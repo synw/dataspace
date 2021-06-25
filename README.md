@@ -1,6 +1,8 @@
 # Dataspace
 
-Data wrangling and visualization
+[![pub package](https://img.shields.io/pypi/v/dataspace)](https://pypi.org/project/dataspace/) [![Documentation Status](https://readthedocs.org/projects/dataspace/badge/?version=latest)](https://dataspace.readthedocs.io/en/latest/?badge=latest)
+
+Data wrangling and visualization. Check the [documentation](https://dataspace.readthedocs.io/en/latest/)
 
 ## Install
 
