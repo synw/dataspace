@@ -43,19 +43,18 @@ class BokehChart:
                 chart = hv.ErrorBars(**args)
             elif chart_type == "heatmap":
                 chart = hv.HeatMap(**args)
-            elif chart_type == "lreg":
-                chart = self._lreg_bokeh(**args)
+            # elif chart_type == "lreg":
+            #    chart = self._lreg_bokeh(**args)
             elif chart_type == "sline":
                 # window_size, y_label = (options["window_size"],)
                 # options["y_label"]
                 # chart = self._sline_bokeh(window_size, y_label)
                 pass
             if chart is None:
-                raise Exception("Chart type " + chart_type + " unknown", e)
-                return
+                raise Exception("Chart type " + chart_type + " unknown")
             return chart.opts(**opts)
         except DataError as e:
-            msg = "Column not found in " + self.x + " and " + self.y
+            msg = f"Column not found in ${self.x} and ${self.y}"
             raise Exception(msg, e)
         except Exception as e:
             raise e

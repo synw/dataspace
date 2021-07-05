@@ -1,7 +1,7 @@
-from typing import Dict
+from typing import Dict, Union
 import numpy as np
 import pandas as pd
-from altair import Chart, X, Y, Scale, data_transformers
+from altair import Chart, X, Y, Scale, Axis, data_transformers
 
 from dataspace.transform import _drop
 from dataspace.core.env import is_notebook
@@ -179,6 +179,7 @@ class AltairChart:
                 lx.append(mean)
                 i += 1
             df["Mean"] = lx
+            # hx = X(self.x.title, axis=None)
             chart = (
                 Chart(df)
                 .mark_line(**style)
@@ -190,14 +191,20 @@ class AltairChart:
         except Exception as e:
             raise Exception("Can not draw mean line chart", e)
 
-    def set_axis(self, xaxis: str, yaxis: str) -> None:
-        self.x = X(xaxis, scale=Scale(zero=False))
-        self.y = Y(yaxis, scale=Scale(zero=False))
+    def set_axis(self, xaxis: Union[str, X], yaxis: Union[str, X]) -> None:
+        if isinstance(xaxis, X):
+            self.x = xaxis
+        else:
+            self.x = X(xaxis, scale=Scale(zero=False))
+        if isinstance(yaxis, Y):
+            self.y = yaxis
+        else:
+            self.y = Y(yaxis, scale=Scale(zero=False))
 
-    def _checkAxis(self):
+    def _checkAxis(self) -> None:
         assert self.x is not None and self.y is not None, "Set the chart fields"
 
-    def _default_opts(self, opts: Dict):
+    def _default_opts(self, opts: Dict) -> Dict:
         if "width" not in opts:
             opts["width"] = self.default_width
         return opts
