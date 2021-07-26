@@ -56,7 +56,7 @@ class DataSpace:
         Display info about the dataframe
 
         :param rows: number of rows to show, **default**: 5
-        :param rows: ``int`` *optional*
+        :type rows: ``int`` *optional*
         :return: a pandas dataframe head
         :rtype: ``DataFrame``
 
