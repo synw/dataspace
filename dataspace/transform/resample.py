@@ -1,9 +1,14 @@
+from typing import Optional
 from dataspace.utils.messages import msg_ok
 import pandas as pd
 
 
 def _resample_(
-    df: pd.DataFrame, method: str, time_period: str, num_col: str, dateindex: str = None
+    df: pd.DataFrame,
+    method: str,
+    time_period: str,
+    num_col: str,
+    dateindex: Optional[str] = None,
 ) -> pd.DataFrame:
     try:
         if dateindex is not None:
@@ -29,7 +34,10 @@ def _resample_(
 
 
 def _rsum(
-    df: pd.DataFrame, time_period: str, num_col: str = "Number", dateindex: str = None
+    df: pd.DataFrame,
+    time_period: str,
+    num_col: str = "Number",
+    dateindex: Optional[str] = None,
 ) -> pd.DataFrame:
     try:
         return _resample_(df, "sum", time_period, num_col, dateindex)
@@ -38,7 +46,10 @@ def _rsum(
 
 
 def _rmean(
-    df: pd.DataFrame, time_period: str, num_col: str = "Number", dateindex: str = None
+    df: pd.DataFrame,
+    time_period: str,
+    num_col: str = "Number",
+    dateindex: Optional[str] = None,
 ):
     try:
         return _resample_(df, "mean", time_period, num_col, dateindex)

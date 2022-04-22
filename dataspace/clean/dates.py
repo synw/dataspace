@@ -1,3 +1,4 @@
+from typing import Optional
 import numpy as np
 import pandas as pd
 
@@ -10,7 +11,7 @@ def _to_date(df: pd.DataFrame, *cols: str, **kwargs):
         raise Exception("Can not convert to date", e)
 
 
-def _fdate(df: pd.DataFrame, *cols, precision: str = "S", format: str = None):
+def _fdate(df: pd.DataFrame, *cols, precision: str = "S", format: Optional[str]):
     def formatdate(row):
         return row.strftime(format)
 

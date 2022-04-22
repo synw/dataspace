@@ -1,18 +1,18 @@
-from typing import Dict, Union
-import numpy as np
+from typing import Dict, Optional, Union
 import pandas as pd
-from altair import Chart, X, Y, Scale, Axis, data_transformers
+from altair import Chart, X, Y, Scale, data_transformers
 
 from dataspace.transform import _drop
-from dataspace.core.env import is_notebook
+
+# from dataspace.core.env import is_notebook
 
 data_transformers.disable_max_rows()
 
 
 class AltairChart:
-    x = None
-    y = None
-    default_width: int = None
+    x: Optional[X] = None
+    y: Optional[Y] = None
+    default_width: int
 
     def __init__(self, default_width: int) -> None:
         self.default_width = default_width
@@ -162,12 +162,13 @@ class AltairChart:
             .encode(x=self.x, y=self.y, **encoder)
             .properties(**opts)
         )
-        return c + num
+        return c + num  # type: ignore
 
     def _altair_hline_(self, df: pd.DataFrame, opts, style, encode) -> Chart:
         """
         Get a mean line chart
         """
+        assert self.x is not None and self.y is not None, "Set the chart fields"
         try:
             rawy = self.y.shorthand
             if ":" in self.y.shorthand:
@@ -191,7 +192,7 @@ class AltairChart:
         except Exception as e:
             raise Exception("Can not draw mean line chart", e)
 
-    def set_axis(self, xaxis: Union[str, X], yaxis: Union[str, X]) -> None:
+    def set_axis(self, xaxis: Union[str, X], yaxis: Union[str, Y]) -> None:
         if isinstance(xaxis, X):
             self.x = xaxis
         else:

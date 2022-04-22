@@ -1,9 +1,8 @@
-from typing import Dict, Iterable, List
+from typing import Dict, List, Optional
 
 from numpy import nan
 import pandas as pd
 
-from dataspace.charts.base import DsChart
 from dataspace.core.env import is_notebook
 from dataspace.charts import DsChart
 from dataspace.io.export import _export_csv
@@ -25,14 +24,14 @@ from dataspace.clean import (
 from dataspace.count import _count_empty_, _count_null_, _count_unique_, _count_zero_
 from dataspace.transform import _drop, _rename, _append, _apply, _rsum, _rmean
 from dataspace.utils.messages import msg_ok
-from dataspace.calculations import _diffn, _diffp, _diffm, _diffs, _diffsp
+from dataspace.calculations import _diffn, _diffp, _diffm  # _diffs, _diffsp
 from dataspace.info.view import _show
 from dataspace.info import _cols
 
 
 class DataSpace:
     df: pd.DataFrame = None
-    _chartEngine: DsChart = None
+    _chartEngine: DsChart = DsChart()
 
     def __init__(self, df: pd.DataFrame = None) -> None:
         self.df = df
@@ -85,25 +84,25 @@ class DataSpace:
 
         :param cols: names of the colums
         :type cols: ``str`` *at least one*
-        :param \*\*kwargs: keyword arguments for ``pd.to_datetime``
-        :type \*\*kwargs: optional
+        :param \\*\\*kwargs: keyword arguments for ``pd.to_datetime``
+        :type \\*\\*kwargs: optional
 
         :example: `ds.to_date("mycol")`
         """
-        _to_date(self.df, *cols, *kwargs)
+        _to_date(self.df, *cols, **kwargs)
 
     def to_int(self, *cols: str, **kwargs) -> None:
         """
         Convert some column values to integers
 
-        :param \*cols: names of the columns
-        :type \*cols: ``str`` *at least one*
-        :param \*\*kwargs: keyword arguments for ``pd.to_numeric``
-        :type \*\*kwargs: optional
+        :param \\*cols: names of the columns
+        :type \\*cols: ``str`` *at least one*
+        :param \\*\\*kwargs: keyword arguments for ``pd.to_numeric``
+        :type \\*\\*kwargs: optional
 
         :example: `ds.to_int("mycol1", "mycol2", errors="coerce")`
         """
-        _to_int(self.df, *cols, *kwargs)
+        _to_int(self.df, *cols, **kwargs)
         if is_notebook is True:
             msg_ok("Converted columns values to integers")
 
@@ -113,12 +112,12 @@ class DataSpace:
 
         :param cols: name of the columns
         :type cols: ``str`` *at least one*
-        :param \*\*kwargs: keyword arguments for ``df.astype``
-        :type \*\*kwargs: optional
+        :param \\*\\*kwargs: keyword arguments for ``df.astype``
+        :type \\*\\*kwargs: optional
 
         :example: `ds.to_float("mycol1")`
         """
-        _to_float(self.df, *cols, *kwargs)
+        _to_float(self.df, *cols, **kwargs)
         if is_notebook is True:
             msg_ok("Converted columns values to floats")
 
@@ -129,27 +128,27 @@ class DataSpace:
 
         :param dtype: a type to convert to: ex: ``str``
         :type dtype: ``type``
-        :param \*cols: names of the columns
-        :type \*cols: ``str`` *at least one**
-        :param \*\*kwargs: keyword arguments for ``df.astype``
-        :type \*\*kwargs: optional
+        :param \\*cols: names of the columns
+        :type \\*cols: ``str`` *at least one**
+        :param \\*\\*kwargs: keyword arguments for ``df.astype``
+        :type \\*\\*kwargs: optional
 
         :example: ``ds.to_type(str, "mycol")``
         """
-        _to_type(self.df, dtype, *cols, *kwargs)
+        _to_type(self.df, dtype, *cols, **kwargs)
         if is_notebook is True:
             msg_ok(f"Converted columns values to {dtype}")
 
-    def drop_nan(self, col: str = None, method: str = "all", **kwargs) -> None:
+    def drop_nan(self, col: str, method: str = "all", **kwargs) -> None:
         """
         Drop rows with ``NaN`` values from the main dataframe
 
-        :param col: name of the column, defaults to None. Drops in
+        :param col: name of the column
         :type col: ``str`` *optional*
         :param method: ``how`` param for ``df.dropna``, **default**: "all"
         :type method: ``str`` *optional*
-        :param \*\*kwargs: params for ``df.dropna``
-        :type \*\*kwargs: optional
+        :param \\*\\*kwargs: params for ``df.dropna``
+        :type \\*\\*kwargs: optional
 
         :example: `ds.drop_nan("mycol")`
         """
@@ -161,8 +160,8 @@ class DataSpace:
 
         :param val: new value
         :type val: ``str``
-        :param \*cols: names of the colums
-        :type \*cols: ``str`` *at least one*
+        :param \\*cols: names of the colums
+        :type \\*cols: ``str`` *at least one*
 
         :example: ``ds.fill_nan("new value", "mycol1", "mycol2")``
         """
@@ -203,12 +202,12 @@ class DataSpace:
         index = pd.DatetimeIndex(self.df[col])
         self.df.set_index(index, inplace=True)
 
-    def fdate(self, *cols, precision: str = "S", format: str = None):
+    def fdate(self, *cols, precision: str = "S", format: Optional[str] = None):
         """
         Convert column values to formated date string
 
-        :param \*cols: names of the colums
-        :type \*cols: str, at least one
+        :param \\*cols: names of the colums
+        :type \\*cols: str, at least one
         :param precision: time precision: Y, M, D, H, Min S, defaults to "S"
         :type precision: ``str`` *optional*
         :param format: python date format, defaults to None
@@ -224,8 +223,8 @@ class DataSpace:
 
         :param col: name of the timestamps column to add
         :type col: ``str``
-        :param \*\*kwargs: keyword arguments for ``pd.to_datetime``
-        :type \*\*kwargs: optional
+        :param \\*\\*kwargs: keyword arguments for ``pd.to_datetime``
+        :type \\*\\*kwargs: optional
 
         :example: ``ds.timestamps("mycol")``
         """
@@ -432,8 +431,7 @@ class DataSpace:
         try:
             self.df[col] = self.df.index.values
         except Exception as e:
-            self.err(e)
-            return
+            raise e
         if is_notebook is True:
             msg_ok("Column", col, "added from the index")
 
@@ -589,7 +587,7 @@ class DataSpace:
         self.df = _apply(self.df, function, *cols, axis=axis, **kwargs)
 
     def rsum(
-        self, time_period: str, num_col: str = "Number", dateindex: str = None
+        self, time_period: str, num_col: str = "Number", dateindex: Optional[str] = None
     ) -> None:
         """
         Resample and add a sum the main dataframe to a time period
@@ -605,7 +603,9 @@ class DataSpace:
         """
         self.df = _rsum(self.df, time_period, num_col, dateindex)
 
-    def rmean(self, time_period: str, num_col: str = "Number", dateindex: str = None):
+    def rmean(
+        self, time_period: str, num_col: str = "Number", dateindex: Optional[str] = None
+    ):
         """
         Resample and add a sum column the main dataframe to a time period
 
@@ -771,8 +771,6 @@ class DataSpace:
 
         :example: `ds.bokeh()`
         """
-        if self._chartEngine is None:
-            self._chartEngine = DsChart()
         self._chartEngine.engine = "bokeh"
 
     def altair(self) -> None:
@@ -781,8 +779,6 @@ class DataSpace:
 
         :example: `ds.altair()`
         """
-        if self._chartEngine is None:
-            self._chartEngine = DsChart()
         self._chartEngine.engine = "altair"
 
     def axis(self, x_axis_col: str, y_axis_col: str):
@@ -796,9 +792,7 @@ class DataSpace:
 
         :example: `ds.axis("col1", "col2")`
         """
-        if self._chartEngine is None:
-            self._chartEngine = DsChart()
-        return self._chartEngine.set_axis(x_axis_col, y_axis_col)
+        self._chartEngine.set_axis(x_axis_col, y_axis_col)
 
     def line_(self, **kwargs):
         """
@@ -876,7 +870,7 @@ class DataSpace:
 
         :param filepath: path of the file to save
         :type filepath: ``str``
-        :param \*\*kwargs: arguments to pass to ``pd.to_csv``
+        :param \\*\\*kwargs: arguments to pass to ``pd.to_csv``
 
         :example: `ds.export_csv("myfile.csv", header=false)`
         """

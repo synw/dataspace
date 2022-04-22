@@ -2,7 +2,8 @@ from typing import Dict
 import pandas as pd
 import holoviews as hv
 from holoviews.core.data.interface import DataError
-from dataspace.core.env import is_notebook
+
+# from dataspace.core.env import is_notebook
 
 hv.extension("bokeh")
 
@@ -10,7 +11,7 @@ hv.extension("bokeh")
 class BokehChart:
     x = None
     y = None
-    default_width: int = None
+    default_width: int
 
     def __init__(self, default_width: int) -> None:
         self.default_width = default_width
