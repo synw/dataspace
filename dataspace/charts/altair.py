@@ -56,6 +56,7 @@ class AltairChart:
             chart = self._altair_hline_(df, opts, style, encode)
         elif chart_type == "line_num":
             chart = self._altair_chart_num_(df, "line", opts, style, encode)
+            print("CHART", chart)
         elif chart_type == "bar_num":
             chart = self._altair_chart_num_(df, "bar", opts, style, encode)
         elif chart_type == "point_num":
@@ -122,30 +123,18 @@ class AltairChart:
         """
         Get a chart + text number chart
         """
+        assert self.x is not None and self.y is not None, "Set the chart fields"
         if chart_type == "line":
-            c = (
-                Chart(df)
-                .mark_line(**style)
-                .encode(x=self.x, y=self.y, **encode)
-                .properties(**opts)
-            )
+            c = Chart(df).mark_line(**style).encode(x=self.x, y=self.y, **encode)
         elif chart_type == "bar":
-            c = (
-                Chart(df)
-                .mark_bar(**style)
-                .encode(x=self.x, y=self.y, **encode)
-                .properties(**opts)
-            )
+            c = Chart(df).mark_bar(**style).encode(x=self.x, y=self.y, **encode)
         elif chart_type == "point":
-            c = (
-                Chart(df)
-                .mark_point(**style)
-                .encode(x=self.x, y=self.y, **encode)
-                .properties(**opts)
-            )
-        encoder = encode
-        if "text" not in encoder:
-            encoder["text"] = self.y
+            c = Chart(df).mark_point(**style).encode(x=self.x, y=self.y, **encode)
+        else:
+            raise Exception("Unknown chart type")
+        # encoder = encode
+        # if "text" not in encoder:
+        #    encoder["text"] = self.y
         if "align" not in style:
             style["align"] = "center"
         if "dy" not in style:
@@ -156,13 +145,9 @@ class AltairChart:
             del style["size"]
         # style["color"] = text_color
         # df2 = df.replace({self.y.split(":")[0]: {0: np.nan}})
-        num = (
-            Chart(df)
-            .mark_text(**style)
-            .encode(x=self.x, y=self.y, **encoder)
-            .properties(**opts)
-        )
-        return c + num  # type: ignore
+        num = c.mark_text(**style).encode(text=self.y.shorthand)
+        res = (c + num).properties(**opts)
+        return res
 
     def _altair_hline_(self, df: pd.DataFrame, opts, style, encode) -> Chart:
         """
