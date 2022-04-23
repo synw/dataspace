@@ -26,8 +26,8 @@ def _apply(
         if len(cols) == 0:
             df = df.apply(function, axis=axis, **kwargs)
         else:
-            cols = list(cols)
-            df[cols] = df[cols].apply(function, **kwargs)
+            _cols = list(cols)
+            df[_cols] = df[_cols].apply(function, **kwargs)
     except Exception as e:
         raise Exception("Can not apply function", e)
     return df
