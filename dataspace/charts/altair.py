@@ -56,7 +56,6 @@ class AltairChart:
             chart = self._altair_hline_(df, opts, style, encode)
         elif chart_type == "line_num":
             chart = self._altair_chart_num_(df, "line", opts, style, encode)
-            print("CHART", chart)
         elif chart_type == "bar_num":
             chart = self._altair_chart_num_(df, "bar", opts, style, encode)
         elif chart_type == "point_num":
