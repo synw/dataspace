@@ -1,6 +1,6 @@
 try:
     from IPython import get_ipython
-except:
+except ImportError:
     pass
 
 
