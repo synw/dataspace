@@ -4,7 +4,7 @@ from .bokeh import BokehChart
 
 
 class DsChart:
-    engine = "bokeh"
+    engine = "altair"
     altair: AltairChart
     bokeh: BokehChart
 
