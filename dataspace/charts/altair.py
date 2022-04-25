@@ -49,10 +49,20 @@ class AltairChart:
             except Exception:
                 pass"""
 
-    def chart(self, df: pd.DataFrame, chart_type, **kwargs) -> Chart:
+    def chart(
+        self,
+        df: pd.DataFrame,
+        chart_type: str,
+        x: Optional[Union[str, X]] = None,
+        y: Optional[Union[str, X]] = None,
+        **kwargs
+    ) -> Chart:
         """
         Get an Altair chart object
         """
+        if x is not None and y is not None:
+            self.set_axis(x, y)
+        self._checkAxis()
         opts = {}
         style = {}
         encode = {}
@@ -61,9 +71,9 @@ class AltairChart:
             opts = kwargs["opts"]
         if "style" in k:
             style = kwargs["style"]
-        if "encode" in encode:
+        if "encode" in k:
             encode = kwargs["encode"]
-        self._checkAxis()
+
         opts = self._default_opts(opts)
         chart = None
         if chart_type == "bar":

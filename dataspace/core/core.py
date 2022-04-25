@@ -794,7 +794,7 @@ class DataSpace:
         """
         self._chartEngine.set_axis(x_axis_col, y_axis_col)
 
-    def line_(self, **kwargs):
+    def line_(self, *args, **kwargs):
         """
         Draw a line chart
 
@@ -802,9 +802,9 @@ class DataSpace:
 
         :example: `ds.line_()`
         """
-        return self._chartEngine.chart(self.df, "line", **kwargs)
+        return self._chartEngine.chart(self.df, "line", *args, **kwargs)
 
-    def point_(self, **kwargs):
+    def point_(self, *args, **kwargs):
         """
         Draw a point chart
 
@@ -812,9 +812,9 @@ class DataSpace:
 
         :example: `ds.point_()`
         """
-        return self._chartEngine.chart(self.df, "point", **kwargs)
+        return self._chartEngine.chart(self.df, "point", *args, **kwargs)
 
-    def bar_(self, **kwargs):
+    def bar_(self, *args, **kwargs):
         """
         Draw a bar chart
 
@@ -822,9 +822,9 @@ class DataSpace:
 
         :example: `ds.bar_()`
         """
-        return self._chartEngine.chart(self.df, "bar", **kwargs)
+        return self._chartEngine.chart(self.df, "bar", *args, **kwargs)
 
-    def square_(self, **kwargs):
+    def square_(self, *args, **kwargs):
         """
         Draw a square chart with numbers. Only for Altair
 
@@ -838,9 +838,9 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        return self._chartEngine.chart(self.df, "square", **kwargs)
+        return self._chartEngine.chart(self.df, "square", *args, **kwargs)
 
-    def rule_(self, **kwargs):
+    def rule_(self, *args, **kwargs):
         """
         Draw a rule chart with numbers. Only for Altair
 
@@ -854,9 +854,9 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        return self._chartEngine.chart(self.df, "rule", **kwargs)
+        return self._chartEngine.chart(self.df, "rule", *args, **kwargs)
 
-    def tick_(self, **kwargs):
+    def tick_(self, *args, **kwargs):
         """
         Draw a square chart with numbers. Only for Altair
 
@@ -870,9 +870,9 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        return self._chartEngine.chart(self.df, "tick", **kwargs)
+        return self._chartEngine.chart(self.df, "tick", *args, **kwargs)
 
-    def bar_num_(self, **kwargs):
+    def bar_num_(self, *args, **kwargs):
         """
         Draw a bar chart with numbers. Only for Altair
 
@@ -886,9 +886,9 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        return self._chartEngine.chart(self.df, "bar_num", **kwargs)
+        return self._chartEngine.chart(self.df, "bar_num", *args, **kwargs)
 
-    def line_num_(self, **kwargs):
+    def line_num_(self, *args, **kwargs):
         """
         Draw a line chart with numbers. Only for Altair
 
@@ -902,9 +902,9 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        return self._chartEngine.chart(self.df, "line_num", **kwargs)
+        return self._chartEngine.chart(self.df, "line_num", *args, **kwargs)
 
-    def point_num_(self, **kwargs):
+    def point_num_(self, *args, **kwargs):
         """
         Draw a point chart with numbers. Only for Altair
 
@@ -918,9 +918,9 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        return self._chartEngine.chart(self.df, "point_num", **kwargs)
+        return self._chartEngine.chart(self.df, "point_num", *args, **kwargs)
 
-    def area_(self, **kwargs):
+    def area_(self, *args, **kwargs):
         """
         Draw an area chart
 
@@ -928,10 +928,9 @@ class DataSpace:
 
         :example: `ds.area_()`
         """
-        print("AREA", kwargs)
-        return self._chartEngine.chart(self.df, "area", **kwargs)
+        return self._chartEngine.chart(self.df, "area", *args, **kwargs)
 
-    def heatmap_(self, **kwargs):
+    def heatmap_(self, *args, **kwargs):
         """
         Draw a heatmap chart
 
@@ -939,9 +938,9 @@ class DataSpace:
 
         :example: `ds.heatmap_()`
         """
-        return self._chartEngine.chart(self.df, "heatmap", **kwargs)
+        return self._chartEngine.chart(self.df, "heatmap", *args, **kwargs)
 
-    def hist_(self, **kwargs):
+    def hist_(self, *args, **kwargs):
         """
         Draw a histogram chart
 
@@ -949,9 +948,9 @@ class DataSpace:
 
         :example: `ds.hist_()`
         """
-        return self._chartEngine.chart(self.df, "hist", **kwargs)
+        return self._chartEngine.chart(self.df, "hist", *args, **kwargs)
 
-    def hline_(self, **kwargs):
+    def hline_(self, *args, **kwargs):
         """
         Draw an horizontal mean line for the y axis
 
@@ -959,7 +958,7 @@ class DataSpace:
 
         :example: `ds.hline_()`
         """
-        return self._chartEngine.chart(self.df, "hline", **kwargs)
+        return self._chartEngine.chart(self.df, "hline", *args, **kwargs)
 
     def w(self, v: int):
         """

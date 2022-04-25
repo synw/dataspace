@@ -1,3 +1,4 @@
+from ctypes import ArgumentError
 from typing import Literal
 
 import pandas as pd
@@ -22,9 +23,18 @@ class DsChart:
         elif self.engine == "bokeh":
             return self.bokeh.set_axis(x_axis_col, y_axis_col)
 
-    def chart(self, df: pd.DataFrame, chart_type, **kwargs):
+    def chart(self, *args, **kwargs):
+        chart_type: str = args[1]
+        df: pd.DataFrame = args[0]
+        x = None
+        y = None
+        if len(args) > 2:
+            if len(args) != 4:
+                raise ArgumentError("Provide arguments for x and y axis")
+            x = args[2]
+            y = args[3]
         if self.engine == "altair":
-            return self.altair.chart(df, chart_type, **kwargs)
+            return self.altair.chart(df, chart_type, x, y, **kwargs)
         elif self.engine == "bokeh":
             return self.bokeh.chart(df, chart_type, **kwargs)
 
