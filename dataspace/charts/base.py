@@ -1,14 +1,17 @@
+from typing import Literal
+
 import pandas as pd
+
 from .altair import AltairChart
 from .bokeh import BokehChart
 
 
 class DsChart:
-    engine = "altair"
+    engine: Literal["altair", "bokeh"] = "altair"
     altair: AltairChart
     bokeh: BokehChart
 
-    def __init__(self, engine="bokeh", default_width=950) -> None:
+    def __init__(self, engine="altair", default_width=950) -> None:
         self.engine = engine
         self.altair = AltairChart(default_width)
         self.bokeh = BokehChart(default_width)

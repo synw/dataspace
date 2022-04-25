@@ -1,6 +1,6 @@
 from typing import Dict, List, Optional, Union
 import pandas as pd
-from altair import Chart as AltChart, X, Y, Scale, data_transformers
+from altair import Chart as AltChart, X, Y, Scale, data_transformers, value
 
 from dataspace.transform import _drop
 
@@ -25,6 +25,9 @@ class Chart(AltChart):
     def color(self, v: str):
         return self.configure_mark(color=v)
 
+    def opacity(self, v: str):
+        return self.encode(opacity=value(v))
+
     def tooltip(self, v: Union[str, List[str]]):
         return self.encode(tooltip=v)
 
@@ -46,12 +49,20 @@ class AltairChart:
             except Exception:
                 pass"""
 
-    def chart(
-        self, df: pd.DataFrame, chart_type, opts={}, style={}, encode={}
-    ) -> Chart:
+    def chart(self, df: pd.DataFrame, chart_type, **kwargs) -> Chart:
         """
         Get an Altair chart object
         """
+        opts = {}
+        style = {}
+        encode = {}
+        k = kwargs.keys()
+        if "opts" in k:
+            opts = kwargs["opts"]
+        if "style" in k:
+            style = kwargs["style"]
+        if "encode" in encode:
+            encode = kwargs["encode"]
         self._checkAxis()
         opts = self._default_opts(opts)
         chart = None

@@ -928,6 +928,7 @@ class DataSpace:
 
         :example: `ds.area_()`
         """
+        print("AREA", kwargs)
         return self._chartEngine.chart(self.df, "area", **kwargs)
 
     def heatmap_(self, **kwargs):
@@ -960,15 +961,40 @@ class DataSpace:
         """
         return self._chartEngine.chart(self.df, "hline", **kwargs)
 
-    def width(self, v: int):
-        """width
+    def w(self, v: int):
+        """
+        Set the default width of charts
 
         :param v: the width to set, in pixel
         :type v: int
 
-        :example: `ds.width(350)`
+        :example: `ds.w(350)`
         """
-        return self._chartEngine.width(v)
+        self._chartEngine.width(v)
+
+    def h(self, v: int):
+        """
+        Set the default width of charts
+
+        :param v: the height to set, in pixel
+        :type v: int
+
+        :example: `ds.h(250)`
+        """
+        self._chartEngine.height(v)
+
+    def wh(self, w: int, h: int):
+        """
+        Set the default width and height of charts
+
+        :param w: the height to set, in pixel
+        :type w: int
+        :param h: the height to set, in pixel
+        :type h: int
+
+        :example: `ds.wh(500, 200)`
+        """
+        self._chartEngine.wh(w, h)
 
     # **************************
     #           export
