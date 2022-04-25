@@ -19,16 +19,17 @@ class Chart(AltChart):
     def wh(self, w: int, h: int):
         return self.properties(width=w, height=h)
 
+    def mw(self, v: str):
+        return self.configure_mark(width=v)
+
     def color(self, v: str):
-        self.mark["color"] = v
-        return self
+        return self.configure_mark(color=v)
 
     def tooltip(self, v: Union[str, List[str]]):
         return self.encode(tooltip=v)
 
     def to(self, v: str):
-        self.mark["type"] = v
-        return self
+        return self.properties(mark=v)
 
 
 class AltairChart:
