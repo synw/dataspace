@@ -12,6 +12,7 @@ class BokehChart:
     x = None
     y = None
     default_width: int
+    default_height: int = 0
 
     def __init__(self, default_width: int) -> None:
         self.default_width = default_width
@@ -76,6 +77,9 @@ class BokehChart:
     def _default_opts(self, opts: Dict):
         if "width" not in opts:
             opts["width"] = self.default_width
+        if "height" not in opts:
+            if self.default_height > 0:
+                opts["height"] = self.default_height
         if "color" not in opts:
             opts["color"] = "#30A2DA"
         return opts

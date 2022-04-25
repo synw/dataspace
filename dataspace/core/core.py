@@ -824,6 +824,54 @@ class DataSpace:
         """
         return self._chartEngine.chart(self.df, "bar", **kwargs)
 
+    def square_(self, **kwargs):
+        """
+        Draw a square chart with numbers. Only for Altair
+
+        :rtype: Altair chart
+
+        :example: `ds.square_()`
+        """
+        if self._chartEngine.engine != "altair":
+            raise Exception(
+                """This chart is only available for the Altair engine
+            Please switch to Altair like this: ds.altair()
+            """
+            )
+        return self._chartEngine.chart(self.df, "square", **kwargs)
+
+    def rule_(self, **kwargs):
+        """
+        Draw a rule chart with numbers. Only for Altair
+
+        :rtype: Altair chart
+
+        :example: `ds.rule_()`
+        """
+        if self._chartEngine.engine != "altair":
+            raise Exception(
+                """This chart is only available for the Altair engine
+            Please switch to Altair like this: ds.altair()
+            """
+            )
+        return self._chartEngine.chart(self.df, "rule", **kwargs)
+
+    def tick_(self, **kwargs):
+        """
+        Draw a square chart with numbers. Only for Altair
+
+        :rtype: Altair chart
+
+        :example: `ds.tick_()`
+        """
+        if self._chartEngine.engine != "altair":
+            raise Exception(
+                """This chart is only available for the Altair engine
+            Please switch to Altair like this: ds.altair()
+            """
+            )
+        return self._chartEngine.chart(self.df, "tick", **kwargs)
+
     def bar_num_(self, **kwargs):
         """
         Draw a bar chart with numbers. Only for Altair
@@ -882,6 +930,26 @@ class DataSpace:
         """
         return self._chartEngine.chart(self.df, "area", **kwargs)
 
+    def heatmap_(self, **kwargs):
+        """
+        Draw a heatmap chart
+
+        :rtype: Bokeh or Altair chart
+
+        :example: `ds.heatmap_()`
+        """
+        return self._chartEngine.chart(self.df, "heatmap", **kwargs)
+
+    def hist_(self, **kwargs):
+        """
+        Draw a histogram chart
+
+        :rtype: Bokeh or Altair chart
+
+        :example: `ds.hist_()`
+        """
+        return self._chartEngine.chart(self.df, "hist", **kwargs)
+
     def hline_(self, **kwargs):
         """
         Draw an horizontal mean line for the y axis
@@ -891,6 +959,16 @@ class DataSpace:
         :example: `ds.hline_()`
         """
         return self._chartEngine.chart(self.df, "hline", **kwargs)
+
+    def width(self, v: int):
+        """width
+
+        :param v: the width to set, in pixel
+        :type v: int
+
+        :example: `ds.width(350)`
+        """
+        return self._chartEngine.width(v)
 
     # **************************
     #           export

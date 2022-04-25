@@ -1,6 +1,6 @@
-from typing import Dict, Optional, Union
+from typing import Dict, List, Optional, Union
 import pandas as pd
-from altair import Chart, X, Y, Scale, data_transformers
+from altair import Chart as AltChart, X, Y, Scale, data_transformers
 
 from dataspace.transform import _drop
 
@@ -9,10 +9,33 @@ from dataspace.transform import _drop
 data_transformers.disable_max_rows()
 
 
+class Chart(AltChart):
+    def w(self, v: int):
+        return self.properties(width=v)
+
+    def h(self, v: int):
+        return self.properties(height=v)
+
+    def wh(self, w: int, h: int):
+        return self.properties(width=w, height=h)
+
+    def color(self, v: str):
+        self.mark["color"] = v
+        return self
+
+    def tooltip(self, v: Union[str, List[str]]):
+        return self.encode(tooltip=v)
+
+    def to(self, v: str):
+        self.mark["type"] = v
+        return self
+
+
 class AltairChart:
     x: Optional[X] = None
     y: Optional[Y] = None
     default_width: int
+    default_height: int = 0
 
     def __init__(self, default_width: int) -> None:
         self.default_width = default_width
@@ -60,6 +83,8 @@ class AltairChart:
             chart = self._altair_chart_num_(df, "bar", opts, style, encode)
         elif chart_type == "point_num":
             chart = self._altair_chart_num_(df, "point", opts, style, encode)
+        elif chart_type == "hist":
+            chart = self._altair_histogram(df, opts, style, encode)
         elif chart_type == "point":
             chart = (
                 Chart(df)
@@ -176,6 +201,15 @@ class AltairChart:
         except Exception as e:
             raise Exception("Can not draw mean line chart", e)
 
+    def _altair_histogram(self, df: pd.DataFrame, opts, style, encode) -> Chart:
+        assert self.x is not None and self.y is not None, "Set the chart fields"
+        return (
+            Chart(df)
+            .mark_bar(**style)
+            .encode(X(self.x.shorthand, bin=True), y="count()", **encode)
+            .properties(**opts)
+        )
+
     def set_axis(self, xaxis: Union[str, X], yaxis: Union[str, Y]) -> None:
         if isinstance(xaxis, X):
             self.x = xaxis
@@ -192,4 +226,7 @@ class AltairChart:
     def _default_opts(self, opts: Dict) -> Dict:
         if "width" not in opts:
             opts["width"] = self.default_width
+        if "height" not in opts:
+            if self.default_height > 0:
+                opts["height"] = self.default_height
         return opts
