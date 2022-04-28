@@ -36,7 +36,7 @@ class DsChart:
         if self.engine == "altair":
             return self.altair.chart(df, chart_type, x, y, **kwargs)
         elif self.engine == "bokeh":
-            return self.bokeh.chart(df, chart_type, **kwargs)
+            return self.bokeh.chart(df, chart_type, x, y, **kwargs)
 
     def width(self, v: int):
         self.altair.default_width = v

@@ -1,8 +1,10 @@
 from typing import Dict, List, Optional, Union
-import pandas as pd
-from altair import Chart as AltChart, X, Y, Scale, data_transformers, value
 
+import pandas as pd
 from dataspace.transform import _drop
+
+from altair import Chart as AltChart
+from altair import Scale, X, Y, data_transformers, value
 
 # from dataspace.core.env import is_notebook
 

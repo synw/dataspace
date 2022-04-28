@@ -623,6 +623,18 @@ class DataSpace:
     #        calculations
     # **************************
 
+    def percent(self, col: str, roundn=1):
+        """add a percent column
+
+        :param col: the column to calculate percentages from
+        :type col: str
+        :param roundn: round level, defaults to 1
+        :type roundn: int, optional
+
+        :example: ``ds.percent("amount")``
+        """
+        self.df["percent"] = round((self.df[col] / self.df[col].sum()) * 100, roundn)
+
     def diffn(self, diffcol: str, name: str = "Diff", doround=True) -> None:
         """
         Add a diff column to the main dataframe: calculate the diff

@@ -1,9 +1,16 @@
-from typing import Dict
+from typing import Dict, List, Optional, Union
 import pandas as pd
 import holoviews as hv
 from holoviews.core.data.interface import DataError
-
-# from dataspace.core.env import is_notebook
+from dataspace.charts.bokeh.charts import (
+    Bars,
+    Curve,
+    # HLine,
+    Scatter,
+    Area,
+    Histogram,
+    HeatMap,
+)
 
 hv.extension("bokeh")
 
@@ -17,11 +24,21 @@ class BokehChart:
     def __init__(self, default_width: int) -> None:
         self.default_width = default_width
 
-    def chart(self, df: pd.DataFrame, chart_type, **kwargs):
+    def chart(
+        self,
+        df: pd.DataFrame,
+        chart_type,
+        x: Optional[Union[str, List[str]]] = None,
+        y: Optional[Union[str, List[str]]] = None,
+        **kwargs,
+    ):
         """
         Get a Bokeh chart object
         """
-        self._checkAxis()
+        if x is not None and y is not None:
+            self.set_axis(x, y)
+        else:
+            self._checkAxis()
         args = {}
         args["data"] = df
         args["kdims"] = self.x
@@ -30,21 +47,21 @@ class BokehChart:
         chart = None
         try:
             if chart_type == "line":
-                chart = hv.Curve(**args)
+                chart = Curve(**args)
             elif chart_type == "hline":
-                chart = hv.HLine(float(df[self.y].mean()))
+                chart = hv.HLine(float(df[self.y].mean()), **args)
             elif chart_type == "point":
-                chart = hv.Scatter(**args)
+                chart = Scatter(**args)
             elif chart_type == "area":
-                chart = hv.Area(**args)
+                chart = Area(**args)
             elif chart_type == "bar":
-                chart = hv.Bars(**args)
+                chart = Bars(**args)
             elif chart_type == "hist":
-                chart = hv.Histogram(**args)
-            elif chart_type == "errorBar":
-                chart = hv.ErrorBars(**args)
+                chart = Histogram(**args)
+            # elif chart_type == "errorBar":
+            #    chart = hv.ErrorBars(**args)
             elif chart_type == "heatmap":
-                chart = hv.HeatMap(**args)
+                chart = HeatMap(**args)
             # elif chart_type == "lreg":
             #    chart = self._lreg_bokeh(**args)
             elif chart_type == "sline":
@@ -61,7 +78,9 @@ class BokehChart:
         except Exception as e:
             raise e
 
-    def set_axis(self, xaxis, yaxis) -> None:
+    def set_axis(
+        self, xaxis: Union[str, List[str]], yaxis: Union[str, List[str]]
+    ) -> None:
         if isinstance(xaxis, list):
             self.x = xaxis
         else:

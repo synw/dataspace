@@ -66,7 +66,7 @@ def _diffp(
             i = 1
         df[name] = vals
     except Exception as e:
-        raise ("Can not diff column", e)
+        raise Exception("Can not diff column", e)
     msg_ok("Diff column " + name + " added to the dataframe")
     return df
 
