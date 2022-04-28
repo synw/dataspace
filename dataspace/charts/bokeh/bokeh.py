@@ -49,7 +49,7 @@ class BokehChart:
             if chart_type == "line":
                 chart = Curve(**args)
             elif chart_type == "hline":
-                chart = hv.HLine(float(df[self.y].mean()), **args)
+                chart = hv.HLine(float(df[self.y].mean()))
             elif chart_type == "point":
                 chart = Scatter(**args)
             elif chart_type == "area":

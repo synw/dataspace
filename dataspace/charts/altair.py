@@ -1,10 +1,11 @@
+from ctypes import ArgumentError
 from typing import Dict, List, Optional, Union
 
 import pandas as pd
 from dataspace.transform import _drop
 
 from altair import Chart as AltChart
-from altair import Scale, X, Y, data_transformers, value
+from altair import Color, Scale, X, Y, data_transformers, value
 
 # from dataspace.core.env import is_notebook
 
@@ -24,6 +25,9 @@ class Chart(AltChart):
     def mw(self, v: str):
         return self.configure_mark(width=v)
 
+    def pw(self, v: int):
+        return self.configure_point(size=v)
+
     def color(self, v: str):
         return self.configure_mark(color=v)
 
@@ -35,6 +39,18 @@ class Chart(AltChart):
 
     def to(self, v: str):
         return self.properties(mark=v)
+
+    def colormap(self, column: str, **kwargs):
+        if len(kwargs) < 2:
+            raise ArgumentError("Provide at least two colors in the map")
+        levels: List = []
+        colors: List[str] = []
+        for kw in kwargs.keys():
+            levels.append(kwargs[kw])
+            colors.append(kw)
+        return self.encode(
+            color=Color(column, scale=Scale(domain=levels, range=colors))
+        )
 
 
 class AltairChart:

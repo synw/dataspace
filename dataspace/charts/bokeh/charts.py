@@ -1,3 +1,4 @@
+from ctypes import ArgumentError
 from typing import List, Union
 import holoviews as hv
 from holoviews.core import Store
@@ -13,6 +14,18 @@ class HvChart(Chart):
 
     def h(self, v: int):
         self.opts(height=v)
+        return self
+
+    def wh(self, v: int):
+        self.opts(height=v)
+        self.opts(width=v)
+        return self
+
+    def mw(self, v: str):
+        return self.configure_mark(width=v)
+
+    def pw(self, v: int):
+        self.opts(size=v)
         return self
 
     def color(self, v: str):
@@ -32,6 +45,23 @@ class HvChart(Chart):
             tt.append((x, x))
         hover = HoverTool(tooltips=tt)
         return self.opts(tools=[hover])
+
+    def colormap(self, column: str, **kwargs):
+        if len(kwargs) < 2:
+            raise ArgumentError("Provide at least two colors in the map")
+        levels: List = [0]
+        colors: List[str] = []
+        for kw in kwargs.keys():
+            levels.append(kwargs[kw])
+            colors.append(kw)
+        self.options(
+            color=column,
+            color_levels=levels,
+            cmap=colors,
+            colorbar=True,
+            clone=False,
+        )
+        return self
 
 
 class HvAnnotation(Annotation):
