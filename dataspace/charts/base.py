@@ -24,6 +24,8 @@ class DsChart:
             return self.bokeh.set_axis(x_axis_col, y_axis_col)
 
     def chart(self, *args, **kwargs):
+        if "df" in kwargs.keys():
+            del kwargs["df"]
         chart_type: str = args[1]
         df: pd.DataFrame = args[0]
         x = None

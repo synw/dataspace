@@ -2,19 +2,11 @@ from typing import List
 import pandas as pd
 
 
-def _append(df: pd.DataFrame, vals: list, index=None) -> pd.DataFrame:
+def _append(df: pd.DataFrame, *vals: List, ignore_index=True) -> pd.DataFrame:
     try:
-        if index is not None:
-            return df.append(
-                pd.DataFrame(columns=df.columns, data=[vals], index=[index])
-            )
-        else:
-            return df.append(
-                pd.DataFrame(
-                    data=[vals],
-                    columns=df.columns,
-                )
-            )
+        return pd.concat(
+            [df, pd.DataFrame([vals], columns=df.columns)], ignore_index=ignore_index
+        )
     except Exception as e:
         raise Exception("Can not append row", e)
 

@@ -21,8 +21,8 @@ class HvChart(Chart):
         self.opts(width=v)
         return self
 
-    def mw(self, v: str):
-        return self.configure_mark(width=v)
+    # def mw(self, v: str):
+    #    return self.configure_mark(width=v)
 
     def pw(self, v: int):
         self.opts(size=v)
@@ -33,6 +33,22 @@ class HvChart(Chart):
 
     def opacity(self, v: str):
         return self.opts(alpha=v)
+
+    def rx(self, v=-45):
+        self.opts(xrotation=v)
+        return self
+
+    def nox(self):
+        self.opts(xaxis=None)
+        return self
+
+    def noy(self):
+        self.opts(yaxis=None)
+        return self
+
+    def title(self, v: str):
+        self = self.relabel(v)
+        return self
 
     def tooltip(self, v: Union[str, List[str]]):
         t = []
@@ -49,10 +65,28 @@ class HvChart(Chart):
     def colormap(self, column: str, **kwargs):
         if len(kwargs) < 2:
             raise ArgumentError("Provide at least two colors in the map")
-        levels: List = [0]
+        levels: List = [self.data[column].min()]
         colors: List[str] = []
         for kw in kwargs.keys():
             levels.append(kwargs[kw])
+            colors.append(kw)
+        self.options(
+            color=column,
+            color_levels=levels,
+            cmap=colors,
+            colorbar=True,
+            clone=False,
+        )
+        return self
+
+    def qcolormap(self, column: str, **kwargs):
+        if len(kwargs) < 2:
+            raise ArgumentError("Provide at least two colors in the map")
+        levels: List = [0]
+        colors: List[str] = []
+        for kw in kwargs.keys():
+            q = self.data[column].quantile(kwargs[kw])
+            levels.append(q)
             colors.append(kw)
         self.options(
             color=column,

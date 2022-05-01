@@ -40,6 +40,21 @@ class Chart(AltChart):
     def to(self, v: str):
         return self.properties(mark=v)
 
+    def rx(self, v=-45):
+        self.encoding.x.axis.labelAngle = v
+        return self
+
+    def nox(self):
+        self.encoding.x.axis = None
+        return self
+
+    def noy(self):
+        self.encoding.y.axis = None
+        return self
+
+    def title(self, v: str):
+        return self.properties(title=v)
+
     def colormap(self, column: str, **kwargs):
         if len(kwargs) < 2:
             raise ArgumentError("Provide at least two colors in the map")
@@ -48,6 +63,20 @@ class Chart(AltChart):
         for kw in kwargs.keys():
             levels.append(kwargs[kw])
             colors.append(kw)
+        return self.encode(
+            color=Color(column, scale=Scale(domain=levels, range=colors))
+        )
+
+    def qcolormap(self, column: str, **kwargs):
+        if len(kwargs) < 2:
+            raise ArgumentError("Provide at least two colors in the map")
+        levels: List = []
+        colors: List[str] = []
+        for kw in kwargs.keys():
+            q = self.data[column].quantile(kwargs[kw])
+            levels.append(q)
+            colors.append(kw)
+        # levels.append(self.data[column].max())
         return self.encode(
             color=Color(column, scale=Scale(domain=levels, range=colors))
         )

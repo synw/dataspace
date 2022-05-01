@@ -152,7 +152,7 @@ class DataSpace:
 
         :example: `ds.drop_nan("mycol")`
         """
-        _drop_nan(self.df, col, method, **kwargs)
+        self.df = _drop_nan(self.df, col, method, **kwargs)
 
     def fill_nan(self, val: str, *cols):
         """
@@ -165,7 +165,7 @@ class DataSpace:
 
         :example: ``ds.fill_nan("new value", "mycol1", "mycol2")``
         """
-        _fill_nan(self.df, val, *cols)
+        self.df = _fill_nan(self.df, val, *cols)
 
     def fill_nulls(self, val=nan, *cols: str, nulls=[None, ""]):
         """
@@ -177,7 +177,7 @@ class DataSpace:
 
         :example: `ds.fill_nulls("mycol")`
         """
-        _fill_nulls(self.df, val, *cols, nulls=nulls)
+        self.df = _fill_nulls(self.df, val, *cols, nulls=nulls)
 
     def index(self, col: str) -> pd.DataFrame:
         """
@@ -537,7 +537,7 @@ class DataSpace:
             raise Exception("Can not drop rows", e)
         msg_ok("Rows dropped")
 
-    def append(self, vals: list, index=None) -> None:
+    def append(self, *vals, ignore_index=True) -> None:
         """
         Append a row to the main dataframe
 
@@ -548,7 +548,7 @@ class DataSpace:
 
         :example: ``ds.append([0, 2, 2, 3, 4])``
         """
-        self.df = _append(self.df, vals, index)
+        self.df = _append(self.df, *vals, ignore_index=ignore_index)
 
     def reverse(self) -> None:
         """
@@ -814,7 +814,10 @@ class DataSpace:
 
         :example: `ds.line_()`
         """
-        return self._chartEngine.chart(self.df, "line", *args, **kwargs)
+        df = self.df
+        if "df" in kwargs.keys():
+            df = kwargs["df"]
+        return self._chartEngine.chart(df, "line", *args, **kwargs)
 
     def point_(self, *args, **kwargs):
         """
@@ -824,7 +827,10 @@ class DataSpace:
 
         :example: `ds.point_()`
         """
-        return self._chartEngine.chart(self.df, "point", *args, **kwargs)
+        df = self.df
+        if "df" in kwargs.keys():
+            df = kwargs["df"]
+        return self._chartEngine.chart(df, "point", *args, **kwargs)
 
     def bar_(self, *args, **kwargs):
         """
@@ -834,7 +840,10 @@ class DataSpace:
 
         :example: `ds.bar_()`
         """
-        return self._chartEngine.chart(self.df, "bar", *args, **kwargs)
+        df = self.df
+        if "df" in kwargs.keys():
+            df = kwargs["df"]
+        return self._chartEngine.chart(df, "bar", *args, **kwargs)
 
     def square_(self, *args, **kwargs):
         """
@@ -850,7 +859,10 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        return self._chartEngine.chart(self.df, "square", *args, **kwargs)
+        df = self.df
+        if "df" in kwargs.keys():
+            df = kwargs["df"]
+        return self._chartEngine.chart(df, "square", *args, **kwargs)
 
     def rule_(self, *args, **kwargs):
         """
@@ -866,7 +878,10 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        return self._chartEngine.chart(self.df, "rule", *args, **kwargs)
+        df = self.df
+        if "df" in kwargs.keys():
+            df = kwargs["df"]
+        return self._chartEngine.chart(df, "rule", *args, **kwargs)
 
     def tick_(self, *args, **kwargs):
         """
@@ -882,7 +897,10 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        return self._chartEngine.chart(self.df, "tick", *args, **kwargs)
+        df = self.df
+        if "df" in kwargs.keys():
+            df = kwargs["df"]
+        return self._chartEngine.chart(df, "tick", *args, **kwargs)
 
     def bar_num_(self, *args, **kwargs):
         """
@@ -898,7 +916,10 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        return self._chartEngine.chart(self.df, "bar_num", *args, **kwargs)
+        df = self.df
+        if "df" in kwargs.keys():
+            df = kwargs["df"]
+        return self._chartEngine.chart(df, "bar_num", *args, **kwargs)
 
     def line_num_(self, *args, **kwargs):
         """
@@ -914,7 +935,10 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        return self._chartEngine.chart(self.df, "line_num", *args, **kwargs)
+        df = self.df
+        if "df" in kwargs.keys():
+            df = kwargs["df"]
+        return self._chartEngine.chart(df, "line_num", *args, **kwargs)
 
     def point_num_(self, *args, **kwargs):
         """
@@ -930,7 +954,10 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        return self._chartEngine.chart(self.df, "point_num", *args, **kwargs)
+        df = self.df
+        if "df" in kwargs.keys():
+            df = kwargs["df"]
+        return self._chartEngine.chart(df, "point_num", *args, **kwargs)
 
     def area_(self, *args, **kwargs):
         """
@@ -940,7 +967,10 @@ class DataSpace:
 
         :example: `ds.area_()`
         """
-        return self._chartEngine.chart(self.df, "area", *args, **kwargs)
+        df = self.df
+        if "df" in kwargs.keys():
+            df = kwargs["df"]
+        return self._chartEngine.chart(df, "area", *args, **kwargs)
 
     def heatmap_(self, *args, **kwargs):
         """
@@ -950,7 +980,10 @@ class DataSpace:
 
         :example: `ds.heatmap_()`
         """
-        return self._chartEngine.chart(self.df, "heatmap", *args, **kwargs)
+        df = self.df
+        if "df" in kwargs.keys():
+            df = kwargs["df"]
+        return self._chartEngine.chart(df, "heatmap", *args, **kwargs)
 
     def hist_(self, *args, **kwargs):
         """
@@ -960,7 +993,10 @@ class DataSpace:
 
         :example: `ds.hist_()`
         """
-        return self._chartEngine.chart(self.df, "hist", *args, **kwargs)
+        df = self.df
+        if "df" in kwargs.keys():
+            df = kwargs["df"]
+        return self._chartEngine.chart(df, "hist", *args, **kwargs)
 
     def hline_(self, *args, **kwargs):
         """
@@ -970,7 +1006,10 @@ class DataSpace:
 
         :example: `ds.hline_()`
         """
-        return self._chartEngine.chart(self.df, "hline", *args, **kwargs)
+        df = self.df
+        if "df" in kwargs.keys():
+            df = kwargs["df"]
+        return self._chartEngine.chart(df, "hline", *args, **kwargs)
 
     def w(self, v: int):
         """
