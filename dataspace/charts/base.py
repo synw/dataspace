@@ -4,7 +4,14 @@ from typing import Literal
 import pandas as pd
 
 from .altair import AltairChart
-from .bokeh import BokehChart
+
+try:
+    from .bokeh import BokehChart
+except (ModuleNotFoundError, ImportError):
+    print("The Bokeh chart engine is not available in this environment")
+
+    class BokehChart(AltairChart):
+        pass
 
 
 class DsChart:
