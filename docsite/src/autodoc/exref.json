@@ -1,1 +1,1 @@
-{"add": "df = pd.DataFrame(np.linspace(1, 100, 5), columns=[\"num\"])\nds = dataspace.from_df(df)\nprint(\"Adding a column with default value\")\nds.add(\"num2\", 1)\nds.show()"}
+{"add": "df = pd.DataFrame(np.linspace(1, 100, 5), columns=[\"num\"])\nds = dataspace.from_df(df)\nprint(\"Adding a column with default value\")\nds.add(\"num2\", 1)\nds.show()", "bar_": "data = {\"col1\": [\"A\", \"B\", \"C\", \"D\", \"E\"], \"col2\": [1, 6, 2, 4, 1]}\ndf = pd.DataFrame(data)\nds = dataspace.from_df(df)\nds.bar_(\"col1:N\", \"col2:Q\").to_json()"}

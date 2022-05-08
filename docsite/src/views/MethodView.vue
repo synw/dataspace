@@ -6,7 +6,7 @@
     <method-doc :method="method"></method-doc>
   </div>
   <div class="p-5 pl-8 text-lg italic">Example</div>
-  <div class="p-3">
+  <div class="w-full p-3">
     <code-block :code="code"></code-block>
   </div>
 </template>

@@ -38,16 +38,17 @@ export default defineComponent({
   },
   setup(props) {
     const { code } = toRefs(props);
-    const parsedCode = ref(code.value);
+    const parsedCode = ref("");
     const lang = [['python', 'Python']];
     const outputHtml = ref("");
     const chartSpec = ref({});
     const hasChart = ref(false);
 
     async function dispatchRenderer(res) {
+      hasChart.value = false;
       await new Promise(resolve => setTimeout(resolve, 1));
       if (res.startsWith('{\n  "$schema"')) {
-        //console.log("CHART", res);
+        console.log("CHART", res);
         chartSpec.value = JSON.parse(res);
         hasChart.value = true;
       } else {
@@ -70,7 +71,9 @@ export default defineComponent({
     }
 
     watchEffect(() => {
+      //console.log("Effect")
       parsedCode.value = code.value;
+      hasChart.value = false;
       resetLog();
       outputHtml.value = ""
     })
@@ -101,4 +104,8 @@ export default defineComponent({
       
 .msg
   @apply mb-3
+.code_area
+  & > textarea
+    min-width: 768px
+    width: 1200px !important
 </style>
