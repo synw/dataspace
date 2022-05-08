@@ -1,32 +1,31 @@
 from typing import Dict, List, Optional
 
-from numpy import nan
 import pandas as pd
-
-from dataspace.core.env import is_notebook
+from dataspace.calculations import _diffm, _diffn, _diffp  # _diffs, _diffsp
 from dataspace.charts import DsChart
-from dataspace.io.export import _export_csv
 from dataspace.clean import (
-    _to_date,
-    _to_int,
-    _to_float,
-    _to_type,
     _drop_nan,
+    _fdate,
     _fill_nan,
     _fill_nulls,
-    _fdate,
-    _timestamps,
+    _replace,
+    _roundvals,
     _strip,
     _strip_cols,
-    _roundvals,
-    _replace,
+    _timestamps,
+    _to_date,
+    _to_float,
+    _to_int,
+    _to_type,
 )
+from dataspace.core.env import is_notebook
 from dataspace.count import _count_empty_, _count_null_, _count_unique_, _count_zero_
-from dataspace.transform import _drop, _rename, _append, _apply, _rsum, _rmean
-from dataspace.utils.messages import msg_ok
-from dataspace.calculations import _diffn, _diffp, _diffm  # _diffs, _diffsp
-from dataspace.info.view import _show
 from dataspace.info import _cols
+from dataspace.info.view import _show
+from dataspace.io.export import _export_csv
+from dataspace.transform import _append, _apply, _drop, _rename, _rmean, _rsum
+from dataspace.utils.messages import msg_ok
+from numpy import nan
 
 
 class DataSpace:
@@ -810,9 +809,11 @@ class DataSpace:
         """
         Draw a line chart
 
-        :param x_axis_col: name of the column to use for x axis chart, defaults to the x axis value set by ds.axis
+        :param x_axis_col: name of the column to use for x axis chart, defaults
+        to the x axis value set by ds.axis
         :type x_axis_col: Optional[str]
-        :param y_axis_col: name of the column to use for y axis chart, defaults to the y axis value set by ds.axis
+        :param y_axis_col: name of the column to use for y axis chart, defaults
+        to the y axis value set by ds.axis
         :type y_axis_col: Optional[str]
         :rtype: an Altair or Bokeh chart
 

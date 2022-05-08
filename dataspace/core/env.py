@@ -1,3 +1,5 @@
+import platform
+
 try:
     from IPython import get_ipython
 except ImportError:
@@ -15,4 +17,5 @@ def _is_notebook():
         return False
 
 
+is_running_in_browser = platform.system() == "Emscripten"
 is_notebook = _is_notebook()

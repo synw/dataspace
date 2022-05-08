@@ -2,7 +2,7 @@
   <div :class="{ dark: user.isDarkMode.value == true }" class="w-screen h-screen">
     <the-header class="fixed w-full h-16 primary"></the-header>
     <the-sidebar class="fixed w-64 h-full mt-16 overflow-y-auto secondary"></the-sidebar>
-    <div id="main" class="container fixed w-full p-3 overflow-auto background top-16 left-64 bg-slate-400">
+    <div id="main" class="fixed w-full p-3 overflow-auto background top-16 left-64 bg-slate-400">
       <router-view></router-view>
     </div>
   </div>

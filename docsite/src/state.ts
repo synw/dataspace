@@ -30,7 +30,7 @@ runcode
   console.log("Running script", _code)
   //let run = pyodide.runPython(_code);
   //let ds = run();
-  let ds = pyodide.runPython(code)
+  let ds = await pyodide.runPythonAsync(code)
   return ds
 }
 

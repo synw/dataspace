@@ -7,8 +7,6 @@ from dataspace.transform import _drop
 from altair import Chart as AltChart
 from altair import Color, Scale, X, Y, data_transformers, value
 
-# from dataspace.core.env import is_notebook
-
 data_transformers.disable_max_rows()
 
 

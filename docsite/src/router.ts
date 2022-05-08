@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
 import HomeView from "./views/HomeView.vue"
-
+import hljs from 'highlight.js/lib/core';
 const baseTitle = "Dataspace doc"
 
 const routes: Array<RouteRecordRaw> = [

@@ -10,7 +10,7 @@ let printBuffer = new Array<string>();
 let bufferIsFilling = false;
 
 function mainLog(msg: string): void {
-  //console.log("[PYLOGBUFFER]", msg);
+  console.log("[PYLOGBUFFER]", msg);
   if (msg == '#!S#') {
     bufferIsFilling = true
     return
