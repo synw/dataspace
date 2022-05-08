@@ -16,7 +16,7 @@
 </template>
 
 <script lang="js">
-import { defineComponent, ref, toRefs } from "vue";
+import { defineComponent, ref, toRefs, watchEffect } from "vue";
 //import hljs from 'highlight.js/lib/core';
 import hljs from "highlight.js";
 import { runCode } from "@/state";
@@ -45,15 +45,13 @@ export default defineComponent({
     const hasChart = ref(false);
 
     async function dispatchRenderer(res) {
-      //console.log("T", typeof res, res.slice(0, 15));
       await new Promise(resolve => setTimeout(resolve, 1));
       if (res.startsWith('{\n  "$schema"')) {
-        console.log("CHART", res)
-        chartSpec.value = JSON.parse(res)
+        //console.log("CHART", res);
+        chartSpec.value = JSON.parse(res);
         hasChart.value = true;
-        await new Promise(resolve => setTimeout(resolve, 1));
       } else {
-        console.log("No chart", res)
+        //console.log("No chart", res)
         outputHtml.value = res;
       }
     }
@@ -70,6 +68,12 @@ export default defineComponent({
       }
       pyState.isExecuting = false;
     }
+
+    watchEffect(() => {
+      parsedCode.value = code.value;
+      resetLog();
+      outputHtml.value = ""
+    })
 
     return {
       pyLog,

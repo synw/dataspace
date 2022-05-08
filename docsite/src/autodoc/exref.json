@@ -1,0 +1,1 @@
+{"add": "df = pd.DataFrame(np.linspace(1, 100, 5), columns=[\"num\"])\nds = dataspace.from_df(df)\nprint(\"Adding a column with default value\")\nds.add(\"num2\", 1)\nds.show()"}

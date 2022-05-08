@@ -28,6 +28,7 @@ async function initPyRuntime(): Promise<PyodideInterface> {
   installLog(2);
   await pyodide.runPythonAsync(`import builtins
 import pandas as pd
+import numpy as np
 import dataspace
 from pyodide import to_js
 print("Libraries loaded, the Python interpreter is ready")

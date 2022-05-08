@@ -17,14 +17,18 @@ import { ref, watchEffect } from 'vue';
 import MethodDoc from '@/widgets/MethodDoc.vue';
 import CodeBlock from '@/widgets/CodeBlock.vue';
 import docref from "@/autodoc/docref.json";
+import exampleref from "@/autodoc/exref.json";
 
 const method = ref({ name: "", docstring: {} })
-
 const code = ref("");
 
 function load() {
-  const methodName = router.currentRoute.value.params?.name.toString();
-  console.log("M", methodName);
+  const name = router.currentRoute.value.params?.name.toString();
+  console.log("Load", name)
+  const methodName = name;
+  //console.log("M", methodName);
+  code.value = exampleref[name] ?? "";
+  console.log("Code", code.value)
   const m = {
     "name": methodName,
     "docstring": docref[methodName]

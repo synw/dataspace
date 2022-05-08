@@ -7,6 +7,7 @@ from typing import TypedDict
 
 
 MethodsDict = TypedDict("name", {"funcdef": str, "docstring": Docstring})
+ExamplesDict = TypedDict("name", {"source": str})
 
 
 def _parseClass(mod: str, cls: str) -> MethodsDict:
@@ -27,8 +28,29 @@ def _parseClass(mod: str, cls: str) -> MethodsDict:
     return methods
 
 
-def get_examples():
-    pass
+def get_examples(file: str) -> ExamplesDict:
+    ex: ExamplesDict = {}  # type: ignore
+    with open(file, "r") as fileop:
+        lines = fileop.readlines()
+        source = "".join(lines)
+        _mod = ast.parse(source)
+        i = 0
+        for node in _mod.body:
+            if isinstance(node, ast.FunctionDef):
+                rawsource = ast.get_source_segment(source, _mod.body[i])  # type: ignore
+                if rawsource is None:
+                    raise Exception("Source not found")
+                lines = rawsource.split("\n")
+                lines.pop(0)
+                nlines = []
+                for line in lines:
+                    nl = line.replace("\t", "", 1)
+                    nl = nl.replace("    ", "", 1)
+                    nlines.append(nl)
+                end = "\n".join(nlines)
+                ex[node.name] = end
+            i += 1
+    return ex
 
 
 def parse_docstrings(methods: MethodsDict):
@@ -71,3 +93,8 @@ print("Writing doc ref")
 file = "src/autodoc/docref.json"
 with open(file, "w") as filetowrite:
     filetowrite.write(json.dumps(doc))
+print("Writing examples ref")
+efile = "src/autodoc/exref.json"
+examples = get_examples("examples/examples.py")
+with open(efile, "w") as filetowrite:
+    filetowrite.write(json.dumps(examples))

@@ -4,6 +4,8 @@ import dataspace
 
 
 def add():
-    df = pd.DataFrame(np.linspace(1, 100, 1000))
+    df = pd.DataFrame(np.linspace(1, 100, 5), columns=["num"])
     ds = dataspace.from_df(df)
-    print(ds.df.to_html())
+    print("Adding a column with default value")
+    ds.add("num2", 1)
+    ds.show()
