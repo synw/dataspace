@@ -24,7 +24,7 @@ def _show(rows: int, df: pd.DataFrame) -> Union[pd.DataFrame, str]:
             f'<p class="msg">The dataframe has <b>{num_rows}</b> rows and <b>{num}</b> '
             f"columns {fields}</p>\n"
         )
-        return html + df.to_html()
+        return html + df.head(rows).to_html()
     msg_info(
         "The dataframe has",
         colors.bold(num_rows),

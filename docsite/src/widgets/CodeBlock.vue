@@ -4,8 +4,9 @@
       @keyup.ctrl.enter="runTheCode()" class="pr-20 code-block dark:bg-neutral-700 bg-amber-50 w-max"
       spellcheck="false">
     </code-editor>
-    <button class="mt-3 border btn" @click="runTheCode()" :disabled="pyState.isExecuting == true || pyLog.install < 3">
-      <i-cil:media-play class="mr-2 txt-success"></i-cil:media-play>Execute
+    <button class="mt-3 border btn" @click="runTheCode()" :disabled="!isPyLoaded && !isPyExecuting">
+      <i-cil:media-play class="mr-2 " :class="!isPyLoaded ? 'txt-light' : 'txt-success'"></i-cil:media-play>
+      Execute
     </button>
     <div class="pt-3 pl-8">
       <pre v-for="log in pyLog.log" v-if="pyLog.install == 3" v-html="log"></pre>
@@ -17,13 +18,13 @@
 
 <script lang="js">
 import { defineComponent, ref, toRefs, watchEffect } from "vue";
-//import hljs from 'highlight.js/lib/core';
 import hljs from "highlight.js";
 import { runCode } from "@/state";
 import { resetLog, pyLog } from "@/pylog";
 import { pyState } from "@/state";
 import CodeEditor from 'simple-code-editor';
 import VegaChart from "@/widgets/VegaChart.vue";
+import { computed } from "@vue/reactivity";
 
 export default defineComponent({
   components: {
@@ -44,24 +45,40 @@ export default defineComponent({
     const chartSpec = ref({});
     const hasChart = ref(false);
 
+    const isPyLoaded = computed(() => {
+      return pyLog.install == 3
+    })
+
+    const isPyExecuting = computed(() => {
+      return pyState.isExecuting == true
+    })
+
     async function dispatchRenderer(res) {
+      console.log("Dispatch res:", res, typeof res);
       hasChart.value = false;
       await new Promise(resolve => setTimeout(resolve, 1));
-      if (res.startsWith('{\n  "$schema"')) {
-        console.log("CHART", res);
-        chartSpec.value = JSON.parse(res);
-        hasChart.value = true;
+      if (typeof res == 'string') {
+        if (res.startsWith('{\n  "$schema"')) {
+          //console.log("CHART", res);
+          chartSpec.value = JSON.parse(res);
+          hasChart.value = true;
+          outputHtml.value = "";
+        } else {
+          //console.log("No chart", res)
+          outputHtml.value = res;
+        }
       } else {
-        //console.log("No chart", res)
-        outputHtml.value = res;
+        console.warn('No str', res)
+        outputHtml.value = `${res}`;
       }
+
     }
 
     async function runTheCode() {
       resetLog();
       pyState.isExecuting = true;
       await new Promise(resolve => setTimeout(resolve, 1));
-      console.log("Run", parsedCode.value)
+      //console.log("Run", parsedCode.value)
       const res = await runCode(parsedCode.value);
       if (res) {
         //console.log("RES", typeof res, res);
@@ -87,6 +104,8 @@ export default defineComponent({
       pyState,
       chartSpec,
       hasChart,
+      isPyLoaded,
+      isPyExecuting,
     };
   },
 });

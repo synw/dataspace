@@ -5,9 +5,11 @@
   <div class="mt-5">
     <method-doc :method="method"></method-doc>
   </div>
-  <div class="p-5 pl-8 text-lg italic">Example</div>
-  <div class="w-full p-3">
-    <code-block :code="code"></code-block>
+  <div v-if="code.length > 0">
+    <div class="p-5 pl-8 text-lg italic">Example</div>
+    <div class="w-full p-3">
+      <code-block :code="code"></code-block>
+    </div>
   </div>
 </template>
 

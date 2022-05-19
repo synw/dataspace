@@ -1,6 +1,5 @@
 import ast
 import inspect
-import json
 from importlib import import_module
 from docstring_parser import parse, Docstring
 from typing import TypedDict
@@ -10,7 +9,7 @@ MethodsDict = TypedDict("name", {"funcdef": str, "docstring": Docstring})
 ExamplesDict = TypedDict("name", {"source": str})
 
 
-def _parseClass(mod: str, cls: str) -> MethodsDict:
+def parse_class(mod: str, cls: str) -> MethodsDict:
     methods: MethodsDict = {}  # type: ignore
     source = inspect.getsource(getattr(import_module(mod), cls))
     _mod = ast.parse(source)
@@ -36,7 +35,9 @@ def get_examples(file: str) -> ExamplesDict:
         _mod = ast.parse(source)
         i = 0
         for node in _mod.body:
-            if isinstance(node, ast.FunctionDef):
+            if isinstance(node, ast.FunctionDef) or isinstance(
+                node, ast.AsyncFunctionDef
+            ):
                 rawsource = ast.get_source_segment(source, _mod.body[i])  # type: ignore
                 if rawsource is None:
                     raise Exception("Source not found")
@@ -75,26 +76,9 @@ def parse_docstrings(methods: MethodsDict):
         docs[k] = {
             "funcdef": method["funcdef"],
             "description": method["docstring"].short_description,
+            "long_description": method["docstring"].long_description,
             "params": params,
             "raises": raises,
             "return": r,
         }
     return docs
-
-
-# methods = get_methods()
-methods = _parseClass("dataspace", "DataSpace")
-doc = parse_docstrings(methods)
-# del doc["__init__"]
-# del doc["__repr__"]
-# res = doc["wunique_"]
-# print(json.dumps(res, indent=4))
-print("Writing doc ref")
-file = "src/autodoc/docref.json"
-with open(file, "w") as filetowrite:
-    filetowrite.write(json.dumps(doc))
-print("Writing examples ref")
-efile = "src/autodoc/exref.json"
-examples = get_examples("examples/examples.py")
-with open(efile, "w") as filetowrite:
-    filetowrite.write(json.dumps(examples))

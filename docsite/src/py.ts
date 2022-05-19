@@ -26,16 +26,31 @@ async function initPyRuntime(): Promise<PyodideInterface> {
   print("Python interpreter loaded, loading libraries")
 `);
   installLog(2);
-  await pyodide.runPythonAsync(`import builtins
+  await pyodide.runPythonAsync(`from io import BytesIO
 import pandas as pd
 import numpy as np
 import dataspace
 from pyodide import to_js
+from pyodide.http import pyfetch
 print("Libraries loaded, the Python interpreter is ready")
-def print(*args, **kwargs):
-  builtins.print('#!S#')
-  builtins.print(*args, **kwargs)
-  builtins.print('#!E#')
+async def load_dataset(name):
+  url = ""
+  if name == "timeserie":
+    url = "http://localhost:3000/small_timeserie.csv"
+  elif name == "bitcoin":
+    url = "http://localhost:3000/BTC-USDT-1min.csv"
+  else:
+    url = f"https://cdn.jsdelivr.net/npm/vega-datasets@v1.29.0/data/{name}.csv"
+    #raise AttributeError()
+  ds = dataspace.from_df(pd.DataFrame({"A": [1]}))
+  response = await pyfetch(url)
+  if response.status == 200:
+      with open("<output_file>", "wb") as f:
+          df = pd.read_csv(BytesIO(await response.bytes()))
+          ds = dataspace.from_df(df)        
+  else:
+      print("Wrong status code", response.status)
+  return ds
   `);
   console.log("Libraries loaded")
   resetLog();

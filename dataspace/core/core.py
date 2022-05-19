@@ -53,6 +53,8 @@ class DataSpace:
         """
         Display info about the dataframe
 
+        Category: Info/View data/Show
+
         :param rows: number of rows to show, **default**: 5
         :type rows: ``int`` *optional*
         :return: a pandas dataframe head
@@ -65,6 +67,8 @@ class DataSpace:
     def cols_(self) -> pd.DataFrame:
         """
         Returns a dataframe with columns info
+
+        Category: Info/View data/Show
 
         :return: a pandas dataframe
         :rtype: ``DataFrame``
@@ -81,6 +85,8 @@ class DataSpace:
         """
         Convert some columns values to date type
 
+        Category: Clean/Dates/To date
+
         :param cols: names of the colums
         :type cols: str *at least one*
         :param \\*\\*kwargs: keyword arguments for ``pd.to_datetime``
@@ -93,6 +99,8 @@ class DataSpace:
     def to_int(self, *cols: str, **kwargs) -> None:
         """
         Convert some column values to integers
+
+        Category: Clean/Convert types/To type
 
         :param \\*cols: names of the columns
         :type \\*cols: str *at least one*
@@ -107,7 +115,9 @@ class DataSpace:
 
     def to_float(self, *cols: str, **kwargs) -> None:
         """
-        Convert colums values to float
+        Convert colums values to float -
+
+        Category: Clean/Convert types/To float
 
         :param cols: name of the columns
         :type cols: str *at least one*
@@ -122,8 +132,9 @@ class DataSpace:
 
     def to_type(self, dtype: type, *cols: str, **kwargs) -> None:
         """
-        Convert colums values to a given type in the
-        main dataframe
+        Convert colums values to a given type in the main dataframe
+
+        Category: Clean/Convert types/To type
 
         :param dtype: a type to convert to: ex: str
         :type dtype: ``type``
@@ -132,7 +143,7 @@ class DataSpace:
         :param \\*\\*kwargs: keyword arguments for ``df.astype``
         :type \\*\\*kwargs: optional
 
-        :example: ``ds.to_type(str, "mycol")``
+        :examples: ``ds.to_type(str, "mycol")``
         """
         _to_type(self.df, dtype, *cols, **kwargs)
         if is_notebook is True:
@@ -169,6 +180,7 @@ class DataSpace:
     def fill_nulls(self, val=nan, *cols: str, nulls=[None, ""]):
         """
         Fill all null values with NaN values in a column.
+
         Null values are ``None`` or en empty string
 
         :param cols: columns names
@@ -810,10 +822,10 @@ class DataSpace:
         Draw a line chart
 
         :param x_axis_col: name of the column to use for x axis chart, defaults
-        to the x axis value set by ds.axis
+            to the x axis value set by ds.axis
         :type x_axis_col: Optional[str]
         :param y_axis_col: name of the column to use for y axis chart, defaults
-        to the y axis value set by ds.axis
+            to the y axis value set by ds.axis
         :type y_axis_col: Optional[str]
         :rtype: an Altair or Bokeh chart
 

@@ -1,4 +1,47 @@
-# -*- coding: utf-8 -*-
+from ..core.env import is_running_in_browser
+
+
+class HtmlColors:
+    def red(self, *msg):
+        color = "red"
+        return self._msg(color, *msg)
+
+    def blue(self, *msg):
+        color = "steelblue"
+        return self._msg(color, *msg)
+
+    def green(self, *msg):
+        color = "forestgreen"
+        return self._msg(color, *msg)
+
+    def yellow(self, *msg):
+        color = "yellow"
+        return self._msg(color, *msg)
+
+    def purple(self, *msg):
+        color = "purple"
+        return self._msg(color, *msg)
+
+    def bold(self, *msg):
+        res = []
+        for m in msg:
+            res.append(str(m))
+        txt = " ".join(res)
+        return f'<span style="font-weight:bold">{txt}</span>'
+
+    def underline(self, *msg):
+        res = []
+        for m in msg:
+            res.append(str(m))
+        txt = " ".join(res)
+        return f'<span style="text-decoration:underline">{txt}</span>'
+
+    def _msg(self, color, *msg):
+        res = []
+        for m in msg:
+            res.append(str(m))
+        txt = " ".join(res)
+        return f'<span style="color:{color}">{txt}</span>'
 
 
 class Colors:
@@ -39,4 +82,7 @@ class Colors:
         return col
 
 
-colors = Colors()
+if is_running_in_browser is True:
+    colors = HtmlColors()
+else:
+    colors = Colors()
