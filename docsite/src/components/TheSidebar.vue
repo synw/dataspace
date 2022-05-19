@@ -1,19 +1,19 @@
 <template>
   <div>
     <div class="p-3 text-xl">Data IO</div>
-    <sw-accordion :data="docDataio" :has-titles="true" @onclick="$router.push('/method/' + $event)"></sw-accordion>
+    <sw-accordion :data="docDataio" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
     <div class="p-3 text-xl">Info</div>
-    <sw-accordion :data="infoData" :has-titles="true" @onclick="$router.push('/method/' + $event)"></sw-accordion>
+    <sw-accordion :data="infoData" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
     <div class="p-3 text-xl">Select</div>
-    <sw-accordion :data="selectData" :has-titles="true" @onclick="$router.push('/method/' + $event)"></sw-accordion>
+    <sw-accordion :data="selectData" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
     <div class="p-3 text-xl">Clean</div>
-    <sw-accordion :data="cleanData" :has-titles="true" @onclick="$router.push('/method/' + $event)"></sw-accordion>
+    <sw-accordion :data="cleanData" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
     <div class="p-3 text-xl">Transform</div>
-    <sw-accordion :data="transformData" :has-titles="true" @onclick="$router.push('/method/' + $event)"></sw-accordion>
+    <sw-accordion :data="transformData" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
     <div class="p-3 text-xl">Charts</div>
-    <sw-accordion :data="chartsData" :has-titles="true" @onclick="$router.push('/method/' + $event)"></sw-accordion>
+    <sw-accordion :data="chartsData" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
     <div class="p-3 text-xl">Api ref</div>
-    <sw-accordion :data="apirefData" @onclick="$router.push('/method/' + $event)"></sw-accordion>
+    <sw-accordion :data="apirefData" @onclick="$router.push($event)"></sw-accordion>
 
   </div>
 </template>
@@ -116,6 +116,22 @@ const chartsData = {
     { title: "Point", value: "point_" },
     { title: "Area", value: "area_" },
     { title: "HLine", value: "hline_" },
+  ],
+  "Inline api": [
+    { title: "Width", value: "w", source: "chart" },
+    { title: "Height", value: "h", source: "chart" },
+    { title: "Width and height", value: "wh", source: "chart" },
+    { title: "Mark width", value: "mw", source: "chart" },
+    { title: "Point width", value: "pw", source: "chart" },
+    { title: "Color", value: "color", source: "chart" },
+    { title: "Opacity", value: "opacity", source: "chart" },
+    { title: "Tooltips", value: "tooltip", source: "chart" },
+    { title: "X axis label rotation", value: "rx", source: "chart" },
+    { title: "Remove X axis labels", value: "nox", source: "chart" },
+    { title: "Remove Y axis labels", value: "noy", source: "chart" },
+    { title: "Title", value: "title", source: "chart" },
+    { title: "Values colormap", value: "colormap", source: "chart" },
+    { title: "Quantiles colormap", value: "qcolormap", source: "chart" },
   ]
 }
 

@@ -11,49 +11,216 @@ data_transformers.disable_max_rows()
 
 
 class Chart(AltChart):
-    def w(self, v: int):
+    def w(self, v: int) -> "Chart":
+        """Set the width of the chart
+
+        .. code-block:: python
+
+            ds = await load_dataset("sp500")
+            ds.axis("date:T", "price:Q")
+            ds.line_().w(500).to_json()
+
+        :param v: value in pixels
+        :type v: int
+        :return: the chart object
+        :rtype: Chart
+        """
         return self.properties(width=v)
 
-    def h(self, v: int):
+    def h(self, v: int) -> "Chart":
+        """Set the height of the chart
+
+        .. code-block:: python
+
+            ds = await load_dataset("sp500")
+            ds.axis("date:T", "price:Q")
+            ds.line_().h(200).to_json()
+
+        :param v: value in pixels
+        :type v: int
+        :return: the chart object
+        :rtype: Chart
+        """
         return self.properties(height=v)
 
-    def wh(self, w: int, h: int):
+    def wh(self, w: int, h: int) -> "Chart":
+        """Set the width and height of a chart
+
+        .. code-block:: python
+
+            ds = await load_dataset("sp500")
+            ds.axis("date:T", "price:Q")
+            ds.line_().wh(500, 200).to_json()
+
+        :param w: width value in pixels
+        :type w: int
+        :param h: height value in pixels
+        :type h: int
+        :return: the chart object
+        :rtype: Chart
+        """
         return self.properties(width=w, height=h)
 
-    def mw(self, v: str):
+    def mw(self, v: int) -> "Chart":
+        """Configure the default mark width
+
+        .. code-block:: python
+
+            ds = await load_dataset("sp500")
+            ds.axis("date:T", "price:Q")
+            ds.bar_().mw(7).to_json()
+
+        :param v: width value in pixels
+        :type v: int
+        :return: the chart object
+        :rtype: Chart
+        """
         return self.configure_mark(width=v)
 
-    def pw(self, v: int):
+    def pw(self, v: int) -> "Chart":
+        """Configure the default point width
+
+        .. code-block:: python
+
+            ds = await load_dataset("sp500")
+            ds.axis("date:T", "price:Q")
+            ds.point_().pw(25).to_json()
+
+        :param v: width value in pixels
+        :type v: int
+        :return: the chart object
+        :rtype: Chart
+        """
         return self.configure_point(size=v)
 
-    def color(self, v: str):
+    def color(self, v: str) -> "Chart":
+        """Configure the chart color
+
+        .. code-block:: python
+
+            ds = await load_dataset("sp500")
+            ds.axis("date:T", "price:Q")
+            ds.area_().color("forestgreen").to_json()
+
+        :param v: the color value
+        :type v: str
+        :return: the chart object
+        :rtype: Chart
+        """
         return self.configure_mark(color=v)
 
-    def opacity(self, v: str):
+    def opacity(self, v: Union[int, float]) -> "Chart":
+        """Configure the chart opacity
+
+        .. code-block:: python
+
+            ds = await load_dataset("sp500")
+            ds.axis("date:T", "price:Q")
+            ds.point_().opacity(0.5).to_json()
+
+        :param v: the opacity value
+        :type v: Union[int, float]
+        :return: the chart object
+        :rtype: Chart
+        """
         return self.encode(opacity=value(v))
 
-    def tooltip(self, v: Union[str, List[str]]):
+    def tooltip(self, v: Union[str, List[str]]) -> "Chart":
+        """Configure a tooltip on hover for some colums
+
+        The tooltip shows up when the user cursor goes
+        over the datapoint on the chart
+
+        .. code-block:: python
+
+            ds = await load_dataset("sp500")
+            ds.point_("date:T", "price:Q").tooltip(["date","price"]).to_json()
+
+        :param v: column or list of columns to use for the tooltip
+        :type v: Union[str, List[str]]
+        :return: the chart object
+        :rtype: Chart
+        """
         return self.encode(tooltip=v)
 
-    def to(self, v: str):
+    def to(self, v: str) -> "Chart":
+        """Change the chart type for an existing chart (only for the Altair engine)
+
+        :param v: the new chart type
+        :type v: str
+        :return: the chart object
+        :rtype: Chart
+        """
         return self.properties(mark=v)
 
-    def rx(self, v=-45):
+    def rx(self, v=-45) -> "Chart":
+        """Rotate the chart x labels
+
+        :param v: angle of rotation to use, defaults to -45
+        :type v: int, optional
+        :return: the chart object
+        :rtype: Chart
+        """
         self.encoding.x.axis.labelAngle = v
         return self
 
-    def nox(self):
+    def nox(self) -> "Chart":
+        """Remove the x axis labels
+
+        .. code-block:: python
+
+            ds = await load_dataset("timeserie")
+            ds.axis("date:T", "data:Q")
+            (ds.line_().nox() + ds.point_().nox()).to_json()
+
+        :return: the chart object
+        :rtype: Chart
+        """
         self.encoding.x.axis = None
         return self
 
-    def noy(self):
+    def noy(self) -> "Chart":
+        """Remove the y axis labels
+
+        .. code-block:: python
+
+            ds = await load_dataset("timeserie")
+            ds.axis("date:T", "data:Q")
+            (ds.line_().noy() + ds.point_().noy()).to_json()
+
+        :return: the chart object
+        :rtype: Chart
+        """
         self.encoding.y.axis = None
         return self
 
-    def title(self, v: str):
+    def title(self, v: str) -> "Chart":
+        """Add a text title to the chart
+
+        .. code-block:: python
+
+            ds = await load_dataset("timeserie")
+            ds.area_("date:T", "data:Q").title("The chart title").to_json()
+
+
+        :param v: the title text
+        :type v: str
+        :return: the chart object
+        :rtype: Chart
+        """
         return self.properties(title=v)
 
-    def colormap(self, column: str, **kwargs):
+    def colormap(self, column: str, **kwargs) -> "Chart":
+        """Add a values based colormap to the chart
+
+        :param column: the column to use
+        :type column: str
+        :param kwargs: the colors and values map to use
+        :type kwargs: Dict[str,str]
+        :raises ArgumentError: raised if less than two colors are provided
+        :return: the chart object
+        :rtype: Chart
+        """
         if len(kwargs) < 2:
             raise ArgumentError("Provide at least two colors in the map")
         levels: List = []
@@ -65,7 +232,17 @@ class Chart(AltChart):
             color=Color(column, scale=Scale(domain=levels, range=colors))
         )
 
-    def qcolormap(self, column: str, **kwargs):
+    def qcolormap(self, column: str, **kwargs) -> "Chart":
+        """Add a quantiles based colormap to the chart
+
+        :param column: the column to use
+        :type column: str
+        :param kwargs: the colors and values map to use
+        :type kwargs: Dict[str,str]
+        :raises ArgumentError: raised if less than two colors are provided
+        :return: the chart object
+        :rtype: Chart
+        """
         if len(kwargs) < 2:
             raise ArgumentError("Provide at least two colors in the map")
         levels: List = []

@@ -19,23 +19,31 @@ import { ref, watchEffect } from 'vue';
 import MethodDoc from '@/widgets/MethodDoc.vue';
 import CodeBlock from '@/widgets/CodeBlock.vue';
 import docref from "@/autodoc/docref.json";
+import chartsref from "@/autodoc/chartsref.json";
 import exampleref from "@/autodoc/exref.json";
 
 const method = ref({ name: "", docstring: {} })
 const code = ref("");
 
 function load() {
-  const name = router.currentRoute.value.params?.name.toString();
-  console.log("Load", name)
-  const methodName = name;
-  //console.log("M", methodName);
-  code.value = exampleref[name] ?? "";
-  console.log("Code", code.value)
+  const methodName = router.currentRoute.value.params?.name.toString();
+  const source = router.currentRoute.value.meta?.source;
+  let docstring: string;
+  if (source == "chart") {
+    docstring = chartsref[methodName]
+  } else {
+    docstring = docref[methodName]
+  }
   const m = {
     "name": methodName,
-    "docstring": docref[methodName]
+    "docstring": docstring
   }
   method.value = m;
+  if (m.docstring["example"]) {
+    code.value = m.docstring["example"]
+  } else {
+    code.value = exampleref[methodName] ?? "";
+  }
 }
 
 watchEffect(() => load())

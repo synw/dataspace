@@ -24,6 +24,14 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       title: "Method"
     }
+  },
+  {
+    path: "/chart/method/:name",
+    component: () => import("./views/MethodView.vue"),
+    meta: {
+      title: "Chart method",
+      source: "chart"
+    }
   }
 ]
 

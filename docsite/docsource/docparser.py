@@ -2,7 +2,7 @@ import ast
 import inspect
 from importlib import import_module
 from docstring_parser import parse, Docstring
-from typing import TypedDict
+from typing import Tuple, TypedDict, Union
 
 
 MethodsDict = TypedDict("name", {"funcdef": str, "docstring": Docstring})
@@ -54,6 +54,19 @@ def get_examples(file: str) -> ExamplesDict:
     return ex
 
 
+def parse_long_description(
+    desc: Union[str, None]
+) -> Tuple[Union[str, None], Union[str, None]]:
+    if desc is None:
+        return (desc, None)
+    sl = desc.split(".. code-block:: python\n\n")
+    if len(sl) < 2:
+        return (desc, None)
+    _desc = sl[0]
+    _ex = sl[1].replace("  ", "")
+    return (_desc, _ex)
+
+
 def parse_docstrings(methods: MethodsDict):
     docs = {}
     for k in methods.keys():
@@ -73,10 +86,12 @@ def parse_docstrings(methods: MethodsDict):
         if method["docstring"].returns is not None:
             r["name"] = method["docstring"].returns.return_name
             r["type"] = method["docstring"].returns.type_name
+        desc, example = parse_long_description(method["docstring"].long_description)
         docs[k] = {
             "funcdef": method["funcdef"],
             "description": method["docstring"].short_description,
-            "long_description": method["docstring"].long_description,
+            "long_description": desc,
+            "example": example,
             "params": params,
             "raises": raises,
             "return": r,

@@ -12,12 +12,12 @@
       }" class=" slide-y">
 
         <div class="flex flex-col pb-3 pl-5 space-y-1" v-if="!hasTitles">
-          <div v-for="val in props.data[k]" class="p-1 cursor-pointer" @click="emit('onclick', val)">
+          <div v-for="val in props.data[k]" class="p-1 cursor-pointer" @click="open(val)">
             {{ val }}
           </div>
         </div>
         <div class="flex flex-col pb-3 pl-5 space-y-1" v-else>
-          <div v-for="entry in props.data[k]" class="p-1 cursor-pointer" @click="emit('onclick', entry.value)">
+          <div v-for="entry in props.data[k]" class="p-1 cursor-pointer" @click="open(entry)">
             {{ entry.title }}
           </div>
         </div>
@@ -47,6 +47,14 @@ function assign(object, source) {
     object[key] = true;
   });
   return object
+}
+
+function open(entry) {
+  let url = "/method/"
+  if (entry?.source) {
+    url = "/" + entry.source + url
+  }
+  emit("onclick", url + entry.value)
 }
 
 const state = reactive(assign({}, props.data))

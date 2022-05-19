@@ -4,12 +4,13 @@
       class="px-5 py-2 code-block dark:bg-neutral-700 bg-amber-50 w-max"><code v-html="parsedCode" style="white-space: pre"></code></pre>
     <div class="pl-5 mt-5">
       <div v-html="method.docstring.description"> </div>
+      <div class="mt-3" v-if="method.docstring.long_description" v-html="method.docstring.long_description"> </div>
       <div class="mt-5" v-if="Object.keys(method.docstring.params).length > 0">
         <div class="text-lg italic">Parameters</div>
         <ul class="pl-5 mt-3 space-y-2">
           <li v-for="param in Object.keys(method.docstring.params)">
             <span class="font-bold">{{ param }}</span>: <span
-              class="hljs-built_in">{{ method.docstring.params[param].type }}</span> -
+              class="hljs-built_in">{{ method.docstring.params[param].type }}</span>:
             <span>{{ method.docstring.params[param].description }}</span>
           </li>
         </ul>
