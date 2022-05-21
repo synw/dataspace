@@ -1,7 +1,11 @@
 <template>
   <div :class="{ dark: user.isDarkMode.value == true }" class="w-screen h-screen">
-    <the-header class="fixed w-full h-16 primary"></the-header>
-    <the-sidebar id="sidebar" class="fixed w-64 pb-5 mt-16 overflow-y-auto secondary"></the-sidebar>
+    <the-header class="fixed w-full h-16 primary" @navigate="navigate($event)"></the-header>
+    <the-sidebar v-if="sidebar == 'doc'" class="fixed w-64 pb-5 mt-16 overflow-y-auto sidebar secondary"></the-sidebar>
+    <the-apiref-sidebar v-else-if="sidebar == 'apiref'" class="fixed w-64 pb-5 mt-16 overflow-y-auto sidebar secondary">
+    </the-apiref-sidebar>
+    <the-examples-sidebar v-else-if="sidebar == 'examples'"
+      class="fixed w-64 pb-5 mt-16 overflow-y-auto sidebar secondary"></the-examples-sidebar>
     <div id="main" class="fixed w-full p-3 pb-12 overflow-auto background top-16 left-64 bg-slate-400">
       <router-view></router-view>
     </div>
@@ -11,14 +15,23 @@
 <script setup lang="ts">
 import TheHeader from "@/components/TheHeader.vue";
 import TheSidebar from "./components/TheSidebar.vue";
+import TheApirefSidebar from "./components/TheApirefSidebar.vue";
+import TheExamplesSidebar from "./components/TheExamplesSidebar.vue";
 import { initState, user } from "@/state";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
+
+const sidebar = ref<"doc" | "apiref" | "examples">("doc");
+
+function navigate(section: "doc" | "apiref" | "examples") {
+  console.log("Nav", section)
+  sidebar.value = section
+}
 
 onMounted(() => initState())
 </script>
 
 <style lang="sass">
-#main, #sidebar
+#main, .sidebar
   height: calc(100% - 4rem)
 #main
   width: calc(100% - 16rem)

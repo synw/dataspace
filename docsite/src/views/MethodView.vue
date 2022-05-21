@@ -15,22 +15,27 @@
 
 <script setup lang="ts">
 import router from '@/router';
-import { ref, watchEffect } from 'vue';
+import { onBeforeUnmount, ref, watchEffect } from 'vue';
 import MethodDoc from '@/widgets/MethodDoc.vue';
 import CodeBlock from '@/widgets/CodeBlock.vue';
 import docref from "@/autodoc/docref.json";
 import chartsref from "@/autodoc/chartsref.json";
+import funcsref from "@/autodoc/funcsref.json";
 import exampleref from "@/autodoc/exref.json";
 
 const method = ref({ name: "", docstring: {} })
 const code = ref("");
 
 function load() {
-  const methodName = router.currentRoute.value.params?.name.toString();
+  const _methodName = router.currentRoute.value.params?.name;
+  let methodName: string
+  if (!_methodName) { return } else { methodName = _methodName.toString() }
   const source = router.currentRoute.value.meta?.source;
   let docstring: string;
   if (source == "chart") {
     docstring = chartsref[methodName]
+  } else if (source == "toplevel") {
+    docstring = funcsref[methodName]
   } else {
     docstring = docref[methodName]
   }
@@ -46,5 +51,8 @@ function load() {
   }
 }
 
-watchEffect(() => load())
+const stop = watchEffect(() => load())
+
+onBeforeUnmount(() => stop())
+
 </script>

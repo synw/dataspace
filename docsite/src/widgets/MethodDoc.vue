@@ -9,16 +9,16 @@
         <div class="text-lg italic">Parameters</div>
         <ul class="pl-5 mt-3 space-y-2">
           <li v-for="param in Object.keys(method.docstring.params)">
-            <span class="font-bold">{{ param }}</span>: <span
-              class="hljs-built_in">{{ method.docstring.params[param].type }}</span>:
-            <span>{{ method.docstring.params[param].description }}</span>
+            <span class="font-bold" v-html="param"></span>: <span class="hljs-built_in"
+              v-html="method.docstring.params[param].type"></span>:
+            <span v-html="method.docstring.params[param].description"></span>
           </li>
         </ul>
       </div>
       <div class="mt-5" v-if="method.docstring.return.type != null">
         <div class="text-lg italic">Return</div>
         <div class="mt-3">
-          <span class="hljs-built_in">{{ method.docstring.return.type }}</span>
+          <span class="hljs-built_in" v-html="method.docstring.return.type"></span>
         </div>
       </div>
     </div>
@@ -42,7 +42,7 @@ const parsedCode = ref("");
 
 function load() {
   parsedCode.value = hljs.highlight(props.method.docstring["funcdef"], { language: "python" }).value;
-  console.log(JSON.stringify(props.method.docstring, null, "  "))
+  //console.log(JSON.stringify(props.method.docstring, null, "  "))
 }
 
 watchEffect(() => load())

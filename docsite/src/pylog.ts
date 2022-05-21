@@ -12,7 +12,7 @@ let bufferIsFilling = false;
 function mainLog(msg: string): void {
   console.log("[PYLOGBUFFER]", msg);
   pyLog.log.push(msg);
-  return
+  /*return
   console.log("[PYLOGBUFFER]", msg);
   if (msg == '#!S#') {
     bufferIsFilling = true
@@ -27,7 +27,7 @@ function mainLog(msg: string): void {
     console.log("END BUFFER", printBuffer)
     pyLog.log.push(printBuffer.join("\n"));
     printBuffer = new Array<string>();
-  }
+  }*/
 }
 
 function errLog(msg: any): void {

@@ -1,6 +1,11 @@
 import json
 
-from docsource.docparser import parse_class, parse_docstrings, get_examples
+from docsource.docparser import (
+    parse_class,
+    parse_docstrings,
+    get_examples,
+    parse_functions,
+)
 
 
 def parse_core():
@@ -31,10 +36,20 @@ def parse_chart_classes():
         filetowrite.write(json.dumps(doc))
 
 
+def parse_funcs():
+    alt = parse_functions("dataspace.core.load")
+    doc = parse_docstrings(alt)
+    print("Writing top level functions doc ref")
+    file = "src/autodoc/funcsref.json"
+    with open(file, "w") as filetowrite:
+        filetowrite.write(json.dumps(doc))
+
+
 def main():
     parse_core()
     parse_examples()
     parse_chart_classes()
+    parse_funcs()
 
 
 if __name__ == "__main__":

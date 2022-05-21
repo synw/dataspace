@@ -11,6 +11,7 @@
     <div class="pt-3 pl-8">
       <pre v-for="log in pyLog.log" v-if="pyLog.install == 3" v-html="log"></pre>
     </div>
+    <div class="pt-5 pl-8" v-if="hasExecutionError == true" v-html="execErr"></div>
     <div class="pt-5 pl-8" v-html="outputHtml"></div>
     <vega-chart id="chart" v-if="hasChart == true" :spec="chartSpec"></vega-chart>
   </div>
@@ -44,6 +45,8 @@ export default defineComponent({
     const outputHtml = ref("");
     const chartSpec = ref({});
     const hasChart = ref(false);
+    const hasExecutionError = ref(false);
+    const execErr = ref("");
 
     const isPyLoaded = computed(() => {
       return pyLog.install == 3
@@ -76,15 +79,27 @@ export default defineComponent({
 
     async function runTheCode() {
       resetLog();
+      outputHtml.value = "";
+      hasExecutionError.value = false;
       pyState.isExecuting = true;
       await new Promise(resolve => setTimeout(resolve, 1));
       //console.log("Run", parsedCode.value)
-      const res = await runCode(parsedCode.value);
-      if (res) {
-        //console.log("RES", typeof res, res);
-        await dispatchRenderer(res);
+      try {
+        const res = await runCode(parsedCode.value);
+        if (res) {
+          //console.log("RES", typeof res, res);
+          await dispatchRenderer(res);
+        }
+      } catch (e) {
+        console.log("Code exec err", typeof e, e)
+        if (e.toString().startsWith("PythonError")) {
+          //console.log("PYEXEC ERROR", e.toString())
+          hasExecutionError.value = true;
+          execErr.value = e.toString().replace("\n", "<br />").replace("PythonError", '<span class="font-bold txt-danger">Python Exception</span>')
+        }
+      } finally {
+        pyState.isExecuting = false;
       }
-      pyState.isExecuting = false;
     }
 
     watchEffect(() => {
@@ -106,6 +121,8 @@ export default defineComponent({
       hasChart,
       isPyLoaded,
       isPyExecuting,
+      execErr,
+      hasExecutionError
     };
   },
 });

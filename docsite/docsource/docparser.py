@@ -1,5 +1,6 @@
 import ast
 import inspect
+from docutils.core import publish_parts
 from importlib import import_module
 from docstring_parser import parse, Docstring
 from typing import Tuple, TypedDict, Union
@@ -9,15 +10,24 @@ MethodsDict = TypedDict("name", {"funcdef": str, "docstring": Docstring})
 ExamplesDict = TypedDict("name", {"source": str})
 
 
-def parse_class(mod: str, cls: str) -> MethodsDict:
-    methods: MethodsDict = {}  # type: ignore
-    source = inspect.getsource(getattr(import_module(mod), cls))
-    _mod = ast.parse(source)
-    _cls = _mod.body[0]
+def rst_to_html(txt: str) -> str:
+    return (
+        publish_parts(
+            txt,
+            settings_overrides={"output_encoding": "unicode"},
+            writer_name="html",
+        )["body"]
+        .replace("<p>", "")
+        .replace("</p>", "")
+    )
+
+
+def parse_nodes(source: str, nodes) -> MethodsDict:
     i = 0
-    for node in _cls.body:  # type: ignore
+    methods: MethodsDict = {}  # type: ignore
+    for node in nodes:  # type: ignore
         if isinstance(node, ast.FunctionDef):
-            s = ast.get_source_segment(source, _cls.body[i])  # type: ignore
+            s = ast.get_source_segment(source, node)  # type: ignore
             d = s.split("\n")[0].replace("    ", "")  # type: ignore
             methods[node.name] = {
                 "funcdef": d[:-1],
@@ -25,6 +35,19 @@ def parse_class(mod: str, cls: str) -> MethodsDict:
             }
         i += 1
     return methods
+
+
+def parse_class(mod: str, cls: str) -> MethodsDict:
+    source = inspect.getsource(getattr(import_module(mod), cls))
+    _mod = ast.parse(source)
+    _cls = _mod.body[0]
+    return parse_nodes(source, _cls.body)  # type: ignore
+
+
+def parse_functions(mod: str) -> MethodsDict:
+    source = inspect.getsource(import_module(mod))
+    _mod = ast.parse(source)
+    return parse_nodes(source, _mod.body)  # type: ignore
 
 
 def get_examples(file: str) -> ExamplesDict:
@@ -74,22 +97,42 @@ def parse_docstrings(methods: MethodsDict):
         raises = {}
         method = methods[k]
         for param in method["docstring"].params:
+            pdesc = param.description
+            ptype = param.type_name
+            pdefault = param.default
+            if pdesc is not None:
+                pdesc = rst_to_html(pdesc)
+            if ptype is not None:
+                ptype = rst_to_html(ptype)
+            if pdefault is not None:
+                pdefault = rst_to_html(pdefault)
             params[param.arg_name] = {
-                "description": param.description,
-                "type": param.type_name,
+                "description": pdesc,
+                "type": ptype,
                 # "is_optional": param.is_optional,
-                "default": param.default,
+                "default": pdefault,
             }
         for ex in method["docstring"].raises:
             raises[ex.type_name] = ex.description
         r = {"name": None, "type": None}
         if method["docstring"].returns is not None:
-            r["name"] = method["docstring"].returns.return_name
-            r["type"] = method["docstring"].returns.type_name
+            rn = method["docstring"].returns.return_name
+            if rn is not None:
+                rn = rst_to_html(rn)
+            rt = method["docstring"].returns.type_name
+            if rt is not None:
+                rt = rst_to_html(rt)
+            r["name"] = rn
+            r["type"] = rt
         desc, example = parse_long_description(method["docstring"].long_description)
+        if desc is not None:
+            desc = rst_to_html(desc)
+        shortdesc = method["docstring"].short_description
+        if shortdesc is not None:
+            shortdesc = rst_to_html(shortdesc)
         docs[k] = {
             "funcdef": method["funcdef"],
-            "description": method["docstring"].short_description,
+            "description": shortdesc,
             "long_description": desc,
             "example": example,
             "params": params,
