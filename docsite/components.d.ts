@@ -7,6 +7,7 @@ declare module 'vue' {
     'IBi:caretDown': typeof import('~icons/bi/caret-down')['default']
     'IBi:caretUp': typeof import('~icons/bi/caret-up')['default']
     'ICil:mediaPlay': typeof import('~icons/cil/media-play')['default']
+    'IFaBrands:github': typeof import('~icons/fa-brands/github')['default']
     'IFaSolid:moon': typeof import('~icons/fa-solid/moon')['default']
     'IFaSolid:sun': typeof import('~icons/fa-solid/sun')['default']
     'IFileIcons:configPython': typeof import('~icons/file-icons/config-python')['default']
