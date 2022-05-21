@@ -5,6 +5,8 @@ import pandas as pd
 
 from .altair import AltairChart
 
+# from dataspace.core.env import is_running_in_browser
+
 try:
     from .bokeh import BokehChart
 except (ModuleNotFoundError, ImportError):
@@ -43,7 +45,10 @@ class DsChart:
             x = args[2]
             y = args[3]
         if self.engine == "altair":
-            return self.altair.chart(df, chart_type, x, y, **kwargs)
+            c = self.altair.chart(df, chart_type, x, y, **kwargs)
+            # if is_running_in_browser is True:
+            #    return c.to_json()
+            return c
         elif self.engine == "bokeh":
             return self.bokeh.chart(df, chart_type, x, y, **kwargs)
 

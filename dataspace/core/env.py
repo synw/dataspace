@@ -1,3 +1,6 @@
+import platform
+import builtins
+
 try:
     from IPython import get_ipython
 except ImportError:
@@ -15,4 +18,15 @@ def _is_notebook():
         return False
 
 
+is_running_in_browser = platform.system() == "Emscripten"
 is_notebook = _is_notebook()
+
+
+def bprint(*args, **kwargs):
+    builtins.print("#!S#")
+    builtins.print(*args, **kwargs)
+    builtins.print("#!E#")
+
+
+# if is_running_in_browser:
+#    print = bprint

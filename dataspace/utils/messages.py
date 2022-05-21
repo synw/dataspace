@@ -3,6 +3,7 @@ from dateutil.relativedelta import relativedelta
 
 from .colors import colors
 
+
 START_TIME = None
 
 
@@ -10,10 +11,10 @@ def _unpack_msg(*msg):
     """
     Convert all message elements to string
     """
-    l = []
+    li = []
     for m in msg:
-        l.append(str(m))
-    return " ".join(l)
+        li.append(str(m))
+    return " ".join(li)
 
 
 def _msg(label, *msg):

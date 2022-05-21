@@ -1,32 +1,31 @@
 from typing import Dict, List, Optional
 
-from numpy import nan
 import pandas as pd
-
-from dataspace.core.env import is_notebook
+from dataspace.calculations import _diffm, _diffn, _diffp  # _diffs, _diffsp
 from dataspace.charts import DsChart
-from dataspace.io.export import _export_csv
 from dataspace.clean import (
-    _to_date,
-    _to_int,
-    _to_float,
-    _to_type,
     _drop_nan,
+    _fdate,
     _fill_nan,
     _fill_nulls,
-    _fdate,
-    _timestamps,
+    _replace,
+    _roundvals,
     _strip,
     _strip_cols,
-    _roundvals,
-    _replace,
+    _timestamps,
+    _to_date,
+    _to_float,
+    _to_int,
+    _to_type,
 )
+from dataspace.core.env import is_notebook
 from dataspace.count import _count_empty_, _count_null_, _count_unique_, _count_zero_
-from dataspace.transform import _drop, _rename, _append, _apply, _rsum, _rmean
-from dataspace.utils.messages import msg_ok
-from dataspace.calculations import _diffn, _diffp, _diffm  # _diffs, _diffsp
-from dataspace.info.view import _show
 from dataspace.info import _cols
+from dataspace.info.view import _show
+from dataspace.io.export import _export_csv
+from dataspace.transform import _append, _apply, _drop, _rename, _rmean, _rsum
+from dataspace.utils.messages import msg_ok
+from numpy import nan
 
 
 class DataSpace:
@@ -54,6 +53,8 @@ class DataSpace:
         """
         Display info about the dataframe
 
+        Category: Info/View data/Show
+
         :param rows: number of rows to show, **default**: 5
         :type rows: ``int`` *optional*
         :return: a pandas dataframe head
@@ -66,6 +67,8 @@ class DataSpace:
     def cols_(self) -> pd.DataFrame:
         """
         Returns a dataframe with columns info
+
+        Category: Info/View data/Show
 
         :return: a pandas dataframe
         :rtype: ``DataFrame``
@@ -82,8 +85,10 @@ class DataSpace:
         """
         Convert some columns values to date type
 
+        Category: Clean/Dates/To date
+
         :param cols: names of the colums
-        :type cols: ``str`` *at least one*
+        :type cols: str *at least one*
         :param \\*\\*kwargs: keyword arguments for ``pd.to_datetime``
         :type \\*\\*kwargs: optional
 
@@ -95,8 +100,10 @@ class DataSpace:
         """
         Convert some column values to integers
 
+        Category: Clean/Convert types/To type
+
         :param \\*cols: names of the columns
-        :type \\*cols: ``str`` *at least one*
+        :type \\*cols: str *at least one*
         :param \\*\\*kwargs: keyword arguments for ``pd.to_numeric``
         :type \\*\\*kwargs: optional
 
@@ -108,10 +115,12 @@ class DataSpace:
 
     def to_float(self, *cols: str, **kwargs) -> None:
         """
-        Convert colums values to float
+        Convert colums values to float -
+
+        Category: Clean/Convert types/To float
 
         :param cols: name of the columns
-        :type cols: ``str`` *at least one*
+        :type cols: str *at least one*
         :param \\*\\*kwargs: keyword arguments for ``df.astype``
         :type \\*\\*kwargs: optional
 
@@ -123,17 +132,18 @@ class DataSpace:
 
     def to_type(self, dtype: type, *cols: str, **kwargs) -> None:
         """
-        Convert colums values to a given type in the
-        main dataframe
+        Convert colums values to a given type in the main dataframe
 
-        :param dtype: a type to convert to: ex: ``str``
+        Category: Clean/Convert types/To type
+
+        :param dtype: a type to convert to: ex: str
         :type dtype: ``type``
         :param \\*cols: names of the columns
-        :type \\*cols: ``str`` *at least one**
+        :type \\*cols: str *at least one**
         :param \\*\\*kwargs: keyword arguments for ``df.astype``
         :type \\*\\*kwargs: optional
 
-        :example: ``ds.to_type(str, "mycol")``
+        :examples: ``ds.to_type(str, "mycol")``
         """
         _to_type(self.df, dtype, *cols, **kwargs)
         if is_notebook is True:
@@ -144,9 +154,9 @@ class DataSpace:
         Drop rows with ``NaN`` values from the main dataframe
 
         :param col: name of the column
-        :type col: ``str`` *optional*
+        :type col: str *optional*
         :param method: ``how`` param for ``df.dropna``, **default**: "all"
-        :type method: ``str`` *optional*
+        :type method: str *optional*
         :param \\*\\*kwargs: params for ``df.dropna``
         :type \\*\\*kwargs: optional
 
@@ -159,9 +169,9 @@ class DataSpace:
         Fill NaN values with new values in the main dataframe
 
         :param val: new value
-        :type val: ``str``
+        :type val: str
         :param \\*cols: names of the colums
-        :type \\*cols: ``str`` *at least one*
+        :type \\*cols: str *at least one*
 
         :example: ``ds.fill_nan("new value", "mycol1", "mycol2")``
         """
@@ -170,10 +180,11 @@ class DataSpace:
     def fill_nulls(self, val=nan, *cols: str, nulls=[None, ""]):
         """
         Fill all null values with NaN values in a column.
+
         Null values are ``None`` or en empty string
 
         :param cols: columns names
-        :type cols: ``str`` *at least one*
+        :type cols: str *at least one*
 
         :example: `ds.fill_nulls("mycol")`
         """
@@ -184,7 +195,7 @@ class DataSpace:
         Set an index to the main dataframe
 
         :param col: column name where to index from
-        :type col: ``str``
+        :type col: str
 
         :example: `ds.index("mycol")`
         """
@@ -195,7 +206,7 @@ class DataSpace:
         Set a datetime index from a column
 
         :param col: column name where to index the date from
-        :type col: ``str``
+        :type col: str
 
         :example: `ds.dateindex("mycol")`
         """
@@ -209,7 +220,7 @@ class DataSpace:
         :param \\*cols: names of the colums
         :type \\*cols: str, at least one
         :param precision: time precision: Y, M, D, H, Min S, defaults to "S"
-        :type precision: ``str`` *optional*
+        :type precision: str *optional*
         :param format: python date format, defaults to None
         :type format: str, optional
 
@@ -222,7 +233,7 @@ class DataSpace:
         Add a timestamps column from a date column
 
         :param col: name of the timestamps column to add
-        :type col: ``str``
+        :type col: str
         :param \\*\\*kwargs: keyword arguments for ``pd.to_datetime``
         :type \\*\\*kwargs: optional
 
@@ -235,7 +246,7 @@ class DataSpace:
         Remove leading and trailing white spaces column's values
 
         :param col: name of the column
-        :type col: ``str``
+        :type col: str
 
         :example: `ds.strip("mycol")`
         """
@@ -255,7 +266,7 @@ class DataSpace:
         converted to floats if they are not already
 
         :param col: column name
-        :type col: ``str``
+        :type col: str
         :param precision: float precision, defaults to 2
         :param precision: ``int`` *optional*
 
@@ -268,11 +279,11 @@ class DataSpace:
         Replace a value in a column in the main dataframe
 
         :param col: column name
-        :type col: ``str``
+        :type col: str
         :param searchval: value to replace
-        :type searchval: ``str``
+        :type searchval: str
         :param replaceval: new value
-        :type replaceval: ``str``
+        :type replaceval: str
 
         :example: `ds.replace("mycol", "value", "new_value")`
         """
@@ -298,7 +309,7 @@ class DataSpace:
         Returns a list of unique values in a column
 
         :param col: the column to select from
-        :type col: ``str``
+        :type col: str
         :return: a list of unique values in the column
         :rtype: ``List[str]``
 
@@ -316,7 +327,7 @@ class DataSpace:
         of unique values for a column
 
         :param col: the column to select from
-        :type col: ``str``
+        :type col: str
         :return: a dataframe with a count of unique values in the column
         :rtype: ``pd.DataFrame``
 
@@ -410,7 +421,7 @@ class DataSpace:
         Sorts the main dataframe according to the given column
 
         :param col: column name
-        :type col: ``str``
+        :type col: str
 
         :example: `ds.sort("Col 1")`
         """
@@ -798,9 +809,9 @@ class DataSpace:
         Set the columns to use for the chart x and y axis
 
         :param x_axis_col: name of the column to use for x axis chart
-        :type r: ``str``
+        :type x_axis_col: str
         :param y_axis_col: name of the column to use for y axis chart
-        :type r: ``str``
+        :type y_axis_col: str
 
         :example: `ds.axis("col1", "col2")`
         """
@@ -810,7 +821,13 @@ class DataSpace:
         """
         Draw a line chart
 
-        :rtype: Bokeh or Altair chart
+        :param x_axis_col: name of the column to use for x axis chart, defaults
+            to the x axis value set by ds.axis
+        :type x_axis_col: Optional[str]
+        :param y_axis_col: name of the column to use for y axis chart, defaults
+            to the y axis value set by ds.axis
+        :type y_axis_col: Optional[str]
+        :rtype: an Altair or Bokeh chart
 
         :example: `ds.line_()`
         """
@@ -1055,7 +1072,7 @@ class DataSpace:
         Write the main dataframe to a csv file
 
         :param filepath: path of the file to save
-        :type filepath: ``str``
+        :type filepath: str
         :param \\*\\*kwargs: arguments to pass to ``pd.to_csv``
 
         :example: `ds.export_csv("myfile.csv", header=false)`
