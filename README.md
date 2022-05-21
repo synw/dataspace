@@ -4,6 +4,8 @@
 
 Data wrangling and visualization. Check the [documentation](https://dataspace.readthedocs.io/en/latest/)
 
+*New*: experimental [interactive documentation](https://synw.github.io/dataspace/)
+
 ## Install
 
 ```
