@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DataSpace class &mdash; Dataspace 0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Conventions" href="src/conventions.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Dataspace
+          </a>
+              <div class="version">
+                0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Data io</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src/io/load.html">Load</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/io/load.html#from-a-dataframe">From a dataframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/io/load.html#from-a-csv-file">From a csv file</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/io/load.html#from-a-django-orm-query">From a Django orm query</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src/io/export.html">Export</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/io/export.html#export-to-a-csv-file">Export to a csv file</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Info</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src/info/view.html">View data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/info/view.html#show-the-dataframe">Show the dataframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/info/view.html#show-columns-types">Show columns types</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Select</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src/select/select.html">Select data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/select/select.html#limit">Limit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/select/select.html#unique">Unique</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/select/select.html#weight-unique">Weight unique</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Count</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src/count/count.html">Count</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/count/count.html#count-nulls">Count nulls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/count/count.html#count-empty">Count empty</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/count/count.html#count-zero">Count zero</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/count/count.html#count-unique">Count unique</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Clean</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src/clean/nulls.html">Nulls</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/nulls.html#drop-nan">Drop NaN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/nulls.html#fill-nan">Fill NaN</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/nulls.html#fill-nulls">Fill nulls</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src/clean/dates.html">Dates</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/dates.html#to-date">To date</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/dates.html#format-date">Format date</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/dates.html#timestamps">Timestamps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src/clean/convert.html">Convert types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/convert.html#to-integer">To integer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/convert.html#to-float">To float</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/convert.html#to-type">To type</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src/clean/values.html">Clean values</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/values.html#strip">Strip</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/values.html#strip-columns-names">Strip columns names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/values.html#round-floats">Round floats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/values.html#replace-values">Replace values</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src/clean/index.html">Index</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/index.html#add-an-index-from-a-column">Add an index from a column</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/clean/index.html#add-a-date-index-from-a-column">Add a date index from a column</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Transform</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src/transform/dataframe.html">DataFrame</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/dataframe.html#split">Split</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/dataframe.html#indexcol">Indexcol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/dataframe.html#drop">Drop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/dataframe.html#add">Add</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/dataframe.html#rename">Rename</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/dataframe.html#keep">Keep</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/dataframe.html#copycol">Copycol</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src/transform/values.html">Values</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/values.html#sort">Sort</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/values.html#exclude">Exclude</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/values.html#dropr">Dropr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/values.html#append">Append</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/values.html#reverse">Reverse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/values.html#apply">Apply</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src/transform/resample.html">Resample timeseries</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/resample.html#rsum">Rsum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/transform/resample.html#rmean">Rmean</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Charts</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src/charts/init.html">Initialize axis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src/charts/init.html#define-the-x-and-y-axis">Define the x and y axis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src/charts/init.html#define-the-chart-engine">Define the chart engine</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src/charts/line.html">Line</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/charts/bar.html">Bar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/charts/point.html">Point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/charts/area.html">Area</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src/charts/hline.html">HLine</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Conventions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src/conventions.html">Conventions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">DataSpace class</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Dataspace</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>DataSpace class</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/class_auto.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dataspace-class">
+<h1>DataSpace class<a class="headerlink" href="#dataspace-class" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">dataspace.core.</span></span><span class="sig-name descname"><span class="pre">DataSpace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">pandas.core.frame.DataFrame</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a column with default values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>col</strong> (<em>str</em>) – column name</p></li>
+<li><p><strong>value</strong> (<em>any</em>) – column value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.add(&quot;Col</span> <span class="pre">4&quot;,</span> <span class="pre">0)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.altair">
+<span class="sig-name descname"><span class="pre">altair</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.altair" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the Altair charts engine</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p><cite>ds.altair()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">vals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append a row to the main dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vals</strong> (<em>list</em>) – list of the row values to add</p></li>
+<li><p><strong>index</strong> – index key, defaults to None</p></li>
+<li><p><strong>index</strong> – any, optional</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.append([0,</span> <span class="pre">2,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4])</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">function</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply a function on columns values</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function</strong> (<em>function</em>) – a function to apply to the columns</p></li>
+<li><p><strong>cols</strong> (<em>name of columns</em>) – columns names</p></li>
+<li><p><strong>axis</strong> – index (0) or column (1), default is 1</p></li>
+<li><p><strong>kwargs</strong> (<em>optional</em>) – arguments for <code class="docutils literal notranslate"><span class="pre">df.apply</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
+        <span class="c1"># add a new column with a value</span>
+        <span class="n">row</span><span class="p">[</span><span class="s2">&quot;newcol&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;col1&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">row</span>
+
+<span class="n">ds</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.area_">
+<span class="sig-name descname"><span class="pre">area_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.area_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw an area chart</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Bokeh or Altair chart</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.area_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.axis">
+<span class="sig-name descname"><span class="pre">axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_axis_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.axis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the columns to use for the chart x and y axis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_axis_col</strong> (<em>str</em>) – name of the column to use for x axis chart</p></li>
+<li><p><strong>y_axis_col</strong> (<em>str</em>) – name of the column to use for y axis chart</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.axis(“col1”, “col2”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.bar_">
+<span class="sig-name descname"><span class="pre">bar_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.bar_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a bar chart</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Bokeh or Altair chart</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.bar_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.bar_num_">
+<span class="sig-name descname"><span class="pre">bar_num_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.bar_num_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a bar chart with numbers. Only for Altair</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Altair chart</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.bar_num_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.bokeh">
+<span class="sig-name descname"><span class="pre">bokeh</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.bokeh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the Bokeh charts engine</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p><cite>ds.bokeh()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.cols_">
+<span class="sig-name descname"><span class="pre">cols_</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.cols_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dataframe with columns info</p>
+<p>Category: Info/View data/Show</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>a pandas dataframe</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p><cite>ds.cols_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.copycol">
+<span class="sig-name descname"><span class="pre">copycol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.copycol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy a columns values in another column</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>origin_col</strong> (<em>str</em>) – name of the column to copy</p></li>
+<li><p><strong>dest_col</strong> (<em>str</em>) – name of the new column</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.copy(&quot;col</span> <span class="pre">1&quot;,</span> <span class="pre">&quot;New</span> <span class="pre">col&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.count_empty_">
+<span class="sig-name descname"><span class="pre">count_empty_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.count_empty_" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of empty row indices</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>str</em>) – column to count from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>number of values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.count_empty_(“col1”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.count_null_">
+<span class="sig-name descname"><span class="pre">count_null_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.count_null_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Count the number of null values in a column</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>str</em>) – the column to count from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>number of values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.count_nulls_(“col1”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.count_unique_">
+<span class="sig-name descname"><span class="pre">count_unique_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.count_unique_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of unique values in a column</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>str</em>) – column to count from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>number of unique values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.count_unique_(“col1”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.count_zero_">
+<span class="sig-name descname"><span class="pre">count_zero_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.count_zero_" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of row with 0 values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>str</em>) – column to count from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>number of values</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.count_zero_(“col1”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.dateindex">
+<span class="sig-name descname"><span class="pre">dateindex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.dateindex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a datetime index from a column</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>str</em>) – column name where to index the date from</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.dateindex(“mycol”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.df">
+<span class="sig-name descname"><span class="pre">df</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">pandas.core.frame.DataFrame</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#dataspace.core.DataSpace.df" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.diffm">
+<span class="sig-name descname"><span class="pre">diffm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diffcol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Diff'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doround</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.diffm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a diff column to the main dataframe: calculate the
+diff from the column mean</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diffcol</strong> (<em>str</em>) – column to diff from</p></li>
+<li><p><strong>name</strong> – diff column name, defaults to “Diff”</p></li>
+<li><p><strong>name</strong> – str, optional</p></li>
+<li><p><strong>default</strong> – column default value, defaults to nan</p></li>
+<li><p><strong>default</strong> – optional</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.diffm(&quot;Col</span> <span class="pre">1&quot;,</span> <span class="pre">&quot;New</span> <span class="pre">col&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.diffmp">
+<span class="sig-name descname"><span class="pre">diffmp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diffcol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Diff'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doround</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.diffmp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a diff column to the main dataframe: calculate the
+diff in percentage from the column mean</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diffcol</strong> (<em>str</em>) – column to diff from</p></li>
+<li><p><strong>name</strong> – diff column name, defaults to “Diff”</p></li>
+<li><p><strong>name</strong> – str, optional</p></li>
+<li><p><strong>default</strong> – column default value, defaults to nan</p></li>
+<li><p><strong>default</strong> – optional</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.diffmp(&quot;Col</span> <span class="pre">1&quot;,</span> <span class="pre">&quot;New</span> <span class="pre">col&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.diffn">
+<span class="sig-name descname"><span class="pre">diffn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diffcol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Diff'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doround</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.diffn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a diff column to the main dataframe: calculate the diff
+from the next value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diffcol</strong> (<em>str</em>) – column to diff from</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – diff column name, defaults to “Diff”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.diffn(&quot;Col</span> <span class="pre">1&quot;,</span> <span class="pre">&quot;New</span> <span class="pre">col&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.diffnp">
+<span class="sig-name descname"><span class="pre">diffnp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diffcol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Diff'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doround</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.diffnp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a diff column to the main dataframe: calculate the diff
+in percentage from the next value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diffcol</strong> (<em>str</em>) – column to diff from</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – diff column name, defaults to “Diff”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.diffnp(&quot;Col</span> <span class="pre">1&quot;,</span> <span class="pre">&quot;New</span> <span class="pre">col&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.diffp">
+<span class="sig-name descname"><span class="pre">diffp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diffcol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Diff'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doround</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.diffp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a diff column to the main dataframe: calculate the diff
+from the previous value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diffcol</strong> (<em>str</em>) – column to diff from</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – diff column name, defaults to “Diff”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.diffp(&quot;Col</span> <span class="pre">1&quot;,</span> <span class="pre">&quot;New</span> <span class="pre">col&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.diffpp">
+<span class="sig-name descname"><span class="pre">diffpp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">diffcol</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Diff'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">doround</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.diffpp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a diff column to the main dataframe: calculate the diff
+in percentage from the previous value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>diffcol</strong> (<em>str</em>) – column to diff from</p></li>
+<li><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – diff column name, defaults to “Diff”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.diffpp(&quot;Col</span> <span class="pre">1&quot;,</span> <span class="pre">&quot;New</span> <span class="pre">col&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.drop">
+<span class="sig-name descname"><span class="pre">drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">cols</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.drop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drops columns from the main dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cols</strong> (<em>str</em>) – names of the columns</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.drop(&quot;Col</span> <span class="pre">1&quot;,</span> <span class="pre">&quot;Col</span> <span class="pre">2&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.drop_nan">
+<span class="sig-name descname"><span class="pre">drop_nan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'all'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.drop_nan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop rows with <code class="docutils literal notranslate"><span class="pre">NaN</span></code> values from the main dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>col</strong> (str <em>optional</em>) – name of the column</p></li>
+<li><p><strong>method</strong> (str <em>optional</em>) – <code class="docutils literal notranslate"><span class="pre">how</span></code> param for <code class="docutils literal notranslate"><span class="pre">df.dropna</span></code>, <strong>default</strong>: “all”</p></li>
+<li><p><strong>**kwargs</strong> (<em>optional</em>) – params for <code class="docutils literal notranslate"><span class="pre">df.dropna</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.drop_nan(“mycol”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.dropr">
+<span class="sig-name descname"><span class="pre">dropr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">rows</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.dropr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drops some rows from the main dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rows</strong> (<em>list of ints</em>) – rows names</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.drop_rows([0,</span> <span class="pre">2])</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.exclude">
+<span class="sig-name descname"><span class="pre">exclude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.exclude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete rows based on value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>col</strong> (<em>str</em>) – column name</p></li>
+<li><p><strong>val</strong> (<em>any</em>) – value to delete</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.exclude(&quot;Col</span> <span class="pre">1&quot;,</span> <span class="pre">&quot;value&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.export_csv">
+<span class="sig-name descname"><span class="pre">export_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.export_csv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the main dataframe to a csv file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>str</em>) – path of the file to save</p></li>
+<li><p><strong>**kwargs</strong> – arguments to pass to <code class="docutils literal notranslate"><span class="pre">pd.to_csv</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.export_csv(“myfile.csv”, header=false)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.fdate">
+<span class="sig-name descname"><span class="pre">fdate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'S'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.fdate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert column values to formated date string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*cols</strong> (<em>str</em><em>, </em><em>at least one</em>) – names of the colums</p></li>
+<li><p><strong>precision</strong> (str <em>optional</em>) – time precision: Y, M, D, H, Min S, defaults to “S”</p></li>
+<li><p><strong>format</strong> (<em>str</em><em>, </em><em>optional</em>) – python date format, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.fdate(“mycol1”, “mycol2”, precision=”D”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.fill_nan">
+<span class="sig-name descname"><span class="pre">fill_nan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">cols</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.fill_nan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill NaN values with new values in the main dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>val</strong> (<em>str</em>) – new value</p></li>
+<li><p><strong>*cols</strong> (str <em>at least one</em>) – names of the colums</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.fill_nan(&quot;new</span> <span class="pre">value&quot;,</span> <span class="pre">&quot;mycol1&quot;,</span> <span class="pre">&quot;mycol2&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.fill_nulls">
+<span class="sig-name descname"><span class="pre">fill_nulls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nulls</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[None,</span> <span class="pre">'']</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.fill_nulls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fill all null values with NaN values in a column.</p>
+<p>Null values are <code class="docutils literal notranslate"><span class="pre">None</span></code> or en empty string</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cols</strong> (str <em>at least one</em>) – columns names</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.fill_nulls(“mycol”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.h">
+<span class="sig-name descname"><span class="pre">h</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.h" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default width of charts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>v</strong> (<em>int</em>) – the height to set, in pixel</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.h(250)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.heatmap_">
+<span class="sig-name descname"><span class="pre">heatmap_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.heatmap_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a heatmap chart</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Bokeh or Altair chart</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.heatmap_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.hist_">
+<span class="sig-name descname"><span class="pre">hist_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.hist_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a histogram chart</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Bokeh or Altair chart</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.hist_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.hline_">
+<span class="sig-name descname"><span class="pre">hline_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.hline_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw an horizontal mean line for the y axis</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Bokeh or Altair chart</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.hline_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.index">
+<span class="sig-name descname"><span class="pre">index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set an index to the main dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>str</em>) – column name where to index from</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.index(“mycol”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.indexcol">
+<span class="sig-name descname"><span class="pre">indexcol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.indexcol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a column from the index</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>str</em>) – name of the new column</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.index_col(&quot;New</span> <span class="pre">col&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.keep">
+<span class="sig-name descname"><span class="pre">keep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">cols</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.keep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limit the dataframe to some columns</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cols</strong> (<em>str</em>) – names of the columns</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.keep(&quot;Col</span> <span class="pre">1&quot;,</span> <span class="pre">&quot;Col</span> <span class="pre">2&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.limit">
+<span class="sig-name descname"><span class="pre">limit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.limit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Limit selection to a range in the main dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>r</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> <em>optional</em>) – number of rows to keep, <strong>default</strong>: 5</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.limit(100)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.line_">
+<span class="sig-name descname"><span class="pre">line_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.line_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a line chart</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_axis_col</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – name of the column to use for x axis chart, defaults
+to the x axis value set by ds.axis</p></li>
+<li><p><strong>y_axis_col</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – name of the column to use for y axis chart, defaults
+to the y axis value set by ds.axis</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>an Altair or Bokeh chart</p>
+</dd>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p><cite>ds.line_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.line_num_">
+<span class="sig-name descname"><span class="pre">line_num_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.line_num_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a line chart with numbers. Only for Altair</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Altair chart</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.line_num_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.percent">
+<span class="sig-name descname"><span class="pre">percent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">roundn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.percent" title="Permalink to this definition">¶</a></dt>
+<dd><p>add a percent column</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>col</strong> (<em>str</em>) – the column to calculate percentages from</p></li>
+<li><p><strong>roundn</strong> (<em>int</em><em>, </em><em>optional</em>) – round level, defaults to 1</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.percent(&quot;amount&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.point_">
+<span class="sig-name descname"><span class="pre">point_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.point_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a point chart</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Bokeh or Altair chart</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.point_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.point_num_">
+<span class="sig-name descname"><span class="pre">point_num_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.point_num_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a point chart with numbers. Only for Altair</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Altair chart</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.point_num_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.rename">
+<span class="sig-name descname"><span class="pre">rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.rename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renames a column in the main dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_col</strong> (<em>str</em>) – name of the column to rename</p></li>
+<li><p><strong>dest_col</strong> (<em>str</em>) – new name of the column</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.rename(&quot;Col</span> <span class="pre">1&quot;,</span> <span class="pre">&quot;New</span> <span class="pre">col&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.replace">
+<span class="sig-name descname"><span class="pre">replace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">searchval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replaceval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace a value in a column in the main dataframe</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>col</strong> (<em>str</em>) – column name</p></li>
+<li><p><strong>searchval</strong> (<em>str</em>) – value to replace</p></li>
+<li><p><strong>replaceval</strong> (<em>str</em>) – new value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.replace(“mycol”, “value”, “new_value”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.reverse">
+<span class="sig-name descname"><span class="pre">reverse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.reverse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reverses the main dataframe order</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">ds.reverse()</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.rmean">
+<span class="sig-name descname"><span class="pre">rmean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Number'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dateindex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.rmean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resample and add a sum column the main dataframe to a time period</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_period</strong> – unit + period: periods are Y, M, D, H, Min, S</p></li>
+<li><p><strong>time_period</strong> – str</p></li>
+<li><p><strong>num_col</strong> – number of the new column, defaults to “Number”</p></li>
+<li><p><strong>num_col</strong> – str, optional</p></li>
+<li><p><strong>dateindex</strong> – column name to use as date index, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.rmean(&quot;1Min&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.roundvals">
+<span class="sig-name descname"><span class="pre">roundvals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.roundvals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Round floats in a column. Numbers are going to be
+converted to floats if they are not already</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>col</strong> (<em>str</em>) – column name</p></li>
+<li><p><strong>precision</strong> – float precision, defaults to 2</p></li>
+<li><p><strong>precision</strong> – <code class="docutils literal notranslate"><span class="pre">int</span></code> <em>optional</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.roundvals(“mycol”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.rsum">
+<span class="sig-name descname"><span class="pre">rsum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time_period</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Number'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dateindex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.rsum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resample and add a sum the main dataframe to a time period</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time_period</strong> – unit + period: periods are Y, M, D, H, Min, S</p></li>
+<li><p><strong>time_period</strong> – str</p></li>
+<li><p><strong>num_col</strong> – name of the new column, defaults to “Number”</p></li>
+<li><p><strong>num_col</strong> – str, optional</p></li>
+<li><p><strong>dateindex</strong> – column name to use as date index, defaults to None</p></li>
+<li><p><strong>dateindex</strong> – str, optional</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.rsum(&quot;1D&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.rule_">
+<span class="sig-name descname"><span class="pre">rule_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.rule_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a rule chart with numbers. Only for Altair</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Altair chart</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.rule_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.show">
+<span class="sig-name descname"><span class="pre">show</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display info about the dataframe</p>
+<p>Category: Info/View data/Show</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rows</strong> (<code class="docutils literal notranslate"><span class="pre">int</span></code> <em>optional</em>) – number of rows to show, <strong>default</strong>: 5</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a pandas dataframe head</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">DataFrame</span></code></p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.show()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.sort">
+<span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sorts the main dataframe according to the given column</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>str</em>) – column name</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.sort(“Col 1”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.split_">
+<span class="sig-name descname"><span class="pre">split_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#dataspace.core.DataSpace" title="dataspace.core.core.DataSpace"><span class="pre">dataspace.core.core.DataSpace</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.split_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split the main dataframe according to a column’s unique values and
+return a dict of DataSpace instances</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of DataSpace instances</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">List[DataSpace]</span></code></p>
+</dd>
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p><cite>dss = ds.slit_(“Col 1”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.square_">
+<span class="sig-name descname"><span class="pre">square_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.square_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a square chart with numbers. Only for Altair</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Altair chart</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.square_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.strip">
+<span class="sig-name descname"><span class="pre">strip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.strip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove leading and trailing white spaces column’s values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>str</em>) – name of the column</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.strip(“mycol”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.strip_cols">
+<span class="sig-name descname"><span class="pre">strip_cols</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.strip_cols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove leading and trailing white spaces in columns names</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example</dt>
+<dd class="field-odd"><p><cite>ds.strip_cols()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.tick_">
+<span class="sig-name descname"><span class="pre">tick_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.tick_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw a square chart with numbers. Only for Altair</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Altair chart</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.tick_()</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.timestamps">
+<span class="sig-name descname"><span class="pre">timestamps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.timestamps" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a timestamps column from a date column</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>col</strong> (<em>str</em>) – name of the timestamps column to add</p></li>
+<li><p><strong>**kwargs</strong> (<em>optional</em>) – keyword arguments for <code class="docutils literal notranslate"><span class="pre">pd.to_datetime</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.timestamps(&quot;mycol&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.to_date">
+<span class="sig-name descname"><span class="pre">to_date</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.to_date" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert some columns values to date type</p>
+<p>Category: Clean/Dates/To date</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cols</strong> (str <em>at least one</em>) – names of the colums</p></li>
+<li><p><strong>**kwargs</strong> (<em>optional</em>) – keyword arguments for <code class="docutils literal notranslate"><span class="pre">pd.to_datetime</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.to_date(“mycol”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.to_float">
+<span class="sig-name descname"><span class="pre">to_float</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.to_float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert colums values to float -</p>
+<p>Category: Clean/Convert types/To float</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cols</strong> (str <em>at least one</em>) – name of the columns</p></li>
+<li><p><strong>**kwargs</strong> (<em>optional</em>) – keyword arguments for <code class="docutils literal notranslate"><span class="pre">df.astype</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.to_float(“mycol1”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.to_int">
+<span class="sig-name descname"><span class="pre">to_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.to_int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert some column values to integers</p>
+<p>Category: Clean/Convert types/To type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>*cols</strong> (str <em>at least one</em>) – names of the columns</p></li>
+<li><p><strong>**kwargs</strong> (<em>optional</em>) – keyword arguments for <code class="docutils literal notranslate"><span class="pre">pd.to_numeric</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.to_int(“mycol1”, “mycol2”, errors=”coerce”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.to_type">
+<span class="sig-name descname"><span class="pre">to_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">type</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">cols</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.to_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert colums values to a given type in the main dataframe</p>
+<p>Category: Clean/Convert types/To type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dtype</strong> (<code class="docutils literal notranslate"><span class="pre">type</span></code>) – a type to convert to: ex: str</p></li>
+<li><p><strong>*cols</strong> (str <em>at least one*</em>) – names of the columns</p></li>
+<li><p><strong>**kwargs</strong> (<em>optional</em>) – keyword arguments for <code class="docutils literal notranslate"><span class="pre">df.astype</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Examples</dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">ds.to_type(str,</span> <span class="pre">&quot;mycol&quot;)</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.unique_">
+<span class="sig-name descname"><span class="pre">unique_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.unique_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a list of unique values in a column</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>str</em>) – the column to select from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a list of unique values in the column</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">List[str]</span></code></p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.unique_(“col1”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.w">
+<span class="sig-name descname"><span class="pre">w</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.w" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default width of charts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>v</strong> (<em>int</em>) – the width to set, in pixel</p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.w(350)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.wh">
+<span class="sig-name descname"><span class="pre">wh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#dataspace.core.DataSpace.wh" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the default width and height of charts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>w</strong> (<em>int</em>) – the height to set, in pixel</p></li>
+<li><p><strong>h</strong> (<em>int</em>) – the height to set, in pixel</p></li>
+</ul>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.wh(500, 200)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="dataspace.core.DataSpace.wunique_">
+<span class="sig-name descname"><span class="pre">wunique_</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colname</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Number'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">pandas.core.frame.DataFrame</span></span></span><a class="headerlink" href="#dataspace.core.DataSpace.wunique_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Weight unique values: returns a dataframe with a count
+of unique values for a column</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>col</strong> (<em>str</em>) – the column to select from</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a dataframe with a count of unique values in the column</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">pd.DataFrame</span></code></p>
+</dd>
+<dt class="field-even">Example</dt>
+<dd class="field-even"><p><cite>ds.wunique_(“col1”)</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="src/conventions.html" class="btn btn-neutral float-left" title="Conventions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, synw.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(false);
+      });
+  </script> 
+
+</body>
+</html>

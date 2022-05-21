@@ -21,7 +21,7 @@ async function initPyRuntime(): Promise<PyodideInterface> {
   console.log("Loading libraries")
   await pyodide.runPythonAsync(`
   import micropip
-  await micropip.install('http://localhost:3000/dataspace-0.0.5-py3-none-any.whl')
+  await micropip.install('dataspace')
   
   print("Python interpreter loaded, loading libraries")
 `);
