@@ -57,7 +57,7 @@ export default defineComponent({
     })
 
     async function dispatchRenderer(res) {
-      console.log("Dispatch res:", res, typeof res);
+      //console.log("Dispatch res:", res, typeof res);
       hasChart.value = false;
       await new Promise(resolve => setTimeout(resolve, 1));
       if (typeof res == 'string') {

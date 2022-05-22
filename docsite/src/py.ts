@@ -26,6 +26,10 @@ async function initPyRuntime(): Promise<PyodideInterface> {
   print("Python interpreter loaded, loading libraries")
 `);
   installLog(2);
+  let baseUri = ""
+  if (import.meta.env.MODE == "production") {
+    baseUri = "/dataspace"
+  }
   await pyodide.runPythonAsync(`from io import BytesIO
 import pandas as pd
 import numpy as np
@@ -36,9 +40,9 @@ print("Libraries loaded, the Python interpreter is ready")
 async def load_dataset(name):
   url = ""
   if name == "timeserie":
-    url = "http://localhost:3000/small_timeserie.csv"
+    url = "${baseUri}/small_timeserie.csv"
   elif name == "bitcoin":
-    url = "http://localhost:3000/BTC-USDT-1min.csv"
+    url = "${baseUri}/BTC-USDT-1min.csv"
   else:
     url = f"https://cdn.jsdelivr.net/npm/vega-datasets@v1.29.0/data/{name}.csv"
     #raise AttributeError()

@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "vite build && rm -rf ../docs && mv dist/ ../docs",
+    "build": "vite build",
+    "compress": "gzipper compress --incremental --brotli --brotli-param-mode font --exclude avif,jpg --threshold 999 --remove-larger ./dist",
+    "final": "rm -rf ../docs && mv dist/ ../docs",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -33,6 +35,7 @@
     "@vitejs/plugin-vue": "^2.3.1",
     "@vue/compiler-sfc": "^3.2.31",
     "autoprefixer": "^10.4.4",
+    "gzipper": "^7.1.0",
     "path": "^0.12.7",
     "postcss": "^8.4.12",
     "rollup-plugin-typescript2": "^0.31.2",
