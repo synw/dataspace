@@ -10,6 +10,7 @@ bin/
 etc/
 pyvenv.cfg
 share/
+.gzipper/
 
 __pycache__/
 *.py[cod]
