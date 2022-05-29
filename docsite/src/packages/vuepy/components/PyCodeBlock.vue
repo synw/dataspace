@@ -3,8 +3,7 @@
     <code-editor v-model="parsedCode" :languages="lang" :display_language="false" :hide_header="true"
       @keyup.ctrl.enter="runTheCode()" :theme="theme" :width="width" spellcheck="false">
     </code-editor>
-    <button class="mt-3 border btn" :class="canRun ? 'cursor-pointer' : 'cursor-wait'" @click="runTheCode()"
-      :disabled="canRun == false">
+    <button class="mt-3 border btn" :class="canRun ? 'cursor-pointer' : 'cursor-wait'" @click="runTheCode()">
       <i-cil:media-play class="mr-2 " :class="!canRun ? 'txt-light' : 'txt-success'"></i-cil:media-play>
       Execute
     </button>
@@ -72,10 +71,10 @@ export default defineComponent({
       //await new Promise(resolve => setTimeout(resolve, 1));
       console.log("Run", typeof (parsedCode.value), unref(parsedCode.value))
       const { results, error } = await runPython(id.value, parsedCode.value);
-      console.log("PYRES", results)
-      console.log("PYERR", error)
+      //console.log("PYRES", results)
+      //console.log("PYERR", error)
       if (results) {
-        console.log("RES TYPE", typeof results);
+        //console.log("RES TYPE", typeof results);
         if (dispatch.value) {
           const res = await dispatch.value(results);
           if (res != null) {

@@ -7,7 +7,7 @@
   </div>
   <div v-if="code.length > 0">
     <div class="p-5 pl-8 text-lg italic">Example</div>
-    <div class="w-full p-3">
+    <div class="w-full p-3" v-if="method.name.length > 0">
       <ds-code-block :id="method.name" :code="code">
       </ds-code-block>
     </div>
@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import router from '@/router';
-import { onBeforeUnmount, ref, watchEffect } from 'vue';
+import { onBeforeUnmount, reactive, ref, watchEffect } from 'vue';
 import MethodDoc from '@/widgets/MethodDoc.vue';
 import DsCodeBlock from '@/widgets/DsCodeBlock.vue';
 import docref from "@/autodoc/docref.json";
@@ -24,13 +24,15 @@ import chartsref from "@/autodoc/chartsref.json";
 import funcsref from "@/autodoc/funcsref.json";
 import exampleref from "@/autodoc/exref.json";
 
-const method = ref({ name: "", docstring: {} })
+const method = reactive({ name: "", docstring: {} })
 const code = ref("");
 const chartSpec = ref({});
 const hasChart = ref(false);
 
 function load() {
+  console.log("LOAD")
   const _methodName = router.currentRoute.value.params?.name;
+  method.name = "";
   hasChart.value = false;
   chartSpec.value = {};
   let methodName: string
@@ -44,13 +46,14 @@ function load() {
   } else {
     docstring = docref[methodName]
   }
-  const m = {
+  /*const m = {
     "name": methodName,
     "docstring": docstring
-  }
-  method.value = m;
-  if (m.docstring["example"]) {
-    code.value = m.docstring["example"]
+  }*/
+  method.name = methodName;
+  method.docstring = docstring;
+  if (method.docstring["example"]) {
+    code.value = method.docstring["example"]
   } else {
     code.value = exampleref[methodName] ?? "";
   }

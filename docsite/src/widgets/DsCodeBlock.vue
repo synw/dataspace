@@ -1,9 +1,9 @@
 <template>
   <div class="w-full p-3">
-    <py-code-block id="simple_scatter1" :code="code" :theme="user.isDarkMode.value == true ? 'dark' : 'light'"
-      :dispatch="dispatch" width="52rem" @run="onRun()">
+    <py-code-block :id="id" :code="code" :theme="user.isDarkMode.value == true ? 'dark' : 'light'" :dispatch="dispatch"
+      width="52rem" @run="onRun()">
     </py-code-block>
-    <vega-chart id="chart1" v-if="hasChart == true" :spec="chartSpec"></vega-chart>
+    <vega-chart :id="id" v-if="hasChart == true" :spec="chartSpec"></vega-chart>
   </div>
 </template>
 
@@ -12,6 +12,7 @@ import { ref } from 'vue';
 import VegaChart from "@/widgets/VegaChart.vue";
 import { user } from '@/state';
 import PyCodeBlock from '@/packages/vuepy/components/PyCodeBlock.vue';
+import { onBeforeRouteLeave, onBeforeRouteUpdate } from 'vue-router';
 
 defineProps({
   "id": {
@@ -45,5 +46,7 @@ async function dispatch(res: any): Promise<any> {
   }
   return endres
 }
+
+onBeforeRouteUpdate(() => onRun())
 </script>
 

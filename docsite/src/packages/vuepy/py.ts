@@ -56,7 +56,7 @@ function processTransformCode(code: string): string {
 
 pyodideWorker.onmessage = (event) => {
   const { id, ...data } = event.data;
-  console.log("=> msg in:", id, ":", data);
+  //console.log("=> msg in:", id, ":", data);
   dispatchEvent(id ?? "", data)
 };
 
