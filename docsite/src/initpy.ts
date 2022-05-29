@@ -10,17 +10,17 @@ import numpy as np
 import altair as alt
 import dataspace
 from pyodide.http import pyfetch
-from vega_datasets import data
-async def load_dataset(name):
+from vega_datasets import data as _vdata
+async def load_dataset(_dsname):
   url = ""
-  if name == "timeserie":
+  if _dsname == "timeserie":
     url = "${baseUri}/small_timeserie.csv"
-  elif name == "bitcoin":
+  elif _dsname == "bitcoin":
     url = "${baseUri}/BTC-USDT-1min.csv"
-  elif name == "sp500":
-    url = f"https://cdn.jsdelivr.net/npm/vega-datasets@v1.29.0/data/{name}.csv"
+  elif _dsname == "sp500":
+    url = f"https://cdn.jsdelivr.net/npm/vega-datasets@v1.29.0/data/{_dsname}.csv"
   else:
-    source = data(name)
+    source = _vdata(_dsname)
     ds = dataspace.from_df(source)
     return ds
   ds = dataspace.from_df(pd.DataFrame({"A": [1]}))

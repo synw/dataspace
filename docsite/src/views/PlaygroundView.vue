@@ -14,7 +14,7 @@ import { defineAsyncComponent, markRaw, reactive } from 'vue';
 
 
 
-const codeBlock = defineAsyncComponent(() => import("@/widgets/CodeBlock.vue"))
+const codeBlock = defineAsyncComponent(() => import("@/widgets/DsCodeBlock.vue"))
 const children = reactive([
   { id: "1", component: markRaw(codeBlock) },
   { id: "2", component: markRaw(codeBlock) },
