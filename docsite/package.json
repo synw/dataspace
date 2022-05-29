@@ -1,6 +1,6 @@
 {
-  "name": "snowind-template",
-  "version": "0.0.0",
+  "name": "dataspace-docsite",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "dev": "vite",
