@@ -19,6 +19,13 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
+    path: "/playground",
+    component: () => import("./views/PlaygroundView.vue"),
+    meta: {
+      title: "Playground"
+    }
+  },
+  {
     path: "/method/:name",
     component: () => import("./views/MethodView.vue"),
     meta: {
@@ -40,7 +47,14 @@ const routes: Array<RouteRecordRaw> = [
       title: "Toplevel method",
       source: "toplevel"
     }
-  }
+  },
+  {
+    path: "/examples/charts/simple_scatter",
+    component: () => import("./views/examples/charts/SimpleScatter.vue"),
+    meta: {
+      title: "Scatter plot with tooltips"
+    }
+  },
 ]
 
 const router = createRouter({

@@ -18,7 +18,7 @@ class Chart(AltChart):
 
             ds = await load_dataset("sp500")
             ds.axis("date:T", "price:Q")
-            ds.line_().w(500).to_json()
+            ds.line_().w(500)
 
         :param v: value in pixels
         :type v: int
@@ -34,7 +34,7 @@ class Chart(AltChart):
 
             ds = await load_dataset("sp500")
             ds.axis("date:T", "price:Q")
-            ds.line_().h(200).to_json()
+            ds.line_().h(200)
 
         :param v: value in pixels
         :type v: int
@@ -50,7 +50,7 @@ class Chart(AltChart):
 
             ds = await load_dataset("sp500")
             ds.axis("date:T", "price:Q")
-            ds.line_().wh(500, 200).to_json()
+            ds.line_().wh(500, 200)
 
         :param w: width value in pixels
         :type w: int
@@ -68,7 +68,7 @@ class Chart(AltChart):
 
             ds = await load_dataset("sp500")
             ds.axis("date:T", "price:Q")
-            ds.bar_().mw(7).to_json()
+            ds.bar_().mw(7)
 
         :param v: width value in pixels
         :type v: int
@@ -84,7 +84,7 @@ class Chart(AltChart):
 
             ds = await load_dataset("sp500")
             ds.axis("date:T", "price:Q")
-            ds.point_().pw(25).to_json()
+            ds.point_().pw(25)
 
         :param v: width value in pixels
         :type v: int
@@ -100,7 +100,7 @@ class Chart(AltChart):
 
             ds = await load_dataset("sp500")
             ds.axis("date:T", "price:Q")
-            ds.area_().color("forestgreen").to_json()
+            ds.area_().color("forestgreen")
 
         :param v: the color value
         :type v: str
@@ -116,7 +116,7 @@ class Chart(AltChart):
 
             ds = await load_dataset("sp500")
             ds.axis("date:T", "price:Q")
-            ds.point_().opacity(0.5).to_json()
+            ds.point_().opacity(0.5)
 
         :param v: the opacity value
         :type v: Union[int, float]
@@ -134,7 +134,7 @@ class Chart(AltChart):
         .. code-block:: python
 
             ds = await load_dataset("sp500")
-            ds.point_("date:T", "price:Q").tooltip(["date","price"]).to_json()
+            ds.point_("date:T", "price:Q").tooltip(["date","price"])
 
         :param v: column or list of columns to use for the tooltip
         :type v: Union[str, List[str]]
@@ -171,7 +171,7 @@ class Chart(AltChart):
 
             ds = await load_dataset("timeserie")
             ds.axis("date:T", "data:Q")
-            (ds.line_().nox() + ds.point_().nox()).to_json()
+            (ds.line_().nox() + ds.point_().nox())
 
         :return: the chart object
         :rtype: Chart
@@ -186,7 +186,7 @@ class Chart(AltChart):
 
             ds = await load_dataset("timeserie")
             ds.axis("date:T", "data:Q")
-            (ds.line_().noy() + ds.point_().noy()).to_json()
+            (ds.line_().noy() + ds.point_().noy())
 
         :return: the chart object
         :rtype: Chart
@@ -200,7 +200,7 @@ class Chart(AltChart):
         .. code-block:: python
 
             ds = await load_dataset("timeserie")
-            ds.area_("date:T", "data:Q").title("The chart title").to_json()
+            ds.area_("date:T", "data:Q").title("The chart title")
 
 
         :param v: the title text

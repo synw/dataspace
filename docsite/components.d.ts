@@ -13,6 +13,7 @@ declare module 'vue' {
     'IFileIcons:configPython': typeof import('~icons/file-icons/config-python')['default']
     'IFileIcons:testPython': typeof import('~icons/file-icons/test-python')['default']
     'IMdi:languagePython': typeof import('~icons/mdi/language-python')['default']
+    SimpleScatter: typeof import('./src/components/examples/charts/SimpleScatter.vue')['default']
     TheApirefSidebar: typeof import('./src/components/TheApirefSidebar.vue')['default']
     TheExamplesSidebar: typeof import('./src/components/TheExamplesSidebar.vue')['default']
     TheHeader: typeof import('./src/components/TheHeader.vue')['default']

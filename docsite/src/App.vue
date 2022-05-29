@@ -17,8 +17,9 @@ import TheHeader from "@/components/TheHeader.vue";
 import TheSidebar from "./components/TheSidebar.vue";
 import TheApirefSidebar from "./components/TheApirefSidebar.vue";
 import TheExamplesSidebar from "./components/TheExamplesSidebar.vue";
-import { initState, user } from "@/state";
-import { onMounted, ref } from "vue";
+import { user } from "@/state";
+import { onBeforeMount, ref } from "vue";
+import initPy from "./initpy";
 
 const sidebar = ref<"doc" | "apiref" | "examples">("doc");
 
@@ -27,15 +28,22 @@ function navigate(section: "doc" | "apiref" | "examples") {
   sidebar.value = section
 }
 
-onMounted(() => initState())
+onBeforeMount(() => initPy())
 </script>
 
 <style lang="sass">
+a, a:visited
+  @apply txt-primary
 #main, .sidebar
   height: calc(100% - 4rem)
 #main
   width: calc(100% - 16rem)
-
+.dataframe
+  @apply table-auto divide-y divide-gray-200 rounded-t w-max text-center
+  & thead
+    & th
+      @apply light px-3
+      min-width: 2em
 </style>
 
 

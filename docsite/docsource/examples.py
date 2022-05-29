@@ -343,32 +343,32 @@ async def rmean():
 async def axis():
     ds = await load_dataset("sp500")
     ds.axis("date:T", "price:Q")
-    ds.line_().to_json()  # type: ignore
+    ds.line_()
 
 
 def bar_():
     data = {"col1": ["A", "B", "C", "D", "E"], "col2": [1, 6, 2, 4, 1]}
     df = pd.DataFrame(data)
     ds = dataspace.from_df(df)
-    ds.bar_("col1:N", "col2:Q").to_json()  # type: ignore
+    ds.bar_("col1:N", "col2:Q")
 
 
 async def line_():
     ds = await load_dataset("sp500")
     ds.axis("date:T", "price:Q")
-    ds.line_().to_json()  # type: ignore
+    ds.line_()
 
 
 async def point_():
     ds = await load_dataset("sp500")
     ds.axis("date:T", "price:Q")
-    ds.point_().to_json()  # type: ignore
+    ds.point_()
 
 
 async def area_():
     ds = await load_dataset("sp500")
     ds.axis("date:T", "price:Q")
-    ds.area_().to_json()  # type: ignore
+    ds.area_()
 
 
 def hline_():
@@ -377,4 +377,4 @@ def hline_():
     ds = dataspace.from_df(df)
     chart = ds.bar_("col1:N", "col2:Q")
     hline = ds.hline_(style={"color": "green"})
-    (chart + hline).to_json()  # type: ignore
+    chart + hline  # type: ignore
