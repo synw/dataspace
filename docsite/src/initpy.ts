@@ -1,8 +1,10 @@
 import { loadPython } from "@/packages/vuepy/py";
 
-let baseUri = window.location.host
+let baseUri = window.location.protocol + "//" + window.location.host
 if (import.meta.env.MODE == "production") {
-  baseUri = window.location.host + import.meta.env.BASE_URL
+  baseUri = baseUri + import.meta.env.BASE_URL
+} else {
+  baseUri = baseUri + "/"
 }
 const initCode = `from io import BytesIO
 import pandas as pd
@@ -14,9 +16,9 @@ from vega_datasets import data as _vdata
 async def load_dataset(_dsname):
   url = ""
   if _dsname == "timeserie":
-    url = "${baseUri}/small_timeserie.csv"
+    url = "${baseUri}small_timeserie.csv"
   elif _dsname == "bitcoin":
-    url = "${baseUri}/BTC-USDT-1min.csv"
+    url = "${baseUri}BTC-USDT-1min.csv"
   elif _dsname == "sp500":
     url = f"https://cdn.jsdelivr.net/npm/vega-datasets@v1.29.0/data/{_dsname}.csv"
   else:
