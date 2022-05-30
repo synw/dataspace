@@ -1,8 +1,8 @@
 import { loadPython } from "@/packages/vuepy/py";
 
-let baseUri = ""
+let baseUri = window.location.host
 if (import.meta.env.MODE == "production") {
-  baseUri = "/dataspace"
+  baseUri = window.location.host + import.meta.env.BASE_URL
 }
 const initCode = `from io import BytesIO
 import pandas as pd
@@ -24,6 +24,7 @@ async def load_dataset(_dsname):
     ds = dataspace.from_df(source)
     return ds
   ds = dataspace.from_df(pd.DataFrame({"A": [1]}))
+  # print("Fetching", url)
   response = await pyfetch(url)
   if response.status == 200:
       with open("<output_file>", "wb") as f:

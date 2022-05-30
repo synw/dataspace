@@ -6,7 +6,7 @@
     "dev": "vite",
     "build": "vite build",
     "compress": "gzipper compress --incremental --brotli --brotli-param-mode font --exclude avif,jpg --threshold 999 --remove-larger ./dist",
-    "final": "rm -rf ../docs && mv dist/ ../docs",
+    "final": "rm -rf ../docs && mv dist/ ../docs && cd ../docs && ln -s index.html 404.html",
     "preview": "vite preview"
   },
   "dependencies": {
