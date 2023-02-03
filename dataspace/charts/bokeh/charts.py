@@ -1,5 +1,5 @@
 from ctypes import ArgumentError
-from typing import List, Union
+from typing import List, Tuple, Union
 import holoviews as hv
 from holoviews.core import Store
 from holoviews.element import Chart, Annotation
@@ -50,15 +50,16 @@ class HvChart(Chart):
         self = self.relabel(v)
         return self
 
-    def tooltip(self, v: Union[str, List[str]]):
-        t = []
+    def tooltip(self, v: Union[str, List[str], List[Tuple[str,str]]]):
+        tt: List[Tuple[str,str]] = []
         if isinstance(v, str) is True:
-            t = [v]
+            tt.append((f"{v}", f"@{v}"))
         else:
-            t = v
-        tt = []
-        for x in t:
-            tt.append((x, x))
+            for x in v:
+                if isinstance(x, tuple):
+                    tt.append(x)
+                else:
+                    tt.append((f"{x}", f"@{x}"))
         hover = HoverTool(tooltips=tt)
         return self.opts(tools=[hover])
 
