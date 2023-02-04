@@ -1,4 +1,5 @@
 pandas
 altair
+altair_saver
 holoviews
 fpdf2

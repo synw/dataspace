@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 from os import path
 
-version = "0.0.6"
+version = "0.0.7"
 
 this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
@@ -25,6 +25,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3.10",
     ],
-    install_requires=["pandas", "altair", "holoviews", "fpdf2"],
+    install_requires=["pandas", "altair", "altair_saver", "holoviews", "fpdf2"],
     zip_safe=False,
 )
