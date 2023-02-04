@@ -3,7 +3,11 @@ from typing import List, Union
 
 from altair import Chart as AltChart
 from altair import Color, Scale, value
-from altair_saver import save
+
+try:
+    from altair_saver import save
+except (ModuleNotFoundError, ImportError):
+    print("The Altair chart saver is not available in this environment")
 
 
 class AltairChart(AltChart):

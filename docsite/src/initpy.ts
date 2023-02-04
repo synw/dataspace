@@ -43,5 +43,6 @@ if (result_type in ['dataspace.charts.altair.Chart', 'altair.vegalite.v4.api.Cha
 `
 
 export default async function initPy() {
-  await loadPython(['pandas', 'numpy', 'bokeh'], ['altair', 'dataspace', 'vega_datasets'], initCode, transformCode)
+  const wheel = "/dataspace-0.0.8-py3-none-any.whl";
+  await loadPython(['pandas', 'numpy', 'bokeh'], ['altair', wheel, 'vega_datasets'], initCode, transformCode)
 }

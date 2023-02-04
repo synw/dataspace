@@ -2,7 +2,11 @@ import os
 import uuid
 from typing import List, Optional
 
-from fpdf import FPDF
+try:
+    from fpdf import FPDF
+except (ModuleNotFoundError, ImportError):
+    print("The pdf reporting engine is not available in this environment")
+
 
 from dataspace.types import ReportItemType, ChartType
 from dataspace.utils.messages import msg_info, msg_ok
