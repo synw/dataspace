@@ -1,8 +1,10 @@
 from typing import Dict, List, Optional
 
 import pandas as pd
+from numpy import nan
+
 from dataspace.calculations import _diffm, _diffn, _diffp  # _diffs, _diffsp
-from dataspace.charts import DsChart
+from dataspace.charts import DsChartEngine
 from dataspace.clean import (
     _drop_nan,
     _fdate,
@@ -25,13 +27,14 @@ from dataspace.info.view import _show
 from dataspace.io.export import export_csv
 from dataspace.transform import _append, _apply, _drop, _rename, _rmean, _rsum
 from dataspace.types import ChartType
-from dataspace.utils.messages import msg_ok
-from numpy import nan
+from dataspace.utils.messages import msg_info, msg_ok
+from dataspace.report import ReportEngine
 
 
 class DataSpace:
     df: pd.DataFrame = None
-    _charts: DsChart = DsChart()
+    _charts: DsChartEngine = DsChartEngine()
+    _reports: ReportEngine = ReportEngine()
 
     def __init__(self, df: pd.DataFrame = None) -> None:
         self.df = df
@@ -1079,3 +1082,28 @@ class DataSpace:
         :example: `ds.export_csv("myfile.csv", header=false)`
         """
         return export_csv(self.df, filepath, **kwargs)
+
+    def report_path(self, path: str):
+        """
+        Set the report path folder
+        """
+        self._reports.path = path
+
+    def stack(
+        self,
+        chart: ChartType,
+        title: Optional[str] = None,
+        description: Optional[str] = None,
+    ):
+        """
+        Store a chart in the report stack
+        """
+        self._reports.stack(chart, title, description)
+        msg_info("Chart added in the report stack")
+
+    def save_pdf(self, filename: str, clear_stack=True):
+        """
+        Save a report to a pdf file
+        """
+        self._reports.save_pdf(filename, clear_stack)
+        msg_info("Pdf file saved")

@@ -2,15 +2,16 @@ from typing import Literal, Optional, Union
 from dataclasses import dataclass
 from dataspace.charts.altair import AltairChart
 
-from dataspace.charts.bokeh.bokeh import BokehChart
+from dataspace.charts.bokeh import HvChart
 
 
-ChartEngineType = Literal["altair", "bokeh"]
+ChartEngineName = Literal["altair", "bokeh"]
 
-ChartType = Union[AltairChart, BokehChart]
+ChartType = Union[AltairChart, HvChart]
 
 
 @dataclass
 class ReportItemType:
     chart: ChartType
     title: Optional[str]
+    description: Optional[str]

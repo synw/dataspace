@@ -2,27 +2,27 @@ from ctypes import ArgumentError
 
 import pandas as pd
 
-from .altair import AltairChart
+from .altair import AltairChartEngine
 
-from dataspace.types import ChartEngineType, ChartType
+from dataspace.types import ChartEngineName, ChartType
 try:
-    from .bokeh import BokehChart  # type: ignore
+    from .bokeh import BokehChartEngine  # type: ignore
 except (ModuleNotFoundError, ImportError):
     print("The Bokeh chart engine is not available in this environment")
 
-    class BokehChart(AltairChart):
+    class BokehChartEngine(AltairChartEngine):
         pass
 
 
-class DsChart:
-    engine: ChartEngineType = "altair"
-    altair: AltairChart
-    bokeh: BokehChart
+class DsChartEngine:
+    engine: ChartEngineName = "altair"
+    altair: AltairChartEngine
+    bokeh: BokehChartEngine
 
-    def __init__(self, engine: ChartEngineType="altair", default_width=950) -> None:
+    def __init__(self, engine: ChartEngineName="altair", default_width=950) -> None:
         self.engine = engine
-        self.altair = AltairChart(default_width)
-        self.bokeh = BokehChart(default_width)
+        self.altair = AltairChartEngine(default_width)
+        self.bokeh = BokehChartEngine(default_width)
 
     def set_axis(self, x_axis_col: str, y_axis_col: str):
         if self.engine == "altair":

@@ -15,7 +15,7 @@ from dataspace.charts.bokeh.charts import (
 hv.extension("bokeh")
 
 
-class BokehChart:
+class BokehChartEngine:
     x = None
     y = None
     default_width: int
