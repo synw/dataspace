@@ -1,8 +1,10 @@
 from typing import Dict, List, Optional
 
 import pandas as pd
+from numpy import nan
+
 from dataspace.calculations import _diffm, _diffn, _diffp  # _diffs, _diffsp
-from dataspace.charts import DsChart
+from dataspace.charts import DsChartEngine
 from dataspace.clean import (
     _drop_nan,
     _fdate,
@@ -22,15 +24,17 @@ from dataspace.core.env import is_notebook
 from dataspace.count import _count_empty_, _count_null_, _count_unique_, _count_zero_
 from dataspace.info import _cols
 from dataspace.info.view import _show
-from dataspace.io.export import _export_csv
+from dataspace.io.export import export_csv
 from dataspace.transform import _append, _apply, _drop, _rename, _rmean, _rsum
-from dataspace.utils.messages import msg_ok
-from numpy import nan
+from dataspace.types import ChartType
+from dataspace.utils.messages import msg_info, msg_ok
+from dataspace.report import ReportEngine
 
 
 class DataSpace:
     df: pd.DataFrame = None
-    _chartEngine: DsChart = DsChart()
+    _charts: DsChartEngine = DsChartEngine()
+    _reports: ReportEngine = ReportEngine()
 
     def __init__(self, df: pd.DataFrame = None) -> None:
         self.df = df
@@ -794,7 +798,7 @@ class DataSpace:
 
         :example: `ds.bokeh()`
         """
-        self._chartEngine.engine = "bokeh"
+        self._charts.engine = "bokeh"
 
     def altair(self) -> None:
         """
@@ -802,7 +806,7 @@ class DataSpace:
 
         :example: `ds.altair()`
         """
-        self._chartEngine.engine = "altair"
+        self._charts.engine = "altair"
 
     def axis(self, x_axis_col: str, y_axis_col: str):
         """
@@ -815,9 +819,9 @@ class DataSpace:
 
         :example: `ds.axis("col1", "col2")`
         """
-        self._chartEngine.set_axis(x_axis_col, y_axis_col)
+        self._charts.set_axis(x_axis_col, y_axis_col)
 
-    def line_(self, *args, **kwargs):
+    def line_(self, *args, **kwargs) -> ChartType:
         """
         Draw a line chart
 
@@ -834,9 +838,9 @@ class DataSpace:
         df = self.df
         if "df" in kwargs.keys():
             df = kwargs["df"]
-        return self._chartEngine.chart(df, "line", *args, **kwargs)
+        return self._charts.chart(df, "line", *args, **kwargs)
 
-    def point_(self, *args, **kwargs):
+    def point_(self, *args, **kwargs) -> ChartType:
         """
         Draw a point chart
 
@@ -847,9 +851,9 @@ class DataSpace:
         df = self.df
         if "df" in kwargs.keys():
             df = kwargs["df"]
-        return self._chartEngine.chart(df, "point", *args, **kwargs)
+        return self._charts.chart(df, "point", *args, **kwargs)
 
-    def bar_(self, *args, **kwargs):
+    def bar_(self, *args, **kwargs) -> ChartType:
         """
         Draw a bar chart
 
@@ -860,9 +864,9 @@ class DataSpace:
         df = self.df
         if "df" in kwargs.keys():
             df = kwargs["df"]
-        return self._chartEngine.chart(df, "bar", *args, **kwargs)
+        return self._charts.chart(df, "bar", *args, **kwargs)
 
-    def square_(self, *args, **kwargs):
+    def square_(self, *args, **kwargs) -> ChartType:
         """
         Draw a square chart with numbers. Only for Altair
 
@@ -870,7 +874,7 @@ class DataSpace:
 
         :example: `ds.square_()`
         """
-        if self._chartEngine.engine != "altair":
+        if self._charts.engine != "altair":
             raise Exception(
                 """This chart is only available for the Altair engine
             Please switch to Altair like this: ds.altair()
@@ -879,9 +883,9 @@ class DataSpace:
         df = self.df
         if "df" in kwargs.keys():
             df = kwargs["df"]
-        return self._chartEngine.chart(df, "square", *args, **kwargs)
+        return self._charts.chart(df, "square", *args, **kwargs)
 
-    def rule_(self, *args, **kwargs):
+    def rule_(self, *args, **kwargs) -> ChartType:
         """
         Draw a rule chart with numbers. Only for Altair
 
@@ -889,7 +893,7 @@ class DataSpace:
 
         :example: `ds.rule_()`
         """
-        if self._chartEngine.engine != "altair":
+        if self._charts.engine != "altair":
             raise Exception(
                 """This chart is only available for the Altair engine
             Please switch to Altair like this: ds.altair()
@@ -898,9 +902,9 @@ class DataSpace:
         df = self.df
         if "df" in kwargs.keys():
             df = kwargs["df"]
-        return self._chartEngine.chart(df, "rule", *args, **kwargs)
+        return self._charts.chart(df, "rule", *args, **kwargs)
 
-    def tick_(self, *args, **kwargs):
+    def tick_(self, *args, **kwargs) -> ChartType:
         """
         Draw a square chart with numbers. Only for Altair
 
@@ -908,7 +912,7 @@ class DataSpace:
 
         :example: `ds.tick_()`
         """
-        if self._chartEngine.engine != "altair":
+        if self._charts.engine != "altair":
             raise Exception(
                 """This chart is only available for the Altair engine
             Please switch to Altair like this: ds.altair()
@@ -917,9 +921,9 @@ class DataSpace:
         df = self.df
         if "df" in kwargs.keys():
             df = kwargs["df"]
-        return self._chartEngine.chart(df, "tick", *args, **kwargs)
+        return self._charts.chart(df, "tick", *args, **kwargs)
 
-    def bar_num_(self, *args, **kwargs):
+    def bar_num_(self, *args, **kwargs) -> ChartType:
         """
         Draw a bar chart with numbers. Only for Altair
 
@@ -927,7 +931,7 @@ class DataSpace:
 
         :example: `ds.bar_num_()`
         """
-        if self._chartEngine.engine != "altair":
+        if self._charts.engine != "altair":
             raise Exception(
                 """This chart is only available for the Altair engine
             Please switch to Altair like this: ds.altair()
@@ -936,9 +940,9 @@ class DataSpace:
         df = self.df
         if "df" in kwargs.keys():
             df = kwargs["df"]
-        return self._chartEngine.chart(df, "bar_num", *args, **kwargs)
+        return self._charts.chart(df, "bar_num", *args, **kwargs)
 
-    def line_num_(self, *args, **kwargs):
+    def line_num_(self, *args, **kwargs) -> ChartType:
         """
         Draw a line chart with numbers. Only for Altair
 
@@ -946,7 +950,7 @@ class DataSpace:
 
         :example: `ds.line_num_()`
         """
-        if self._chartEngine.engine != "altair":
+        if self._charts.engine != "altair":
             raise Exception(
                 """This chart is only available for the Altair engine
             Please switch to Altair like this: ds.altair()
@@ -955,9 +959,9 @@ class DataSpace:
         df = self.df
         if "df" in kwargs.keys():
             df = kwargs["df"]
-        return self._chartEngine.chart(df, "line_num", *args, **kwargs)
+        return self._charts.chart(df, "line_num", *args, **kwargs)
 
-    def point_num_(self, *args, **kwargs):
+    def point_num_(self, *args, **kwargs) -> ChartType:
         """
         Draw a point chart with numbers. Only for Altair
 
@@ -965,7 +969,7 @@ class DataSpace:
 
         :example: `ds.point_num_()`
         """
-        if self._chartEngine.engine != "altair":
+        if self._charts.engine != "altair":
             raise Exception(
                 """This chart is only available for the Altair engine
             Please switch to Altair like this: ds.altair()
@@ -974,9 +978,9 @@ class DataSpace:
         df = self.df
         if "df" in kwargs.keys():
             df = kwargs["df"]
-        return self._chartEngine.chart(df, "point_num", *args, **kwargs)
+        return self._charts.chart(df, "point_num", *args, **kwargs)
 
-    def area_(self, *args, **kwargs):
+    def area_(self, *args, **kwargs) -> ChartType:
         """
         Draw an area chart
 
@@ -987,9 +991,9 @@ class DataSpace:
         df = self.df
         if "df" in kwargs.keys():
             df = kwargs["df"]
-        return self._chartEngine.chart(df, "area", *args, **kwargs)
+        return self._charts.chart(df, "area", *args, **kwargs)
 
-    def heatmap_(self, *args, **kwargs):
+    def heatmap_(self, *args, **kwargs) -> ChartType:
         """
         Draw a heatmap chart
 
@@ -1000,9 +1004,9 @@ class DataSpace:
         df = self.df
         if "df" in kwargs.keys():
             df = kwargs["df"]
-        return self._chartEngine.chart(df, "heatmap", *args, **kwargs)
+        return self._charts.chart(df, "heatmap", *args, **kwargs)
 
-    def hist_(self, *args, **kwargs):
+    def hist_(self, *args, **kwargs) -> ChartType:
         """
         Draw a histogram chart
 
@@ -1013,9 +1017,9 @@ class DataSpace:
         df = self.df
         if "df" in kwargs.keys():
             df = kwargs["df"]
-        return self._chartEngine.chart(df, "hist", *args, **kwargs)
+        return self._charts.chart(df, "hist", *args, **kwargs)
 
-    def hline_(self, *args, **kwargs):
+    def hline_(self, *args, **kwargs) -> ChartType:
         """
         Draw an horizontal mean line for the y axis
 
@@ -1026,7 +1030,7 @@ class DataSpace:
         df = self.df
         if "df" in kwargs.keys():
             df = kwargs["df"]
-        return self._chartEngine.chart(df, "hline", *args, **kwargs)
+        return self._charts.chart(df, "hline", *args, **kwargs)
 
     def w(self, v: int):
         """
@@ -1037,7 +1041,7 @@ class DataSpace:
 
         :example: `ds.w(350)`
         """
-        self._chartEngine.width(v)
+        self._charts.width(v)
 
     def h(self, v: int):
         """
@@ -1048,7 +1052,7 @@ class DataSpace:
 
         :example: `ds.h(250)`
         """
-        self._chartEngine.height(v)
+        self._charts.height(v)
 
     def wh(self, w: int, h: int):
         """
@@ -1061,7 +1065,7 @@ class DataSpace:
 
         :example: `ds.wh(500, 200)`
         """
-        self._chartEngine.wh(w, h)
+        self._charts.wh(w, h)
 
     # **************************
     #           export
@@ -1077,4 +1081,29 @@ class DataSpace:
 
         :example: `ds.export_csv("myfile.csv", header=false)`
         """
-        return _export_csv(self.df, filepath, **kwargs)
+        return export_csv(self.df, filepath, **kwargs)
+
+    def report_path(self, path: str):
+        """
+        Set the report path folder
+        """
+        self._reports.path = path
+
+    def stack(
+        self,
+        chart: ChartType,
+        title: Optional[str] = None,
+        description: Optional[str] = None,
+    ):
+        """
+        Store a chart in the report stack
+        """
+        self._reports.stack(chart, title, description)
+        msg_info("Chart added in the report stack")
+
+    def save_pdf(self, filename: str, clear_stack=True):
+        """
+        Save a report to a pdf file
+        """
+        self._reports.save_pdf(filename, clear_stack)
+        msg_info("Pdf file saved")

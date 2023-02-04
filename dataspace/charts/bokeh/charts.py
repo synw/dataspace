@@ -1,7 +1,8 @@
 from ctypes import ArgumentError
-from typing import List, Union
+from typing import List, Tuple, Union
 import holoviews as hv
 from holoviews.core import Store
+from holoviews.util import Dynamic
 from holoviews.element import Chart, Annotation
 from holoviews.plotting import bokeh as plot
 from bokeh.models import HoverTool
@@ -50,15 +51,16 @@ class HvChart(Chart):
         self = self.relabel(v)
         return self
 
-    def tooltip(self, v: Union[str, List[str]]):
-        t = []
+    def tooltip(self, v: Union[str, List[str], List[Tuple[str,str]]]):
+        tt: List[Tuple[str,str]] = []
         if isinstance(v, str) is True:
-            t = [v]
+            tt.append((f"{v}", f"@{v}"))
         else:
-            t = v
-        tt = []
-        for x in t:
-            tt.append((x, x))
+            for x in v:
+                if isinstance(x, tuple):
+                    tt.append(x)
+                else:
+                    tt.append((f"{x}", f"@{x}"))
         hover = HoverTool(tooltips=tt)
         return self.opts(tools=[hover])
 
@@ -96,6 +98,15 @@ class HvChart(Chart):
             clone=False,
         )
         return self
+
+    def save_img(self, path: str):
+        """Save the chart to a png image
+
+        :param path: the filepath
+        :type path: str
+        """
+        dmap = Dynamic(self)
+        hv.save(dmap, path, fmt='png')
 
 
 class HvAnnotation(Annotation):

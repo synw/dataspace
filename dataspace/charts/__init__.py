@@ -1,3 +1,3 @@
-from .base import DsChart
+from .base import DsChartEngine
 
-__all__ = ["DsChart"]
+__all__ = ["DsChartEngine"]

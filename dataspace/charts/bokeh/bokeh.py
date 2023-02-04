@@ -15,7 +15,7 @@ from dataspace.charts.bokeh.charts import (
 hv.extension("bokeh")
 
 
-class BokehChart:
+class BokehChartEngine:
     x = None
     y = None
     default_width: int
@@ -88,7 +88,7 @@ class BokehChart:
         if isinstance(yaxis, list):
             self.y = yaxis
         else:
-            self.y = [yaxis]
+            self.y = [yaxis]    
 
     def _checkAxis(self):
         assert self.x is not None or self.y is not None, "Set the chart fields"
