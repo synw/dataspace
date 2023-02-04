@@ -14,7 +14,6 @@ def _load_csv(url, **kwargs) -> pd.DataFrame:
         return
     except Exception as e:
         raise Exception("Can not load csv file", e)
-    msg_end("Finished loading csv")
 
 
 def _load_django(query) -> pd.DataFrame:

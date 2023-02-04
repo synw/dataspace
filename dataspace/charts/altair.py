@@ -6,6 +6,7 @@ from dataspace.transform import _drop
 
 from altair import Chart as AltChart
 from altair import Color, Scale, X, Y, data_transformers, value
+from altair_saver import save
 
 data_transformers.disable_max_rows()
 
@@ -256,6 +257,14 @@ class Chart(AltChart):
             color=Color(column, scale=Scale(domain=levels, range=colors))
         )
 
+    def save_img(self, path: str):
+        """Save the chart to a png image
+
+        :param path: the filepath
+        :type path: str
+        """
+        save(self, path)
+
 
 class AltairChart:
     x: Optional[X] = None
@@ -378,7 +387,7 @@ class AltairChart:
                 .encode(x=self.x, y=self.y, **encode)
                 .properties(**opts)
             )
-        return chart
+        return chart    
 
     def _altair_chart_num_(
         self,

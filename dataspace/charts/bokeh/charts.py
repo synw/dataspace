@@ -2,6 +2,7 @@ from ctypes import ArgumentError
 from typing import List, Tuple, Union
 import holoviews as hv
 from holoviews.core import Store
+from holoviews.util import Dynamic
 from holoviews.element import Chart, Annotation
 from holoviews.plotting import bokeh as plot
 from bokeh.models import HoverTool
@@ -97,6 +98,15 @@ class HvChart(Chart):
             clone=False,
         )
         return self
+
+    def save_img(self, path: str):
+        """Save the chart to a png image
+
+        :param path: the filepath
+        :type path: str
+        """
+        dmap = Dynamic(self)
+        hv.save(dmap, path, fmt='png')
 
 
 class HvAnnotation(Annotation):
