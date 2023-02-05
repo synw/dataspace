@@ -107,7 +107,7 @@ class AltairChart(AltChart):
         :return: the chart object
         :rtype: Chart
         """
-        return self.configure_mark(color=v)
+        return self.encode(color=value(v))
 
     def opacity(self, v: Union[int, float]) -> "AltairChart":
         """Configure the chart opacity
