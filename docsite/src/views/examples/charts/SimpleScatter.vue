@@ -19,8 +19,8 @@ import DsCodeBlock from '@/widgets/DsCodeBlock.vue';
 const code1 = `ds = await load_dataset('cars')
 ds.show()`;
 
-const code2 = `ds.point_('Horsepower','Miles_per_Gallon').pw(60).encode(
-    color='Origin'
+const code2 = `ds.point_('Horsepower:Q','Miles_per_Gallon:Q').pw(60).encode(
+    color='Origin:N'
 ).tooltip(
     ['Name', 'Origin', 'Horsepower', 'Miles_per_Gallon']
 ).interactive()`;

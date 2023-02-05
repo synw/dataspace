@@ -24,7 +24,7 @@ import { initPy } from "./py";
 const sidebar = ref<"doc" | "apiref" | "examples">("doc");
 
 function navigate(section: "doc" | "apiref" | "examples") {
-  console.log("Nav", section)
+  //console.log("Nav", section)
   sidebar.value = section
 }
 
@@ -42,7 +42,7 @@ a, a:visited
   @apply table-auto divide-y divide-gray-200 rounded-t w-max text-center
   & thead
     & th
-      @apply light px-3
+      @apply lighter px-3
       min-width: 2em
 </style>
 
