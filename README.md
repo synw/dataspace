@@ -2,11 +2,7 @@
 
 [![pub package](https://img.shields.io/pypi/v/dataspace)](https://pypi.org/project/dataspace/)
 
-A simple api to explore, clean, transform and visualize data. This api is:
-
-- **Minimalistic**: short names, simple functionalites, minimal parameters
-- **Pragmatic**: focuses on raw efficiency rather than idiomatic code
-- **Simple stupid**: keep it easy to understand for both code and api
+A simple api to explore, clean, transform and visualize data
 
 ## Features
 
@@ -15,6 +11,12 @@ A simple api to explore, clean, transform and visualize data. This api is:
 - **Visualize data**: many kind of charts
 
 Check the [documentation](https://synw.github.io/dataspace/)
+
+This api is:
+
+- *Minimalistic*: short names, simple functionalites, minimal parameters
+- *Pragmatic*: focuses on raw efficiency rather than strictly idiomatic code while favouring static typing
+- *Simple stupid*: keep it easy to understand for both code and api
 
 ## Install
 
