@@ -12,13 +12,14 @@
       <i-fa-solid:moon v-if="!user.isDarkMode.value"></i-fa-solid:moon>
       <i-fa-solid:sun v-else></i-fa-solid:sun>
     </div>
-    <py-status></py-status>
+    <py-status :py="py" class="mr-5"></py-status>
   </div>
 </template>
 
 <script setup lang="ts">
 import { user } from '@/state';
-import PyStatus from '@/packages/vuepy/components/PyStatus.vue';
+import { PyStatus } from 'vuepython';
+import { py } from "@/py";
 
 function openLink(url: string) {
   window.location.href = url;

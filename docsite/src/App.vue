@@ -19,7 +19,7 @@ import TheApirefSidebar from "./components/TheApirefSidebar.vue";
 import TheExamplesSidebar from "./components/TheExamplesSidebar.vue";
 import { user } from "@/state";
 import { onBeforeMount, ref } from "vue";
-import initPy from "./initpy";
+import { initPy } from "./py";
 
 const sidebar = ref<"doc" | "apiref" | "examples">("doc");
 

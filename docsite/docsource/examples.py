@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import altair as alt
 import dataspace
 
 
@@ -378,3 +379,16 @@ def hline_():
     chart = ds.bar_("col1:N", "col2:Q")
     hline = ds.hline_(style={"color": "green"})
     chart + hline  # type: ignore
+
+
+def diffm():
+    data = {"col1": [1, 2, 3, 4, 4, 6, 8, 10, 12]}
+    df = pd.DataFrame(data)
+    ds = dataspace.from_df(df)
+    ds.diffm("col1")
+    ds.indexcol("id")
+    ds.axis("id", "col1")
+    c = ds.bar_()
+    ds.axis("id", "Diff")
+    d = ds.line_().encode(color=alt.value("red"))
+    c + d  # type: ignore

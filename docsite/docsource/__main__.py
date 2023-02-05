@@ -28,7 +28,7 @@ def parse_examples():
 
 
 def parse_chart_classes():
-    alt = parse_class("dataspace.charts.altair", "Chart")
+    alt = parse_class("dataspace.charts.altair.charts", "AltairChart")
     doc = parse_docstrings(alt)
     print("Writing chart options doc ref")
     file = "src/autodoc/chartsref.json"

@@ -7,7 +7,7 @@
   </div>
   <div v-if="code.length > 0">
     <div class="p-5 pl-8 text-lg italic">Example</div>
-    <div class="w-full p-3" v-if="method.name.length > 0">
+    <div class="w-full p-3" v-if="isReady">
       <ds-code-block :id="method.name" :code="code">
       </ds-code-block>
     </div>
@@ -28,9 +28,10 @@ const method = reactive({ name: "", docstring: {} })
 const code = ref("");
 const chartSpec = ref({});
 const hasChart = ref(false);
+const isReady = ref(false)
 
 function load() {
-  console.log("LOAD")
+  isReady.value = false;
   const _methodName = router.currentRoute.value.params?.name;
   method.name = "";
   hasChart.value = false;
@@ -56,7 +57,10 @@ function load() {
     code.value = method.docstring["example"]
   } else {
     code.value = exampleref[methodName] ?? "";
+    //console.log("M=", exampleref[methodName])
   }
+  //console.log("MN", _methodName)
+  isReady.value = true;
 }
 
 const stop = watchEffect(() => load());

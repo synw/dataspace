@@ -1,9 +1,10 @@
+from typing import Tuple, TypedDict, Union
 import ast
 import inspect
-from docutils.core import publish_parts
 from importlib import import_module
+
+from docutils.core import publish_parts
 from docstring_parser import parse, Docstring
-from typing import Tuple, TypedDict, Union
 
 
 MethodsDict = TypedDict("name", {"funcdef": str, "docstring": Docstring})
@@ -114,7 +115,7 @@ def parse_docstrings(methods: MethodsDict):
             }
         for ex in method["docstring"].raises:
             raises[ex.type_name] = ex.description
-        r = {"name": None, "type": None}
+        r = {"name": "", "type": ""}
         if method["docstring"].returns is not None:
             rn = method["docstring"].returns.return_name
             if rn is not None:

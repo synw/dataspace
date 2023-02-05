@@ -1,4 +1,6 @@
-import { loadPython } from "@/packages/vuepy/py";
+import { usePython } from "usepython";
+
+const py = usePython();
 
 let baseUri = window.location.protocol + "//" + window.location.host
 if (import.meta.env.MODE == "production") {
@@ -38,11 +40,15 @@ async def load_dataset(_dsname):
 `;
 
 const transformCode = `
+result_type = str(type(result)).replace("<class '", "").replace("'>", "")
+# print("T", result_type)
 if (result_type in ['dataspace.charts.altair.charts.AltairChart', 'altair.vegalite.v4.api.Chart', 'altair.vegalite.v4.api.LayerChart']):
   return result.to_json()
 `
 
-export default async function initPy() {
-  //const wheel = "/dataspace-0.0.8-py3-none-any.whl";
-  await loadPython(['pandas', 'numpy', 'bokeh'], ['altair', "dataspace", 'vega_datasets'], initCode, transformCode)
+async function initPy() {
+  // const wheel = "/dataspace-0.0.8-py3-none-any.whl";
+  await py.load(['pandas', 'numpy', 'bokeh'], ['altair', "dataspace", 'vega_datasets'], initCode, transformCode)
 }
+
+export { py, initPy }

@@ -29,7 +29,7 @@ export default defineComponent({
       //spec.$schema = "https://vega.github.io/schema/vega-lite/v5.json";
       const vegaSpec = compile(spec, { config }).spec;
       await embed(`#${this.id}`, vegaSpec, { actions: false });
-      console.log("Chart ok")
+      //console.log("Chart ok")
       var objDiv = document.getElementById("main");
       if (!objDiv) {
         throw new Error("No #main")

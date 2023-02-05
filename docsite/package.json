@@ -1,6 +1,6 @@
 {
   "name": "dataspace-docsite",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -25,7 +25,9 @@
     "vega-embed": "^6.20.8",
     "vega-lite": "^5.2.0",
     "vue": "^3.2.31",
-    "vue-router": "4"
+    "vue-router": "4",
+    "vuecodit": "^0.0.4",
+    "vuepython": "^0.0.11"
   },
   "devDependencies": {
     "@iconify/json": "^2.1.26",

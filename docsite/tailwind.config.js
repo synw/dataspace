@@ -5,6 +5,7 @@ module.exports = {
     './index.html',
     './src/**/*.{js,jsx,ts,tsx,vue}',
     './node_modules/@snowind/**/*.{vue,js,ts}',
+    './node_modules/vuepython/**/*.{vue,js,ts}',
   ],
   darkMode: 'class',
   plugins: [
@@ -28,6 +29,16 @@ module.exports = {
         secondary: {
           light: {
             bg: colors.cyan[500],
+            txt: colors.white
+          },
+          dark: {
+            bg: colors.neutral[800],
+            txt: colors.neutral[100]
+          }
+        },
+        secondary2: {
+          light: {
+            bg: colors.cyan[600],
             txt: colors.white
           },
           dark: {
