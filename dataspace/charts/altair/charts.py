@@ -1,8 +1,16 @@
 from ctypes import ArgumentError
 from typing import List, Union
+import uuid
 
 from altair import Chart as AltChart
-from altair import Color, Scale, value
+from altair import (
+    Color,
+    Scale,
+    value,
+    VEGA_VERSION,
+    VEGALITE_VERSION,
+    VEGAEMBED_VERSION,
+)
 
 try:
     from altair_saver import save
@@ -263,3 +271,43 @@ class AltairChart(AltChart):
         :type path: str
         """
         save(self, path)
+
+    def get_html_(self) -> str:
+        """
+        Get html for an Altair chart
+        """
+        slug = uuid.uuid4().hex
+        json_data = self.to_json(indent=0)
+        html = '<div id="' + slug + '"></div>\n'
+        html += '<script type="text/javascript">'
+        html += "var spec = " + json_data.replace("\n", "") + ";"
+        html += """
+        var embed_opt = {"mode": "vega-lite"};
+        function showError(altel, error){
+            altel.innerHTML = ('<div class="error">'
+                            + '<p>JavaScript Error: ' + error.message + '</p>'
+                            + "<p>This usually means there's a typo in your "
+                            + "chart specification. "
+                            + "See the javascript console for the full "
+                            + "traceback.</p>"
+                            + '</div>');
+            throw error;
+        };\n"""
+        html += "const el_" + slug + " = document.getElementById('" + slug + "');"
+        html += "vegaEmbed('#" + slug + "', spec, embed_opt)"
+        html += ".catch(error => showError(el_" + slug + ", error));"
+        html += "</script>"
+        return html
+
+    @staticmethod
+    def html_header_():
+        """
+        Returns html script tags for Altair
+        """
+        header = (
+            f'<script src="https://cdn.jsdelivr.net/npm/vega@{VEGA_VERSION}"></script>',
+            f'<script src="https://cdn.jsdelivr.net/npm/vega-lite@{VEGALITE_VERSION}"></script>',
+            f'<script src="https://cdn.jsdelivr.net/npm/vega-embed@{VEGAEMBED_VERSION}"></script>',
+            "<style>.vega-actions {display:none}</style>",
+        )
+        return "\n".join(header)

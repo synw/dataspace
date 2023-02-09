@@ -1,2 +1,3 @@
 fpdf2
 altair_saver
+python-slugify
