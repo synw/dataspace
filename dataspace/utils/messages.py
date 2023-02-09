@@ -69,21 +69,22 @@ def _endmsg(rd) -> str:
     return msg
 
 
-def msg_end(self, *msg):
+def msg_end(*msg):
     """
     Prints an end message with elapsed time
     """
     global START_TIME
     if START_TIME is None:
         raise Exception(
-            "No start time set: please use start() " "before using this function"
+            "No start time set: please use start() before using this function"
         )
     endtime = datetime.datetime.now()
     rd = relativedelta(endtime, START_TIME)
     endmsg = _endmsg(rd)
     label = colors.purple("END")
-    msg += ("in " + endmsg,)
-    _msg(label, *msg)
+    args = list(msg)
+    args.append("in " + endmsg)
+    _msg(label, *args)
     START_TIME = None
 
 

@@ -12,6 +12,8 @@ ChartType = Union[AltairChart, HvChart]
 
 @dataclass
 class ReportItemType:
+    id: str
     chart: ChartType
+    chart_engine: ChartEngineName
     title: Optional[str]
     description: Optional[str]

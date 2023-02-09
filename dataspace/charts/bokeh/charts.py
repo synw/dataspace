@@ -6,6 +6,7 @@ from holoviews.util import Dynamic
 from holoviews.element import Chart, Annotation
 from holoviews.plotting import bokeh as plot
 from bokeh.models import HoverTool
+from bokeh.resources import CDN
 
 
 class HvChart(Chart):
@@ -51,8 +52,8 @@ class HvChart(Chart):
         self = self.relabel(v)
         return self
 
-    def tooltip(self, v: Union[str, List[str], List[Tuple[str,str]]]):
-        tt: List[Tuple[str,str]] = []
+    def tooltip(self, v: Union[str, List[str], List[Tuple[str, str]]]):
+        tt: List[Tuple[str, str]] = []
         if isinstance(v, str) is True:
             tt.append((f"{v}", f"@{v}"))
         else:
@@ -106,7 +107,27 @@ class HvChart(Chart):
         :type path: str
         """
         dmap = Dynamic(self)
-        hv.save(dmap, path, fmt='png')
+        hv.save(dmap, path, fmt="png")
+
+    def get_html_(self) -> str:
+        """
+        Get html for a Bokeh chart
+        """
+        renderer = hv.renderer("bokeh")
+        plot = renderer.get_plot(self)
+        html = renderer._figure_data(plot, "html")
+        return html
+
+    @staticmethod
+    def html_header_():
+        """
+        Returns html script tags for Bokeh
+        """
+        url = CDN.js_files[0]
+        tag = f'<script type="text/javascript" src="{url}"></script>'
+        log = '<script type="text/javascript">Bokeh.set_log_level("info")</script>'
+        html_tokens = [tag, log]
+        return "\n".join(html_tokens)
 
 
 class HvAnnotation(Annotation):

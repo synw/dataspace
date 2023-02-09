@@ -1098,12 +1098,23 @@ class DataSpace:
         """
         Store a chart in the report stack
         """
-        self._reports.stack(chart, title, description)
-        msg_info("Chart added in the report stack")
+        self._reports.stack(chart, self._charts.engine, title, description)
+        m = "" if not title else title + " "
+        msg_info(f"Chart {m}added in the report stack")
 
     def save_pdf(self, filename: str, clear_stack=True):
         """
         Save a report to a pdf file
         """
         self._reports.save_pdf(filename, clear_stack)
-        msg_info("Pdf file saved")
+        msg_ok("Pdf file saved")
+
+    def save_html(self, info=False, clear_stack=True):
+        """Save a report to html files
+
+        :param info: print info about the html headers, defaults to False
+        :type info: bool, optional
+        :param clear_stack: clear the reporting stack, defaults to True
+        :type clear_stack: bool, optional
+        """
+        self._reports.save_html(info, clear_stack)

@@ -3,7 +3,12 @@ from typing import Dict, Optional, Union
 import pandas as pd
 from dataspace.transform import _drop
 
-from altair import Scale, X, Y, data_transformers
+from altair import (
+    Scale,
+    X,
+    Y,
+    data_transformers,
+)
 
 from .charts import AltairChart
 
@@ -30,7 +35,7 @@ class AltairChartEngine:
         chart_type: str,
         x: Optional[Union[str, X]] = None,
         y: Optional[Union[str, X]] = None,
-        **kwargs
+        **kwargs,
     ) -> AltairChart:
         """
         Get an Altair chart object
@@ -131,7 +136,17 @@ class AltairChartEngine:
                 .encode(x=self.x, y=self.y, **encode)
                 .properties(**opts)
             )
-        return chart    
+        return chart
+
+    def set_axis(self, xaxis: Union[str, X], yaxis: Union[str, Y]) -> None:
+        if isinstance(xaxis, X):
+            self.x = xaxis
+        else:
+            self.x = X(xaxis, scale=Scale(zero=False))
+        if isinstance(yaxis, Y):
+            self.y = yaxis
+        else:
+            self.y = Y(yaxis, scale=Scale(zero=False))
 
     def _altair_chart_num_(
         self,
@@ -206,16 +221,6 @@ class AltairChartEngine:
             .encode(X(self.x.shorthand, bin=True), y="count()", **encode)
             .properties(**opts)
         )
-
-    def set_axis(self, xaxis: Union[str, X], yaxis: Union[str, Y]) -> None:
-        if isinstance(xaxis, X):
-            self.x = xaxis
-        else:
-            self.x = X(xaxis, scale=Scale(zero=False))
-        if isinstance(yaxis, Y):
-            self.y = yaxis
-        else:
-            self.y = Y(yaxis, scale=Scale(zero=False))
 
     def _checkAxis(self) -> None:
         assert self.x is not None and self.y is not None, "Set the chart fields"
