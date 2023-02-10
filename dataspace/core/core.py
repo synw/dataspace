@@ -1077,15 +1077,19 @@ class DataSpace:
 
         :param filepath: path of the file to save
         :type filepath: str
-        :param \\*\\*kwargs: arguments to pass to ``pd.to_csv``
+        :param **kwargs: arguments to pass to ``pd.to_csv``
 
         :example: `ds.export_csv("myfile.csv", header=false)`
         """
         return export_csv(self.df, filepath, **kwargs)
 
     def report_path(self, path: str):
-        """
-        Set the report path folder
+        """Set the report path folder
+
+        :param path: the path where to save reports: relative or absolute
+        :type path: str
+
+        :example: `ds.report_path("../reports")`
         """
         self._reports.path = path
 
@@ -1095,22 +1099,32 @@ class DataSpace:
         title: Optional[str] = None,
         description: Optional[str] = None,
     ):
-        """
-        Store a chart in the report stack
+        """Store a chart in the report stack
+
+        :param chart: a chart object
+        :type chart: ChartType
+        :param title: the chart title, defaults to None
+        :type title: Optional[str], optional
+        :param description: the chart description, defaults to None
+        :type description: Optional[str], optional
         """
         self._reports.stack(chart, self._charts.engine, title, description)
         m = "" if not title else title + " "
         msg_info(f"Chart {m}added in the report stack")
 
     def save_pdf(self, filename: str, clear_stack=True):
-        """
-        Save a report to a pdf file
+        """Save a report to a pdf file
+
+        :param filename: the filename
+        :type filename: str
+        :param clear_stack: clear the reporting stack, defaults to True
+        :type clear_stack: bool, optional
         """
         self._reports.save_pdf(filename, clear_stack)
         msg_ok("Pdf file saved")
 
     def save_html(self, info=False, clear_stack=True):
-        """Save a report to html files
+        """Save a report to multiple html files, one per stacked item
 
         :param info: print info about the html headers, defaults to False
         :type info: bool, optional
