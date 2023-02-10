@@ -315,5 +315,29 @@
         "source": "chart"
       }
     ]
+  },
+  "Reporting": {
+    "Prepare a report": [
+      {
+        "title": "Set the report path",
+        "value": "report_path"
+      },
+      {
+        "title": "Add a chart to the report",
+        "value": "stack"
+      }
+    ],
+    "Pdf": [
+      {
+        "title": "Save to pdf",
+        "value": "save_pdf"
+      }
+    ],
+    "Html": [
+      {
+        "title": "Save to html files",
+        "value": "save_html"
+      }
+    ]
   }
 }

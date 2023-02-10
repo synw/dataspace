@@ -22,7 +22,6 @@
 </template>
 
 <script setup lang="ts">
-import { pyodide, onPythonReady } from "@/state";
 import docmap from "@/docmap.json";
 import router from "@/router";
 

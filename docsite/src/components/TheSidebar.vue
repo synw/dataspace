@@ -18,6 +18,9 @@
     <sidebar-block name="Charts">
       <sw-accordion :data="docmap['Charts']" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
     </sidebar-block>
+    <sidebar-block name="Reporting">
+      <sw-accordion :data="docmap['Reporting']" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
+    </sidebar-block>
   </div>
 </template>
 
