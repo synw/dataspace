@@ -2,7 +2,10 @@ import os
 import uuid
 from typing import List, Optional
 
-from slugify import slugify
+try:
+    from slugify import slugify
+except (ModuleNotFoundError, ImportError):
+    print("The html reporting engine is not available in this environment")
 
 try:
     from fpdf import FPDF

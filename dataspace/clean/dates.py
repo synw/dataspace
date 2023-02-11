@@ -39,21 +39,16 @@ def _fdate(df: pd.DataFrame, *cols, precision: str = "S", format: Optional[str])
             except ValueError as e:
                 raise Exception("Can not convert date", e)
     except KeyError:
-        raise Exception("Can not find colums " + " ".join(cols))
-    except Exception as e:
-        raise Exception(e, "Can not process date col")
+        raise KeyError("Can not find colums " + " ".join(cols))
 
 
 def _timestamps(df: pd.DataFrame, col: str, **kwargs):
-    try:
-        name = "timestamp"
-        if "name" in kwargs:
-            name = kwargs["name"]
-        if "errors" not in kwargs:
-            kwargs["errors"] = "coerce"
-        if "unit" in kwargs:
-            kwargs["unit"] = "ms"
-        df[name] = pd.to_datetime(df[col], **kwargs)
-        df[name] = df["timestamp"].values.astype(np.int64) // 10 ** 9
-    except Exception as e:
-        raise Exception("Can not convert to timestamps", e)
+    name = "timestamp"
+    if "name" in kwargs:
+        name = kwargs["name"]
+    if "errors" not in kwargs:
+        kwargs["errors"] = "coerce"
+    if "unit" in kwargs:
+        kwargs["unit"] = "ms"
+    df[name] = pd.to_datetime(df[col], **kwargs)
+    df[name] = df["timestamp"].values.astype(np.int64) // 10**9
