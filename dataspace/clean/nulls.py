@@ -1,16 +1,19 @@
-from typing import Optional
+from typing import List, Literal, Optional, Union
 import pandas as pd
 
 
 def _drop_nan(
-    df: pd.DataFrame, col: Optional[str] = None, method: str = "all", **kwargs
+    df: pd.DataFrame,
+    col: Optional[Union[str, List[str]]] = None,
+    how: Literal["all", "any"] = "all",
+    **kwargs
 ) -> pd.DataFrame:
     try:
         if col is None:
-            return df.dropna(how=method, **kwargs)
+            df = df.dropna(how=how, **kwargs)
         else:
-            df = df[df[col].notnull()]
-        df.reset_index(drop=True)
+            df = df.dropna(subset=col, how=how, **kwargs)
+        # df.reset_index(drop=True)
         return df
     except Exception as e:
         raise Exception("Error dropping nan values", e)

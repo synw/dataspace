@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import Dict, List, Literal, Optional, Union
 
 import pandas as pd
 from numpy import nan
@@ -153,27 +153,32 @@ class DataSpace:
         if is_notebook is True:
             msg_ok(f"Converted columns values to {dtype}")
 
-    def drop_nan(self, col: str, method: str = "all", **kwargs) -> None:
+    def drop_nan(
+        self,
+        col: Optional[Union[str, List[str]]] = None,
+        how: Literal["all", "any"] = "all",
+        **kwargs,
+    ) -> None:
         """
         Drop rows with ``NaN`` values from the main dataframe
 
         :param col: name of the column
-        :type col: str *optional*
-        :param method: ``how`` param for ``df.dropna``, **default**: "all"
-        :type method: str *optional*
+        :type col: str or list *optional*
+        :param how: ``how`` param for ``df.dropna``, **default**: "all"
+        :type method: Literal["all", "any"], *optional*
         :param \\*\\*kwargs: params for ``df.dropna``
         :type \\*\\*kwargs: optional
 
         :example: `ds.drop_nan("mycol")`
         """
-        self.df = _drop_nan(self.df, col, method, **kwargs)
+        self.df = _drop_nan(self.df, col, how, **kwargs)
 
-    def fill_nan(self, val: str, *cols):
+    def fill_nan(self, val, *cols):
         """
         Fill NaN values with new values in the main dataframe
 
         :param val: new value
-        :type val: str
+        :type val: scalar, dict, Series, or DataFrame
         :param \\*cols: names of the colums
         :type \\*cols: str *at least one*
 
