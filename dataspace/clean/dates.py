@@ -29,26 +29,18 @@ def _fdate(df: pd.DataFrame, *cols, precision: str = "S", format: Optional[str])
             encoded = "%Y"
         return row.strftime(encoded)
 
-    try:
-        for f in cols:
-            try:
-                if format is None:
-                    df[f] = pd.to_datetime(df[f]).apply(convert)
-                else:
-                    df[f] = pd.to_datetime(df[f]).apply(formatdate)
-            except ValueError as e:
-                raise Exception("Can not convert date", e)
-    except KeyError:
-        raise KeyError("Can not find colums " + " ".join(cols))
+    for f in cols:
+        if format is None:
+            df[f] = pd.to_datetime(df[f]).apply(convert)
+        else:
+            df[f] = pd.to_datetime(df[f]).apply(formatdate)
 
 
-def _timestamps(df: pd.DataFrame, col: str, **kwargs):
-    name = "timestamp"
-    if "name" in kwargs:
-        name = kwargs["name"]
+def _timestamps(df: pd.DataFrame, col: str, name: Optional[str] = None, **kwargs):
     if "errors" not in kwargs:
         kwargs["errors"] = "coerce"
     if "unit" in kwargs:
         kwargs["unit"] = "ms"
-    df[name] = pd.to_datetime(df[col], **kwargs)
-    df[name] = df["timestamp"].values.astype(np.int64) // 10**9
+    _name = name or "timestamp"
+    df[_name] = pd.to_datetime(df[col], **kwargs)
+    df[_name] = df[_name].values.astype(np.int64) // 10**9
