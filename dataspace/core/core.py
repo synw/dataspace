@@ -1,4 +1,4 @@
-from typing import Dict, List, Literal, Optional, Union
+from typing import Any, Dict, List, Literal, Optional, Union
 
 import pandas as pd
 from numpy import nan
@@ -173,7 +173,7 @@ class DataSpace:
         """
         self.df = _drop_nan(self.df, col, how, **kwargs)
 
-    def fill_nan(self, val, *cols):
+    def fill_nan(self, val: Any, *cols):
         """
         Fill NaN values with new values in the main dataframe
 
@@ -186,7 +186,7 @@ class DataSpace:
         """
         self.df = _fill_nan(self.df, val, *cols)
 
-    def fill_nulls(self, val=nan, *cols: str, nulls=[None, ""]):
+    def fill_nulls(self, *cols: str, val=nan, nulls=[None, ""]):
         """
         Fill all null values with NaN values in a column.
 
@@ -197,7 +197,7 @@ class DataSpace:
 
         :example: `ds.fill_nulls("mycol")`
         """
-        self.df = _fill_nulls(self.df, val, *cols, nulls=nulls)
+        self.df = _fill_nulls(self.df, *cols, val=val, nulls=nulls)
 
     def index(self, col: str) -> pd.DataFrame:
         """
@@ -237,7 +237,7 @@ class DataSpace:
         """
         _fdate(self.df, *cols, precision=precision, format=format)
 
-    def timestamps(self, col: str, **kwargs):
+    def timestamps(self, col: str, name: Optional[str] = None, **kwargs):
         """
         Add a timestamps column from a date column
 
@@ -248,7 +248,7 @@ class DataSpace:
 
         :example: ``ds.timestamps("mycol")``
         """
-        _timestamps(self.df, col, **kwargs)
+        _timestamps(self.df, col, name, **kwargs)
 
     def strip(self, *cols: str):
         """
@@ -324,11 +324,8 @@ class DataSpace:
 
         :example: `ds.unique_("col1")`
         """
-        try:
-            df = self.df.drop_duplicates(subset=[col], inplace=False)
-            return list(df[col])
-        except Exception as e:
-            raise Exception("Can not select unique data", e)
+        df = self.df.drop_duplicates(subset=[col], inplace=False)
+        return list(df[col])
 
     def wunique_(self, col: str, colname: str = "Number") -> pd.DataFrame:
         """
@@ -342,12 +339,9 @@ class DataSpace:
 
         :example: `ds.wunique_("col1")`
         """
-        try:
-            s = pd.value_counts(self.df[col].values)
-            df = pd.DataFrame(s, columns=[colname])
-            return df
-        except Exception as e:
-            raise Exception("Can not weight unique data", e)
+        s = pd.value_counts(self.df[col].values)
+        df = pd.DataFrame(s, columns=[colname])
+        return df
 
     # **************************
     #           count
@@ -416,13 +410,10 @@ class DataSpace:
         :example: `dss = ds.slit_("Col 1")`
         """
         dss = {}
-        try:
-            unique = self.df[col].unique()
-            for key in unique:
-                df2 = DataSpace(self.df.loc[self.df[col] == key])
-                dss[key] = df2
-        except Exception as e:
-            raise Exception("Can not split dataframe", e)
+        unique = self.df[col].unique()
+        for key in unique:
+            df2 = DataSpace(self.df.loc[self.df[col] == key])
+            dss[key] = df2
         return dss
 
     def sort(self, col: str, **kwargs):
@@ -434,10 +425,7 @@ class DataSpace:
 
         :example: `ds.sort("Col 1")`
         """
-        try:
-            self.df = self.df.sort_values(col, **kwargs)
-        except Exception as e:
-            raise Exception("Can not sort the dataframe from column ", col, e)
+        self.df = self.df.sort_values(col, **kwargs)
 
     def indexcol(self, col: str):
         """
@@ -448,10 +436,7 @@ class DataSpace:
 
         :example: ``ds.index_col("New col")``
         """
-        try:
-            self.df[col] = self.df.index.values
-        except Exception as e:
-            raise e
+        self.df[col] = self.df.index.values
         if is_notebook is True:
             msg_ok("Column", col, "added from the index")
 
@@ -490,10 +475,7 @@ class DataSpace:
 
         :example: ``ds.add("Col 4", 0)``
         """
-        try:
-            self.df[col] = value
-        except Exception as e:
-            raise Exception("Can not add column", e)
+        self.df[col] = value
 
     def keep(self, *cols) -> None:
         """
@@ -504,10 +486,7 @@ class DataSpace:
 
         :example: ``ds.keep("Col 1", "Col 2")``
         """
-        try:
-            self.df = self.df[list(cols)]
-        except Exception as e:
-            raise Exception("Can not remove colums", e)
+        self.df = self.df[list(cols)]
         msg_ok("Setting dataframe to columns", " ".join(cols))
 
     def exclude(self, col: str, val) -> None:
@@ -521,10 +500,7 @@ class DataSpace:
 
         :example: ``ds.exclude("Col 1", "value")``
         """
-        try:
-            self.df = self.df[self.df[col] != val]
-        except Exception as e:
-            raise Exception("Can not exclude rows based on value " + str(val), e)
+        self.df = self.df[self.df[col] != val]
 
     def copycol(self, origin_col: str, dest_col: str):
         """
@@ -537,10 +513,7 @@ class DataSpace:
 
         :example: ``ds.copy("col 1", "New col")``
         """
-        try:
-            self.df[dest_col] = self.df[[origin_col]]
-        except Exception as e:
-            raise Exception("Can not copy column", e)
+        self.df[dest_col] = self.df[[origin_col]]
 
     def dropr(self, *rows):
         """
@@ -551,10 +524,7 @@ class DataSpace:
 
         :example: ``ds.drop_rows([0, 2])``
         """
-        try:
-            self.df = self.df.drop(*rows)
-        except Exception as e:
-            raise Exception("Can not drop rows", e)
+        self.df = self.df.drop(*rows)
         msg_ok("Rows dropped")
 
     def append(self, *vals, ignore_index=True) -> None:
@@ -576,10 +546,7 @@ class DataSpace:
 
         :example: ``ds.reverse()``
         """
-        try:
-            self.df = self.df.iloc[::-1]
-        except Exception as e:
-            raise Exception("Can not reverse the dataframe", e)
+        self.df = self.df.iloc[::-1]
 
     def apply(self, function, *cols: List[str], axis=1, **kwargs) -> None:
         """

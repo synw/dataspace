@@ -1,5 +1,4 @@
 import pytest
-import datetime
 import pandas as pd
 import numpy as np
 import dataspace
@@ -29,6 +28,9 @@ class TestDsDataClean(BaseDsTest):
         ds.df = df1
         ds.fill_nan("two", "two")
         df2 = pd.DataFrame({"one": ["one", "two"], "two": ["two", "two"]}, ["1", "2"])
+        assert_frame_equal(ds.df, df2)
+        ds.df = df1
+        ds.fill_nan("two")
         assert_frame_equal(ds.df, df2)
 
     def test_replace(self):
@@ -73,7 +75,7 @@ class TestDsDataClean(BaseDsTest):
         with pytest.raises(ValueError):
             ds.to_type(str, "wrongcol")
 
-    """def tests_timestamps(self):
+    def tests_timestamps(self):
         df1 = pd.DataFrame(
             {"one": ["one", "two"], "two": ["2002/12/01", "2002/12/02"]}, [1, 2]
         )
@@ -105,11 +107,8 @@ class TestDsDataClean(BaseDsTest):
             dtype="datetime64[ns]",
         )
         np.testing.assert_array_equal(ds.df.index.values, index)
-        ds.df = None
-        ds.dateindex("date")
-        self.assertRaises(TypeError)
-        ds.dateindex("wrong")
-        self.assertRaises(TypeError)
+        with pytest.raises(KeyError):
+            ds.dateindex("wrong")
 
     def test_index(self):
         df1 = pd.DataFrame([[1, 3], [2, 4]], columns=["one", "two"])
@@ -117,9 +116,6 @@ class TestDsDataClean(BaseDsTest):
         ds.index("one")
         index = np.array([1, 2])
         np.testing.assert_array_equal(ds.df.index.values, index)
-        ds.df = None
-        ds.index("one")
-        self.assertRaises(TypeError)
 
     def test_strip(self):
         df = pd.DataFrame({"one": [" 2 ", "1 ", "0 "], "two": [2, 1, 1]})
@@ -127,12 +123,6 @@ class TestDsDataClean(BaseDsTest):
         ds.strip("one")
         df2 = pd.DataFrame({"one": ["2", "1", "0"], "two": [2, 1, 1]})
         assert_frame_equal(ds.df, df2)
-        ds.df = None
-        ds.strip("one")
-        self.assertRaises(TypeError)
-        ds.df = "wrong"
-        ds.index("one")
-        self.assertRaises(AttributeError)
 
     def test_strip_cols(self):
         df1 = pd.DataFrame([[1, 3], [2, 4]], columns=[" one ", " two "])
@@ -149,23 +139,9 @@ class TestDsDataClean(BaseDsTest):
         ds.roundvals("one")
         df2 = pd.DataFrame([[1.35, 3.0], [2.1, 4.0]], columns=["one", "two"])
         assert_frame_equal(ds.df, df2)
-        ds.df = df1
-        ds.roundvals("wrong")
-        self.assertRaises(KeyError)
-
-    def test_format_date(self):
-        date = datetime.datetime(2011, 1, 3, 0, 0)
-        d2 = ds.format_date_(date)
-        self.assertEqual(d2, "2011-01-03 00:00:00")
-
-    def test_date(self):
-        df = pd.DataFrame(
-            {"one": ["one", "two"], "two": ["2002/12/01", "2003/12/02"]}, [1, 2]
-        )
-        ds.df = df
-        ds.date("two")
-        self.assertEqual(ds.df.two.dtype, "datetime64[ns]")
-        # self.assertErr("ValueError", ds.date, "one")
+        with pytest.raises(KeyError):
+            ds.df = df1
+            ds.roundvals("wrong")
 
     def test_fdates(self):
         ds.df = pd.DataFrame(
@@ -232,38 +208,12 @@ class TestDsDataClean(BaseDsTest):
         ds.fdate("two", format="%Y")
         assert_frame_equal(ds.df, df2)
 
-        ds.df = pd.DataFrame(
-            {"one": ["one", "two"], "two": ["2002/12/01", "2003/12/02"]}, [1, 2]
-        )
-        ds.fdate("wrong")
-        self.assertRaises(KeyError)
-
-        ds.df = pd.DataFrame(
-            {"one": ["one", "two"], "two": ["2002/12/01", "wrong"]}, [1, 2]
-        )
-        ds.fdate("two", "wrong")
-        self.assertRaises(TypeError)
-
-        ds.df = None
-        ds.fdate("two")
-        self.assertRaises(ValueError)
-
     def test_nulls(self):
         df1 = pd.DataFrame({"one": ["one", "two"], "two": ["", None]}, ["1", "2"])
         ds.df = df1
         ds.fill_nulls("two")
-        df2 = pd.DataFrame({"one": ["one", "two"], "two": [nan, nan]}, ["1", "2"])
+        df2 = pd.DataFrame({"one": ["one", "two"], "two": [np.nan, np.nan]}, ["1", "2"])
         assert_frame_equal(ds.df, df2)
-        ds.df = None
-        ds.fill_nulls("two")
-        self.assertRaises(AttributeError)
-
-    def test_nan_empty(self):
-        df1 = pd.DataFrame({"one": ["one", "two"], "two": ["two", ""]}, ["1", "2"])
         ds.df = df1
-        ds.nan_empty("two")
-        df2 = pd.DataFrame({"one": ["one", "two"], "two": ["two", nan]}, ["1", "2"])
+        ds.fill_nulls()
         assert_frame_equal(ds.df, df2)
-        ds.df = None
-        ds.nan_empty("two")
-        self.assertRaises(TypeError)"""
