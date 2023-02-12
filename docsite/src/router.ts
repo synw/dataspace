@@ -12,13 +12,6 @@ const routes: Array<RouteRecordRaw> = [
     }
   },
   {
-    path: "/settings",
-    component: () => import("./views/SettingsView.vue"),
-    meta: {
-      title: "Settings"
-    }
-  },
-  {
     path: "/playground",
     component: () => import("./views/PlaygroundView.vue"),
     meta: {
