@@ -39,11 +39,14 @@ a, a:visited
 #main
   width: calc(100% - 16rem)
 .dataframe
-  @apply table-auto divide-y divide-gray-200 rounded-t w-max text-center
+  @apply table-auto divide-y divide-gray-200 rounded-t w-max mt-3
   & thead
     & th
-      @apply lighter px-3
+      @apply lighter px-3 text-center
       min-width: 2em
+  & tbody
+    & td
+      @apply px-2 py-1
 </style>
 
 

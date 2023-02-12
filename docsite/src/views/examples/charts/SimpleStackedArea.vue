@@ -1,10 +1,10 @@
 <template>
   <div class="text-xl">
-    Scatter plot with tooltip
+    Simple stacked area chart
   </div>
   <p class="mt-3">This example is from the <a
-      href="https://altair-viz.github.io/gallery/simple_stacked_area_chart.html">Simple
-      scatter plot with tooltips</a> example from Altair's examples. First load the dataset</p>
+      href="https://altair-viz.github.io/gallery/simple_stacked_area_chart.html">Simple stacked area chart</a> example
+    from Altair's examples.</p>
   <div class="w-full p-3">
     <ds-code-block id="simple_scatter1" :code="code1">
     </ds-code-block>
@@ -17,13 +17,11 @@
 <script setup lang="ts">
 import DsCodeBlock from '@/widgets/DsCodeBlock.vue';
 
-const code1 = `ds = await load_dataset('cars')
+const code1 = `ds = await load_dataset('iowa_electricity')
 ds.show()`;
 
-const code2 = `ds.point_('Horsepower:Q','Miles_per_Gallon:Q').pw(60).encode(
-    color='Origin:N'
-).tooltip(
-    ['Name', 'Origin', 'Horsepower', 'Miles_per_Gallon']
-).interactive()`;
+const code2 = `ds.area_('year:T','net_generation:Q').encode(
+    color='source:N'
+)`;
 </script>
 
