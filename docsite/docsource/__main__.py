@@ -1,10 +1,11 @@
 import json
 
-from docsource.docparser import (
+from docdundee.docparser import (
     parse_class,
     parse_docstrings,
-    get_examples,
+    get_func_sources,
     parse_functions,
+    write_docstrings,
 )
 
 
@@ -15,14 +16,13 @@ def parse_core():
     del doc["__repr__"]
     print("Writing doc ref")
     file = "src/autodoc/docref.json"
-    with open(file, "w") as filetowrite:
-        filetowrite.write(json.dumps(doc))
+    write_docstrings(file, doc)
 
 
 def parse_examples():
     print("Writing examples ref")
     efile = "src/autodoc/exref.json"
-    examples = get_examples("docsource/examples.py")
+    examples = get_func_sources("docsource/examples.py")
     with open(efile, "w") as filetowrite:
         filetowrite.write(json.dumps(examples))
 
@@ -32,8 +32,7 @@ def parse_chart_classes():
     doc = parse_docstrings(alt)
     print("Writing chart options doc ref")
     file = "src/autodoc/chartsref.json"
-    with open(file, "w") as filetowrite:
-        filetowrite.write(json.dumps(doc))
+    write_docstrings(file, doc)
 
 
 def parse_funcs():
@@ -41,8 +40,7 @@ def parse_funcs():
     doc = parse_docstrings(alt)
     print("Writing top level functions doc ref")
     file = "src/autodoc/funcsref.json"
-    with open(file, "w") as filetowrite:
-        filetowrite.write(json.dumps(doc))
+    write_docstrings(file, doc)
 
 
 def main():
