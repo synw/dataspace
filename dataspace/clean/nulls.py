@@ -11,6 +11,7 @@ def _drop_nan(
     if col is None:
         df = df.dropna(how=how, **kwargs)
     else:
+        df.drop_nulls(subset=['col1'])
         df = df.dropna(subset=col, how=how, **kwargs)
     # df.reset_index(drop=True)
     return df

@@ -1,6 +1,7 @@
 from typing import Any, Dict, List, Literal, Optional, Union
 
 import pandas as pd
+import polars as pl
 from numpy import nan
 
 from dataspace.calculations import _diffm, _diffn, _diffp  # _diffs, _diffsp
@@ -32,18 +33,21 @@ from dataspace.report import ReportEngine
 
 
 class DataSpace:
-    df: pd.DataFrame = None
+    df: pl.DataFrame
     _charts: DsChartEngine = DsChartEngine()
     _reports: ReportEngine = ReportEngine()
 
-    def __init__(self, df: pd.DataFrame = None) -> None:
-        self.df = df
+    def __init__(self, df: pl.DataFrame | pl.LazyFrame) -> None:
+        if isinstance(df, pl.LazyFrame):
+            self.df = df.collect()
+        else:
+            self.df = df
 
     def __repr__(self) -> str:
         num = 0
-        if self.df is not None:
-            num = len(self.df.index)
-        msg = "<DataSpace object | " + str(num) + " rows>"
+        if self.df:
+            num = self.df.select(pl.count())
+        msg = f"<DataSpace object | {num} rows>"
         if is_notebook is True:
             self.df.head()
             return str(self.df.head(5))
@@ -53,7 +57,7 @@ class DataSpace:
     #           info
     # **************************
 
-    def show(self, rows: int = 5) -> pd.DataFrame:
+    def show(self, rows: int = 5) -> pl.DataFrame:
         """
         Display info about the dataframe
 
@@ -68,8 +72,8 @@ class DataSpace:
         """
         return _show(rows, self.df)
 
-    def cols_(self) -> pd.DataFrame:
-        """
+    """def cols_(self) -> pd.DataFrame:
+        
         Returns a dataframe with columns info
 
         Category: Info/View data/Show
@@ -78,8 +82,8 @@ class DataSpace:
         :rtype: ``DataFrame``
 
         :example: `ds.cols_()`
-        """
-        return _cols(self.df)
+        
+        return _cols(self.df)"""
 
     # **************************
     #           clean
@@ -199,29 +203,6 @@ class DataSpace:
         """
         self.df = _fill_nulls(self.df, *cols, val=val, nulls=nulls)
 
-    def index(self, col: str) -> pd.DataFrame:
-        """
-        Set an index to the main dataframe
-
-        :param col: column name where to index from
-        :type col: str
-
-        :example: `ds.index("mycol")`
-        """
-        self.df.set_index(self.df[col], inplace=True)
-
-    def dateindex(self, col: str) -> pd.DataFrame:
-        """
-        Set a datetime index from a column
-
-        :param col: column name where to index the date from
-        :type col: str
-
-        :example: `ds.dateindex("mycol")`
-        """
-        index = pd.DatetimeIndex(self.df[col])
-        self.df.set_index(index, inplace=True)
-
     def fdate(self, *cols, precision: str = "S", format: Optional[str] = None):
         """
         Convert column values to formated date string
@@ -259,7 +240,7 @@ class DataSpace:
 
         :example: `ds.strip("mycol")`
         """
-        _strip(self.df, *cols)
+        self.df = _strip(self.df, *cols)
 
     def strip_cols(self):
         """
@@ -267,7 +248,7 @@ class DataSpace:
 
         :example: `ds.strip_cols()`
         """
-        _strip_cols(self.df)
+        self.df = _strip_cols(self.df)
 
     def roundvals(self, col: str, precision: int = 2):
         """
@@ -281,7 +262,7 @@ class DataSpace:
 
         :example: `ds.roundvals("mycol")`
         """
-        _roundvals(self.df, col, precision)
+        self.df = _roundvals(self.df, col, precision)
 
     def replace(self, col: str, searchval: str, replaceval: str):
         """
@@ -296,7 +277,7 @@ class DataSpace:
 
         :example: `ds.replace("mycol", "value", "new_value")`
         """
-        _replace(self.df, col, searchval, replaceval)
+        self.df = _replace(self.df, col, searchval, replaceval)
 
     # **************************
     #           select
@@ -311,7 +292,7 @@ class DataSpace:
 
         :example: `ds.limit(100)`
         """
-        self.df = self.df[:r]
+        self.df = self.df.slice(0, r)
 
     def unique_(self, col: str) -> List[str]:
         """
@@ -324,8 +305,8 @@ class DataSpace:
 
         :example: `ds.unique_("col1")`
         """
-        df = self.df.drop_duplicates(subset=[col], inplace=False)
-        return list(df[col])
+        df = self.df.unique(subset=col)
+        return df[col].to_list()
 
     def wunique_(self, col: str, colname: str = "Number") -> pd.DataFrame:
         """
@@ -339,9 +320,7 @@ class DataSpace:
 
         :example: `ds.wunique_("col1")`
         """
-        s = pd.value_counts(self.df[col].values)
-        df = pd.DataFrame(s, columns=[colname])
-        return df
+        return self.df.groupby(col).agg([pl.col(col).count().alias(colname)])
 
     # **************************
     #           count

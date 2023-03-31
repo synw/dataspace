@@ -1,30 +1,31 @@
-import pandas as pd
+import polars as pl
 
 from dataspace.utils.messages import msg_start, msg_end, msg_warning
 from . import DataSpace
 
 
-def _load_csv(url, **kwargs) -> pd.DataFrame:
+def _load_csv(url, **kwargs) -> pl.LazyFrame:
     msg_start("Loading csv...")
+    lf: pl.LazyFrame
     try:
-        return pd.read_csv(url, **kwargs)
+        lf = pl.scan_csv(url, **kwargs)
     except FileNotFoundError:
         msg = "File " + url + " not found"
         msg_warning(msg)
-        return
-    except Exception as e:
-        raise Exception("Can not load csv file", e)
+        raise Exception(msg)
+    msg_end("Csv file loaded")
+    return lf
 
 
-def _load_django(query) -> pd.DataFrame:
+def _load_django(query) -> pl.DataFrame:
     try:
-        df = pd.DataFrame(list(query.values()))
+        df = pl.DataFrame(list(query.values()))
         return df
     except Exception as e:
         raise Exception("Can not create dataspace from query", e)
 
 
-def from_df(df: pd.DataFrame) -> DataSpace:
+def from_df(df: pl.DataFrame) -> DataSpace:
     """
     Intialize a DataSpace from a pandas DataFrame
 
