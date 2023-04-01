@@ -1,5 +1,4 @@
-from .dataframe import _drop, _rename
-from .values import _append, _apply
-from .resample import _rsum, _rmean
+from .dataframe import _drop, _rename, _add
+from .resample import _resample
 
-__all__ = ["_drop", "_rename", "_append", "_apply", "_rsum", "_rmean"]
+__all__ = ["_drop", "_rename", "_add", "_resample"]

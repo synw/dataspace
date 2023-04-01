@@ -1,15 +1,15 @@
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Dict, List, Optional
 
 import pandas as pd
 import polars as pl
 from numpy import nan
 
-from dataspace.calculations import _diffm, _diffn, _diffp  # _diffs, _diffsp
+from dataspace.calculations import _percent, _diffm, _diffp
 from dataspace.charts import DsChartEngine
 from dataspace.clean import (
-    _drop_nan,
+    _drop_any_nulls,
+    _drop_all_nulls,
     _fdate,
-    _fill_nan,
     _fill_nulls,
     _replace,
     _roundvals,
@@ -17,16 +17,19 @@ from dataspace.clean import (
     _strip_cols,
     _timestamps,
     _to_date,
+    _to_tzdate,
     _to_float,
     _to_int,
+    _to_str,
     _to_type,
 )
 from dataspace.core.env import is_notebook
 from dataspace.count import _count_empty_, _count_null_, _count_unique_, _count_zero_
-from dataspace.info import _cols
+
+# from dataspace.info import _cols
 from dataspace.info.view import _show
 from dataspace.io.export import export_csv
-from dataspace.transform import _append, _apply, _drop, _rename, _rmean, _rsum
+from dataspace.transform import _drop, _rename, _add, _resample
 from dataspace.types import ChartType
 from dataspace.utils.messages import msg_info, msg_ok
 from dataspace.report import ReportEngine
@@ -37,20 +40,17 @@ class DataSpace:
     _charts: DsChartEngine = DsChartEngine()
     _reports: ReportEngine = ReportEngine()
 
-    def __init__(self, df: pl.DataFrame | pl.LazyFrame) -> None:
+    def __init__(self, df: pl.DataFrame | pl.LazyFrame):
         if isinstance(df, pl.LazyFrame):
             self.df = df.collect()
         else:
             self.df = df
 
     def __repr__(self) -> str:
-        num = 0
-        if self.df:
-            num = self.df.select(pl.count())
+        num = self.df.height
         msg = f"<DataSpace object | {num} rows>"
         if is_notebook is True:
-            self.df.head()
-            return str(self.df.head(5))
+            self.show()
         return msg
 
     # **************************
@@ -59,16 +59,16 @@ class DataSpace:
 
     def show(self, rows: int = 5) -> pl.DataFrame:
         """
-        Display info about the dataframe
+        Displays information about the DataFrame.
 
-        Category: Info/View data/Show
+        Args:
+            rows (int, optional): The number of rows to show. Defaults to 5.
 
-        :param rows: number of rows to show, **default**: 5
-        :type rows: ``int`` *optional*
-        :return: a pandas dataframe head
-        :rtype: ``DataFrame``
+        Returns:
+            pl.DataFrame: A head of the DataFrame.
 
-        :example: `ds.show()`
+        Example:
+            ds.show()
         """
         return _show(rows, self.df)
 
@@ -89,156 +89,177 @@ class DataSpace:
     #           clean
     # **************************
 
-    def to_date(self, *cols: str, **kwargs) -> None:
+    def to_date(self, *cols: str):
         """
-        Convert some columns values to date type
+        Converts some column values to date type.
 
-        Category: Clean/Dates/To date
+        Args:
+            cols (str): The name(s) of the column(s) to convert.
 
-        :param cols: names of the colums
-        :type cols: str *at least one*
-        :param \\*\\*kwargs: keyword arguments for ``pd.to_datetime``
-        :type \\*\\*kwargs: optional
-
-        :example: `ds.to_date("mycol")`
+        Example:
+            ds.to_date("mycol")
         """
-        _to_date(self.df, *cols, **kwargs)
+        self.df = _to_date(self.df, *cols)
 
-    def to_int(self, *cols: str, **kwargs) -> None:
+    def to_tzdate(self, *cols: str):
         """
-        Convert some column values to integers
+        Converts some column values to date type from ISO string
+        with timezone info.
 
-        Category: Clean/Convert types/To type
+        Args:
+            cols (str): The name(s) of the column(s) to convert.
 
-        :param \\*cols: names of the columns
-        :type \\*cols: str *at least one*
-        :param \\*\\*kwargs: keyword arguments for ``pd.to_numeric``
-        :type \\*\\*kwargs: optional
-
-        :example: `ds.to_int("mycol1", "mycol2", errors="coerce")`
+        Example:
+            ds.to_date("mycol")
         """
-        _to_int(self.df, *cols, **kwargs)
+        self.df = _to_tzdate(self.df, *cols)
+
+    def to_int(self, *cols: str):
+        """
+        Converts some column values to integers.
+
+        Args:
+            *cols (str): The name(s) of the column(s) to convert.
+
+        Example:
+            ds.to_int("mycol1", "mycol2")
+        """
+        self.df = _to_int(self.df, *cols)
         if is_notebook is True:
             msg_ok("Converted columns values to integers")
 
-    def to_float(self, *cols: str, **kwargs) -> None:
+    def to_float(self, *cols: str):
         """
-        Convert colums values to float -
+        Converts column values to floats.
 
-        Category: Clean/Convert types/To float
+        Args:
+            cols (str): The name(s) of the column(s) to convert.
 
-        :param cols: name of the columns
-        :type cols: str *at least one*
-        :param \\*\\*kwargs: keyword arguments for ``df.astype``
-        :type \\*\\*kwargs: optional
-
-        :example: `ds.to_float("mycol1")`
+        Example:
+            ds.to_float("mycol1")
         """
-        _to_float(self.df, *cols, **kwargs)
+        self.df = _to_float(self.df, *cols)
         if is_notebook is True:
             msg_ok("Converted columns values to floats")
 
-    def to_type(self, dtype: type, *cols: str, **kwargs) -> None:
+    def to_str(self, *cols: str):
         """
-        Convert colums values to a given type in the main dataframe
+        Converts column values to strings.
 
-        Category: Clean/Convert types/To type
+        Args:
+            cols (str): The name(s) of the column(s) to convert.
 
-        :param dtype: a type to convert to: ex: str
-        :type dtype: ``type``
-        :param \\*cols: names of the columns
-        :type \\*cols: str *at least one**
-        :param \\*\\*kwargs: keyword arguments for ``df.astype``
-        :type \\*\\*kwargs: optional
-
-        :examples: ``ds.to_type(str, "mycol")``
+        Example:
+            ds.to_str("mycol1")
         """
-        _to_type(self.df, dtype, *cols, **kwargs)
+        self.df = _to_str(self.df, *cols)
+        if is_notebook is True:
+            msg_ok("Converted columns values to strings")
+
+    def to_type(self, dtype: pl.DataType, *cols: str):
+        """
+        Converts column values to a given Polars datatype in the main DataFrame.
+
+        Args:
+            dtype (pl.DataType): The data type to convert to.
+            *cols (str): The name(s) of the column(s) to convert.
+
+        Example:
+            ds.to_type(pl.Utf8, "mycol")
+        """
+        self.df = _to_type(self.df, dtype, *cols)
         if is_notebook is True:
             msg_ok(f"Converted columns values to {dtype}")
 
-    def drop_nan(
-        self,
-        col: Optional[Union[str, List[str]]] = None,
-        how: Literal["all", "any"] = "all",
-        **kwargs,
-    ) -> None:
+    def drop_any_nulls(self, *cols: str):
         """
-        Drop rows with ``NaN`` values from the main dataframe
+        Drop rows that contain any null values in the
+        specified columns.
 
-        :param col: name of the column
-        :type col: str or list *optional*
-        :param how: ``how`` param for ``df.dropna``, **default**: "all"
-        :type method: Literal["all", "any"], *optional*
-        :param \\*\\*kwargs: params for ``df.dropna``
-        :type \\*\\*kwargs: optional
+        Args:
+            *cols: A variable number of string arguments representing the column
+                names to check for null values.
 
-        :example: `ds.drop_nan("mycol")`
+        Example:
+            ds.drop_any_nulls("mycol")
         """
-        self.df = _drop_nan(self.df, col, how, **kwargs)
+        self.df = _drop_any_nulls(self.df, *cols)
 
-    def fill_nan(self, val: Any, *cols):
+    def drop_all_nulls(self):
         """
-        Fill NaN values with new values in the main dataframe
+        Drop rows where all values are null
 
-        :param val: new value
-        :type val: scalar, dict, Series, or DataFrame
-        :param \\*cols: names of the colums
-        :type \\*cols: str *at least one*
+        Args:
+            *cols: A variable number of string arguments representing the column
+                names to check for null values.
 
-        :example: ``ds.fill_nan("new value", "mycol1", "mycol2")``
+        Example:
+            ds.drop_all_nulls()
         """
-        self.df = _fill_nan(self.df, val, *cols)
+        self.df = _drop_all_nulls(self.df)
 
-    def fill_nulls(self, *cols: str, val=nan, nulls=[None, ""]):
+    def fill_nulls(self, *cols: str, val=None, nulls=[None, ""]):
         """
-        Fill all null values with NaN values in a column.
+        Replace null (missing or empty) values in the specified columns with a given value.
 
-        Null values are ``None`` or en empty string
+        Args:
+            *cols (str): One or more column names to replace nulls in.
+            val (any, optional): The value to replace nulls with. Defaults to None.
+            nulls (list, optional): The list of null values to replace. Defaults to [None, ""].
 
-        :param cols: columns names
-        :type cols: str *at least one*
+        Returns:
+            None
 
-        :example: `ds.fill_nulls("mycol")`
+        Raises:
+            ValueError: If any of the specified column names are not found in the
+                DataFrame.
+
+        Example:
+            ds.fill_nulls("mycol")
         """
         self.df = _fill_nulls(self.df, *cols, val=val, nulls=nulls)
 
-    def fdate(self, *cols, precision: str = "S", format: Optional[str] = None):
+    def fdate(self, *cols, precision: str = "S", newcol="fdate"):
         """
-        Convert column values to formated date string
+        Converts specified columns to formatted date strings.
 
-        :param \\*cols: names of the colums
-        :type \\*cols: str, at least one
-        :param precision: time precision: Y, M, D, H, Min S, defaults to "S"
-        :type precision: str *optional*
-        :param format: python date format, defaults to None
-        :type format: str, optional
+         Args:
+             cols (str): Names of columns to convert to formatted date strings.
+             precision (str, optional): Precision level of date format string.
+                 Defaults to "S" (seconds).
+                 Possible values: "S" (seconds), "Min" (minutes), "H" (hours), "D" (days),
+                 "M" (months), "Y" (years).
+             newcol: Name of the new column to create. Defaults to "fdate".
 
-        :example: `ds.fdate("mycol1", "mycol2", precision="D")`
+         Example:
+             ds.fdate("mycol1", "mycol2")
         """
-        _fdate(self.df, *cols, precision=precision, format=format)
+        self.df = _fdate(self.df, *cols, precision=precision, newcol=newcol)
 
-    def timestamps(self, col: str, name: Optional[str] = None, **kwargs):
+    def timestamps(self, *cols: str, name: str = "timestamps"):
         """
-        Add a timestamps column from a date column
+        Adds a new column with timestamps from one or more specified date columns.
 
-        :param col: name of the timestamps column to add
-        :type col: str
-        :param \\*\\*kwargs: keyword arguments for ``pd.to_datetime``
-        :type \\*\\*kwargs: optional
+        Args:
+            *cols (str): Names of columns to convert to timestamps.
+            name (str, optional): Name of the new column to create. Defaults to "timestamps".
 
-        :example: ``ds.timestamps("mycol")``
+
+        Example:
+            ds.timestamps("mycol")
         """
-        _timestamps(self.df, col, name, **kwargs)
+        self.df = _timestamps(self.df, *cols, name=name)
 
     def strip(self, *cols: str):
         """
-        Remove leading and trailing white spaces column's values
+        Removes leading and trailing white spaces from the
+        values in the specified columns.
 
-        :param col: name of the column
-        :type col: str
+        Args:
+            *cols (str): Names of columns to strip
 
-        :example: `ds.strip("mycol")`
+        Example:
+            ds.strip("mycol")
         """
         self.df = _strip(self.df, *cols)
 
@@ -246,36 +267,35 @@ class DataSpace:
         """
         Remove leading and trailing white spaces in columns names
 
-        :example: `ds.strip_cols()`
+        Example:
+            ds.strip_cols()
         """
         self.df = _strip_cols(self.df)
 
     def roundvals(self, col: str, precision: int = 2):
         """
-        Round floats in a column. Numbers are going to be
-        converted to floats if they are not already
+        Rounds the values in the specified column to the specified float precision.
 
-        :param col: column name
-        :type col: str
-        :param precision: float precision, defaults to 2
-        :param precision: ``int`` *optional*
+        Args:
+            col (str): Name of the column to round.
+            precision (int, optional): Number of decimal places to round to. Defaults to 2.
 
-        :example: `ds.roundvals("mycol")`
+        Example:
+            ds.roundvals("mycol")
         """
         self.df = _roundvals(self.df, col, precision)
 
     def replace(self, col: str, searchval: str, replaceval: str):
         """
-        Replace a value in a column in the main dataframe
+        Replaces all occurrences of a value in the specified column with a new value.
 
-        :param col: column name
-        :type col: str
-        :param searchval: value to replace
-        :type searchval: str
-        :param replaceval: new value
-        :type replaceval: str
+        Args:
+            col (str): Name of the column to search.
+            searchval (str): Value to replace.
+            replaceval (str): New value to replace `searchval` with.
 
-        :example: `ds.replace("mycol", "value", "new_value")`
+        Example:
+            ds.replace("mycol", "value", "new_value")
         """
         self.df = _replace(self.df, col, searchval, replaceval)
 
@@ -283,42 +303,44 @@ class DataSpace:
     #           select
     # **************************
 
-    def limit(self, r: int = 5) -> None:
+    def limit(self, r: int = 5):
         """
-        Limit selection to a range in the main dataframe
+        Limits the number of rows in the DataFrame to the specified number.
 
-        :param r: number of rows to keep, **default**: 5
-        :type r: ``int`` *optional*
+        Args:
+            r (int, optional): Number of rows to keep. Defaults to 5.
 
-        :example: `ds.limit(100)`
+        Example:
+            ds.limit(100)
         """
-        self.df = self.df.slice(0, r)
+        self.df = self.df.limit(r)
 
     def unique_(self, col: str) -> List[str]:
         """
-        Returns a list of unique values in a column
+        Returns a list of unique values in the specified column.
 
-        :param col: the column to select from
-        :type col: str
-        :return: a list of unique values in the column
-        :rtype: ``List[str]``
+        Args:
+            col (str): Name of the column to select from.
 
-        :example: `ds.unique_("col1")`
+        Returns:
+            list: A list of unique values in the column.
+
+        Example:
+            ds.unique_("col1")
         """
-        df = self.df.unique(subset=col)
-        return df[col].to_list()
+        return list(self.df[col].unique())
 
     def wunique_(self, col: str, colname: str = "Number") -> pd.DataFrame:
         """
-        Weight unique values: returns a dataframe with a count
-        of unique values for a column
+        Returns a `pl.DataFrame` object with a count of unique values in the specified column.
 
-        :param col: the column to select from
-        :type col: str
-        :return: a dataframe with a count of unique values in the column
-        :rtype: ``pd.DataFrame``
+        Args:
+            col (str): Name of the column to select from.
+            colname (str, optional): Name of the new column containing the unique counts.
+                Defaults to "Number".
 
-        :example: `ds.wunique_("col1")`
+        Example:
+            ds.wunique_("col1")
         """
         return self.df.groupby(col).agg([pl.col(col).count().alias(colname)])
 
@@ -327,50 +349,62 @@ class DataSpace:
     # **************************
 
     def count_null_(self, col: str) -> int:
-        """Count the number of null values in a column
+        """
+        Counts the number of null values in the specified column.
 
-        :param col: the column to count from
-        :type col: str
-        :return: number of values
-        :rtype: int
+        Args:
+            col (str): Name of the column to count from.
 
-        :example: `ds.count_nulls_("col1")`
+        Returns:
+            int: The number of null values in the column.
+
+        Example:
+            ds.count_nulls_("col1")
         """
         return _count_null_(self.df, col)
 
     def count_empty_(self, col: str) -> int:
-        """List of empty row indices
+        """
+        Counts the number of empty values in the specified column.
 
-        :param col: column to count from
-        :type col: str
-        :return: number of values
-        :rtype: int
+        Args:
+            col (str): Name of the column to count from.
 
-        :example: `ds.count_empty_("col1")`
+        Returns:
+            int: The number of empty values in the column.
+
+        Example:
+            ds.count_empty_("col1")
         """
         return _count_empty_(self.df, col)
 
     def count_zero_(self, col: str) -> int:
-        """List of row with 0 values
+        """
+        Counts the number of zero values in the specified column.
 
-        :param col: column to count from
-        :type col: str
-        :return: number of values
-        :rtype: int
+        Args:
+            col (str): Name of the column to count from.
 
-        :example: `ds.count_zero_("col1")`
+        Returns:
+            int: The number of zero values in the column.
+
+        Example:
+            ds.count_zero_("col1")
         """
         return _count_zero_(self.df, col)
 
     def count_unique_(self, col: str) -> int:
-        """Return the number of unique values in a column
+        """
+        Counts the number of unique values in the specified column.
 
-        :param col: column to count from
-        :type col: str
-        :return: number of unique values
-        :rtype: int
+        Args:
+            col (str): Name of the column to count from.
 
-        :example: `ds.count_unique_("col1")`
+        Returns:
+            int: The number of unique values in the column.
+
+        Example:
+           ds.count_unique_("col1")
         """
         return _count_unique_(self.df, col)
 
@@ -380,333 +414,245 @@ class DataSpace:
 
     def split_(self, col: str) -> Dict[str, "DataSpace"]:
         """
-        Split the main dataframe according to a column's unique values and
-        return a dict of DataSpace instances
+        Splits the main `pl.DataFrame` object into multiple `DataSpace` objects,
+        one for each unique value in the specified column.
 
-        :return: list of DataSpace instances
-        :rtype: ``List[DataSpace]``
+        Args:
+            col (str): Name of the column to split by.
 
-        :example: `dss = ds.slit_("Col 1")`
+        Returns:
+            Dict[str, DataSpace]: A dictionary with the unique values in the specified column as
+                keys and a corresponding `DataSpace` object as the value.
+
+        Example:
+            dss = ds.split_("col1")
         """
         dss = {}
-        unique = self.df[col].unique()
+        unique = self.df[col].unique().to_list()
         for key in unique:
-            df2 = DataSpace(self.df.loc[self.df[col] == key])
-            dss[key] = df2
+            dss[key] = DataSpace(self.df.filter(pl.col(col) == key))
         return dss
 
-    def sort(self, col: str, **kwargs):
+    def sort(self, col: str):
         """
-        Sorts the main dataframe according to the given column
+        Sorts the main `pl.DataFrame` object in-place according to the specified column.
 
-        :param col: column name
-        :type col: str
+        Args:
+            col (str): Name of the column to sort by.
 
-        :example: `ds.sort("Col 1")`
+        Example:
+            ds.sort("Col 1")
         """
-        self.df = self.df.sort_values(col, **kwargs)
+        self.df = self.df.sort(by=col)
 
-    def indexcol(self, col: str):
+    def drop(self, *cols):
         """
-        Add a column from the index
+        Removes the specified columns from the main `pl.DataFrame` object in-place.
 
-        :param col: name of the new column
-        :type col: str
+        Args:
+            *cols (str): Names of the columns to remove.
 
-        :example: ``ds.index_col("New col")``
-        """
-        self.df[col] = self.df.index.values
-        if is_notebook is True:
-            msg_ok("Column", col, "added from the index")
-
-    def drop(self, *cols) -> None:
-        """
-        Drops columns from the main dataframe
-
-        :param cols: names of the columns
-        :type cols: str
-
-        :example: ``ds.drop("Col 1", "Col 2")``
+        Example:
+            ds.drop("Col1", "Col2")
         """
         self.df = _drop(self.df, *cols)
 
-    def rename(self, source_col: str, dest_col: str) -> None:
+    def rename(self, source_col: str, dest_col: str):
         """
-        Renames a column in the main dataframe
+        Renames a column in the main `pl.DataFrame` object in-place.
 
-        :param source_col: name of the column to rename
-        :type source_col: str
-        :param dest_col: new name of the column
-        :type dest_col: str
+        Args:
+            source_col (str): Name of the column to rename.
+            dest_col (str): New name of the column.
 
-        :example: ``ds.rename("Col 1", "New col")``
+        Example:
+            ds.rename("Col1", "Newcol")
         """
         self.df = _rename(self.df, source_col, dest_col)
 
-    def add(self, col: str, value) -> None:
+    def add(self, col: str, value: Any):
         """
-        Add a column with default values
+        Adds a new column to the main `pl.DataFrame` object with the
+        specified default value.
 
-        :param col: column name
-        :type col: str
-        :param value: column value
-        :type value: any
+        Args:
+            col (str): Name of the new column.
+            value (Any): Default value for the new column.
 
-        :example: ``ds.add("Col 4", 0)``
+        Example:
+            ds.add("Col 4", 0)
         """
-        self.df[col] = value
+        self.df = _add(self.df, col, value)
 
-    def keep(self, *cols) -> None:
+    def keep(self, *cols: str):
         """
-        Limit the dataframe to some columns
+        Limits the main `pl.DataFrame` object to the specified columns.
 
-        :param cols: names of the columns
-        :type cols: str
+        Args:
+            *cols (str): Names of the columns to keep.
 
-        :example: ``ds.keep("Col 1", "Col 2")``
+        Example:
+            ds.keep("Col 1", "Col 2")
         """
-        self.df = self.df[list(cols)]
-        msg_ok("Setting dataframe to columns", " ".join(cols))
+        self.df = self.df.select(cols)
 
-    def exclude(self, col: str, val) -> None:
+    def exclude(self, col: str, val: Any):
         """
-        Delete rows based on value
+        Deletes all rows from the main `pl.DataFrame` object
+        where the specified column has the specified value.
 
-        :param col: column name
-        :type col: str
-        :param val: value to delete
-        :type val: any
+        Args:
+            col (str): Name of the column to check for the specified value.
+            val (Any): Value to exclude rows for.
 
-        :example: ``ds.exclude("Col 1", "value")``
+        Example:
+            ds.exclude("Col1", "value")
         """
-        self.df = self.df[self.df[col] != val]
+        self.df = self.df.filter(pl.any(pl.col(col) != val))
 
     def copycol(self, origin_col: str, dest_col: str):
         """
-        Copy a columns values in another column
+        Copies the values from one column to another column
+        in the main `pl.DataFrame` object.
 
-        :param origin_col: name of the column to copy
-        :type origin_col: str
-        :param dest_col: name of the new column
-        :type dest_col: str
+        Args:
+            origin_col (str): Name of the column to copy values from.
+            dest_col (str): Name of the column to copy values to.
 
-        :example: ``ds.copy("col 1", "New col")``
+        Example:
+            ds.copy("col1", "New col")
         """
-        self.df[dest_col] = self.df[[origin_col]]
+        self.df = self.df.with_columns([pl.col(origin_col).alias(dest_col)])
 
-    def dropr(self, *rows):
-        """
-        Drops some rows from the main dataframe
-
-        :param rows: rows names
-        :type rows: list of ints
-
-        :example: ``ds.drop_rows([0, 2])``
-        """
-        self.df = self.df.drop(*rows)
-        msg_ok("Rows dropped")
-
-    def append(self, *vals, ignore_index=True) -> None:
-        """
-        Append a row to the main dataframe
-
-        :param vals: list of the row values to add
-        :type vals: list
-        :param index: index key, defaults to None
-        :param index: any, optional
-
-        :example: ``ds.append([0, 2, 2, 3, 4])``
-        """
-        self.df = _append(self.df, *vals, ignore_index=ignore_index)
-
-    def reverse(self) -> None:
+    def reverse(self):
         """
         Reverses the main dataframe order
 
-        :example: ``ds.reverse()``
+        Example:
+            ds.reverse()
         """
-        self.df = self.df.iloc[::-1]
+        self.df = self.df.reverse()
 
-    def apply(self, function, *cols: List[str], axis=1, **kwargs) -> None:
-        """
-        Apply a function on columns values
-
-        :param function: a function to apply to the columns
-        :type function: function
-        :param cols: columns names
-        :type cols: name of columns
-        :param axis: index (0) or column (1), default is 1
-        :param kwargs: arguments for ``df.apply``
-        :type kwargs: optional
-
-        :example:
-                        .. code-block:: python
-
-                                def f(row):
-                                        # add a new column with a value
-                                        row["newcol"] = row["col1"] + 1
-                                        return row
-
-                                ds.apply(f)
-
-        """
-        self.df = _apply(self.df, function, *cols, axis=axis, **kwargs)
-
-    def rsum(
-        self, time_period: str, num_col: str = "Number", dateindex: Optional[str] = None
-    ) -> None:
-        """
-        Resample and add a sum the main dataframe to a time period
-
-        :param time_period: unit + period: periods are Y, M, D, H, Min, S
-        :param time_period: str
-        :param num_col: name of the new column, defaults to "Number"
-        :param num_col: str, optional
-        :param dateindex: column name to use as date index, defaults to None
-        :param dateindex: str, optional
-
-        :example: ``ds.rsum("1D")``
-        """
-        self.df = _rsum(self.df, time_period, num_col, dateindex)
-
-    def rmean(
-        self, time_period: str, num_col: str = "Number", dateindex: Optional[str] = None
+    def resample(
+        self,
+        date_col: str,
+        time_period: str,
+        mcols: List[str] = [],
+        scols: List[str] = [],
     ):
         """
-        Resample and add a sum column the main dataframe to a time period
+        Resamples the `pl.DataFrame` object to a specific time period.
 
-        :param time_period: unit + period: periods are Y, M, D, H, Min, S
-        :param time_period: str
-        :param num_col: number of the new column, defaults to "Number"
-        :param num_col: str, optional
-        :param dateindex: column name to use as date index, defaults to None
+        Args:
+            date_col (str): Name of the column containing the date or datetime values.
+            time_period (str): Resample time period string. Possible values are:
+                - "1ns" (1 nanosecond)
+                - "1us" (1 microsecond)
+                - "1ms" (1 millisecond)
+                - "1s" (1 second)
+                - "1m" (1 minute)
+                - "1h" (1 hour)
+                - "1d" (1 day)
+                - "1w" (1 week)
+                - "1mo" (1 calendar month)
+                - "1y" (1 calendar year)
+                - "1i" (1 index count)
+            mcols (List[str]): List of column names to resample with the mean function.
+            scols (List[str]): List of column names to resample with the sum function.
 
-        :example: ``ds.rmean("1Min")``
+        Example:
+            ds.resample("datecol", "1m", mean_cols=["price"], sum_cols=["quantity"])
+
+        Example:
+
         """
-        self.df = _rmean(self.df, time_period, num_col, dateindex)
+        self.df = _resample(self.df, date_col, time_period, mcols, scols)
 
     # **************************
     #        calculations
     # **************************
 
     def percent(self, col: str, roundn=1):
-        """add a percent column
+        """Adds a percent column to the DataFrame.
 
-        :param col: the column to calculate percentages from
-        :type col: str
-        :param roundn: round level, defaults to 1
-        :type roundn: int, optional
+        Args:
+            col (str): The name of the column to calculate percentages from.
+            roundn (int, optional): The number of decimal places to round to. Defaults to 1.
 
-        :example: ``ds.percent("amount")``
+        Returns:
+            polars.DataFrame: The DataFrame with a new column containing the percentages.
+
+        Example:
+            ds.percent("amount")
         """
-        self.df["percent"] = round((self.df[col] / self.df[col].sum()) * 100, roundn)
+        self.df = _percent(self.df, col, roundn)
 
-    def diffn(self, diffcol: str, name: str = "Diff", doround=True) -> None:
+    def diffp(self, diffcol: str, name: str = "diff", decimals=0):
         """
-        Add a diff column to the main dataframe: calculate the diff
-        from the next value
+        Add a diff column to the main dataframe: calculate the difference
+        from the previous value.
 
-        :param diffcol: column to diff from
-        :type diffcol: str
-        :param name: diff column name, defaults to "Diff"
-        :type name: str, optional
+        Args:
+            diffcol (str): The column name for which to calculate the difference.
+            name (str, optional): The name of the resulting difference column. Defaults to "diff".
+            decimals (int, optional): The number of decimal places to round the difference to. Defaults to 0.
 
-        :example: ``ds.diffn("Col 1", "New col")``
-        """
-        self.df = _diffn(
-            self.df, diffcol=diffcol, name=name, doround=doround, percent=False
-        )
-
-    def diffnp(self, diffcol: str, name: str = "Diff", doround=True) -> None:
-        """
-        Add a diff column to the main dataframe: calculate the diff
-        in percentage from the next value
-
-        :param diffcol: column to diff from
-        :type diffcol: str
-        :param name: diff column name, defaults to "Diff"
-        :type name: str, optional
-
-        :example: ``ds.diffnp("Col 1", "New col")``
-        """
-        self.df = _diffn(
-            self.df, diffcol=diffcol, name=name, doround=doround, percent=True
-        )
-
-    def diffp(self, diffcol: str, name: str = "Diff", doround=True) -> None:
-        """
-        Add a diff column to the main dataframe: calculate the diff
-        from the previous value
-
-        :param diffcol: column to diff from
-        :type diffcol: str
-        :param name: diff column name, defaults to "Diff"
-        :type name: str, optional
-
-        :example: ``ds.diffp("Col 1", "New col")``
+        Example:
+            ds.diffp("Col 1", "New col")
         """
         self.df = _diffp(
-            self.df, diffcol=diffcol, name=name, doround=doround, percent=False
+            self.df, diffcol=diffcol, name=name, decimals=decimals, percent=False
         )
 
-    def diffpp(self, diffcol: str, name: str = "Diff", doround=True) -> None:
+    def diffpp(self, diffcol: str, name: str = "diff", decimals=0):
         """
-        Add a diff column to the main dataframe: calculate the diff
-        in percentage from the previous value
+        Add a diff column to the main dataframe: calculate the difference
+        in percentage from the previous value.
 
-        :param diffcol: column to diff from
-        :type diffcol: str
-        :param name: diff column name, defaults to "Diff"
-        :type name: str, optional
+        Args:
+            diffcol (str): The column name for which to calculate the difference.
+            name (str, optional): The name of the resulting difference column. Defaults to "diff".
+            decimals (int, optional): The number of decimal places to round the difference to. Defaults to 0.
 
-        :example: ``ds.diffpp("Col 1", "New col")``
+        Example:
+            ds.diffpp("Col 1", "New col")
         """
         self.df = _diffp(
-            self.df, diffcol=diffcol, name=name, doround=doround, percent=True
+            self.df, diffcol=diffcol, name=name, decimals=decimals, percent=True
         )
 
-    def diffm(
-        self, diffcol: str, name: str = "Diff", default=nan, doround=True
-    ) -> None:
+    def diffm(self, diffcol: str, name: str = "diff", decimals=0):
         """
-        Add a diff column to the main dataframe: calculate the
-        diff from the column mean
+        Add a difference column to the main dataframe: calculate the
+        difference from the column mean.
 
-        :param diffcol: column to diff from
-        :type diffcol: str
-        :param name: diff column name, defaults to "Diff"
-        :param name: str, optional
-        :param default: column default value, defaults to nan
-        :param default: optional
+        Args:
+            diffcol (str): The column name for which to calculate the difference.
+            name (str, optional): The name of the resulting difference column. Defaults to "diff".
+            decimals (int, optional): The number of decimal places to round the difference to. Defaults to 0.
 
-        :example: ``ds.diffm("Col 1", "New col")``
+        Example:
+            ds.diffm("Col 1", "New col")
         """
-        self.df = _diffm(
-            self.df, diffcol, name=name, default=default, doround=doround, percent=False
-        )
+        self.df = _diffm(self.df, diffcol, name=name, decimals=decimals, percent=False)
 
-    def diffmp(
-        self, diffcol: str, name: str = "Diff", default=nan, doround=True
-    ) -> None:
+    def diffmp(self, diffcol: str, name: str = "diff", decimals=0):
         """
-        Add a diff column to the main dataframe: calculate the
-        diff in percentage from the column mean
+        Add a difference column to the main dataframe: calculate the
+        difference in percentage from the column mean.
 
-        :param diffcol: column to diff from
-        :type diffcol: str
-        :param name: diff column name, defaults to "Diff"
-        :param name: str, optional
-        :param default: column default value, defaults to nan
-        :param default: optional
+        Args:
+            diffcol (str): The column name for which to calculate the difference.
+            name (str, optional): The name of the resulting difference column. Defaults to "diff".
+            decimals (int, optional): The number of decimal places to round the difference to. Defaults to 0.
 
-        :example: ``ds.diffmp("Col 1", "New col")``
+        Example:
+            ds.diffmp("Col 1", "New col")
         """
-        self.df = _diffm(
-            self.df, diffcol, name=name, default=default, doround=doround, percent=True
-        )
+        self.df = _diffm(self.df, diffcol, name=name, decimals=decimals, percent=True)
 
     """
-    def diffs(self, col: str, serie: Iterable, name: str = "Diff") -> None:
+    def diffs(self, col: str, serie: Iterable, name: str = "Diff"):
         ""
         Add a diff column from a serie. The serie is an iterable
         of the same length than the dataframe
@@ -722,7 +668,7 @@ class DataSpace:
         ""
         self.df = _diffs(self.df, col, serie, name)
 
-    def diffsp(self, col: str, serie: Iterable, name: str = "Diff") -> None:
+    def diffsp(self, col: str, serie: Iterable, name: str = "Diff"):
         ""
         Add a diff column in percentage from a serie. The serie is
         an iterable of the same length than the dataframe
@@ -743,7 +689,7 @@ class DataSpace:
     #           charts
     # **************************
 
-    def bokeh(self) -> None:
+    def bokeh(self):
         """
         Use the Bokeh charts engine
 
@@ -751,7 +697,7 @@ class DataSpace:
         """
         self._charts.engine = "bokeh"
 
-    def altair(self) -> None:
+    def altair(self):
         """
         Use the Altair charts engine
 
@@ -786,7 +732,7 @@ class DataSpace:
 
         :example: `ds.line_()`
         """
-        df = self.df
+        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "line", *args, **kwargs)
@@ -799,7 +745,7 @@ class DataSpace:
 
         :example: `ds.point_()`
         """
-        df = self.df
+        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "point", *args, **kwargs)
@@ -812,7 +758,7 @@ class DataSpace:
 
         :example: `ds.bar_()`
         """
-        df = self.df
+        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "bar", *args, **kwargs)
@@ -831,7 +777,7 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        df = self.df
+        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "square", *args, **kwargs)
@@ -850,7 +796,7 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        df = self.df
+        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "rule", *args, **kwargs)
@@ -869,7 +815,7 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        df = self.df
+        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "tick", *args, **kwargs)
@@ -888,7 +834,7 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        df = self.df
+        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "bar_num", *args, **kwargs)
@@ -907,7 +853,7 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        df = self.df
+        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "line_num", *args, **kwargs)
@@ -926,7 +872,7 @@ class DataSpace:
             Please switch to Altair like this: ds.altair()
             """
             )
-        df = self.df
+        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "point_num", *args, **kwargs)
@@ -939,7 +885,7 @@ class DataSpace:
 
         :example: `ds.area_()`
         """
-        df = self.df
+        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "area", *args, **kwargs)
@@ -952,7 +898,7 @@ class DataSpace:
 
         :example: `ds.heatmap_()`
         """
-        df = self.df
+        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "heatmap", *args, **kwargs)
@@ -965,7 +911,7 @@ class DataSpace:
 
         :example: `ds.hist_()`
         """
-        df = self.df
+        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "hist", *args, **kwargs)
@@ -978,7 +924,7 @@ class DataSpace:
 
         :example: `ds.hline_()`
         """
-        df = self.df
+        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "hline", *args, **kwargs)
@@ -1022,7 +968,7 @@ class DataSpace:
     #           export
     # **************************
 
-    def export_csv(self, filepath: str, **kwargs) -> None:
+    def export_csv(self, filepath: str, **kwargs):
         """
         Write the main dataframe to a csv file
 

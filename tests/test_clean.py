@@ -1,54 +1,47 @@
 import pytest
-import pandas as pd
+import polars as pl
 import numpy as np
 import dataspace
-from pandas.testing import assert_frame_equal
+from polars.testing import assert_frame_equal
 
 from tests.base import BaseDsTest
 
-ds = dataspace.from_df(pd.DataFrame())
+ds = dataspace.from_df(pl.DataFrame())
 
 
 class TestDsDataClean(BaseDsTest):
     def test_drop_nan(self):
-        df1 = pd.DataFrame({"one": ["one", "two"], "two": ["two", np.nan]})
+        df1 = pl.DataFrame(
+            {"one": pl.Series(["one", "two"]), "two": pl.Series([None, None])}
+        )
         ds.df = df1
-        ds.drop_nan("two")
-        df2 = pd.DataFrame({"one": ["one"], "two": ["two"]})
+        ds.drop_all_nulls()
+        df2 = pl.DataFrame({"one": pl.Series(["one", "two"])})
         assert_frame_equal(ds.df, df2)
-        ds.df = df1
-        ds.drop_nan(how="any")
-        assert_frame_equal(ds.df, df2)
-        ds.df = df1
-        ds.drop_nan(["two"])
-        assert_frame_equal(ds.df, df2)
-
-    def test_fill_nan(self):
-        df1 = pd.DataFrame({"one": ["one", "two"], "two": ["two", None]}, ["1", "2"])
-        ds.df = df1
-        ds.fill_nan("two", "two")
-        df2 = pd.DataFrame({"one": ["one", "two"], "two": ["two", "two"]}, ["1", "2"])
-        assert_frame_equal(ds.df, df2)
-        ds.df = df1
-        ds.fill_nan("two")
+        ds.df = pl.DataFrame(
+            {"one": pl.Series(["one", "two"]), "two": pl.Series([None, "x"])}
+        )
+        ds.drop_any_nulls("one")
         assert_frame_equal(ds.df, df2)
 
     def test_replace(self):
-        df1 = pd.DataFrame({"one": ["one", "two"], "two": ["two", "two"]}, ["1", "2"])
+        df1 = pl.DataFrame(
+            {"one": pl.Series(["one", "two"]), "two": pl.Series(["two", "two"])}
+        )
         ds.df = df1
         ds.replace("one", "two", "three")
-        df2 = pd.DataFrame({"one": ["one", "three"], "two": ["two", "two"]}, ["1", "2"])
+        df2 = pl.DataFrame(
+            {"one": pl.Series(["one", "three"]), "two": pl.Series(["two", "two"])}
+        )
         assert_frame_equal(ds.df, df2)
 
     def test_to_int(self):
-        df1 = pd.DataFrame({"one": ["one", "two"], "two": [1.0, 2.0]}, ["1", "2"])
+        df1 = pl.DataFrame({"one": ["one", "two"], "two": [1.0, 2.0]})
         ds.df = df1
         ds.to_int("two")
         self.assertEqual(list(ds.df["two"]), [1, 2])
         with pytest.raises(ValueError):
-            ds.df = pd.DataFrame(
-                {"one": ["one", "two"], "two": ["wrong", 2.0]}, ["1", "2"]
-            )
+            ds.df = pl.DataFrame({"one": ["one", "two"], "two": ["wrong", 2.0]})
             ds.to_int("two")
 
     def test_to_float(self):
@@ -57,23 +50,23 @@ class TestDsDataClean(BaseDsTest):
         ds.to_float("two")
         self.assertEqual(list(ds.df["two"]), [1.0, 2.0])
         with pytest.raises(ValueError):
-            ds.df = pd.DataFrame({"one": ["one", "two"], "two": ["wrong", 2]})
+            ds.df = pl.DataFrame({"one": ["one", "two"], "two": ["wrong", 2]})
             ds.to_float("two")
 
     def test_to_type(self):
-        df1 = pd.DataFrame({"one": ["one", "two"], "two": [1, 2]})
+        df1 = pl.DataFrame({"one": ["one", "two"], "two": [1, 2]})
         ds.df = df1
-        ds.to_type(str, "two")
-        df2 = pd.DataFrame({"one": ["one", "two"], "two": ["1", "2"]})
+        ds.to_type(pl.Utf8, "two")  # type: ignore
+        df2 = pl.DataFrame({"one": ["one", "two"], "two": ["1", "2"]})
         df2.astype(str, "two")
         assert_frame_equal(ds.df, df2)
         with pytest.raises(ValueError):
             ds.df = pd.DataFrame(
                 {"one": ["one", "two"], "two": ["wrong", 2.0]}, ["1", "2"]
             )
-            ds.to_type(int, "two")
+            ds.to_type(pl.Int64, "two")  # type: ignore
         with pytest.raises(ValueError):
-            ds.to_type(str, "wrongcol")
+            ds.to_type(pl.Utf8, "wrongcol")  # type: ignore
 
     def tests_timestamps(self):
         df1 = pd.DataFrame(

@@ -1,24 +1,21 @@
-import pandas as pd
+from typing import Any
+import polars as pl
 from ..utils.messages import msg_warning, msg_info
 
 
-def _drop(df: pd.DataFrame, *cols) -> pd.DataFrame:
-    try:
-        index = df.columns.values
-        for col in cols:
-            if col not in index:
-                msg_warning("Column", col, "not found. Aborting")
-                return
-            df = df.drop(col, axis=1)
-    except Exception as e:
-        raise ("Can not drop column", e)
-    return df
+def _drop(df: pl.DataFrame, *cols: str) -> pl.DataFrame:
+    ndf = df.drop(cols)
+    msg_info("Columns", *cols, "droped")
+    return ndf
 
 
-def _rename(df: pd.DataFrame, source_col: str, dest_col: str) -> pd.DataFrame:
-    try:
-        df = df.rename(columns={source_col: dest_col})
-    except Exception as e:
-        raise ("Can not rename column", e)
+def _rename(df: pl.DataFrame, source_col: str, dest_col: str) -> pl.DataFrame:
+    ndf = df.rename({source_col: dest_col})
     msg_info("Column", source_col, "renamed")
-    return df
+    return ndf
+
+
+def _add(df: pl.DataFrame, col: str, value: Any) -> pl.DataFrame:
+    ndf = df.with_columns([pl.lit(value).alias(col)])
+    msg_info("Column", col, "added")
+    return ndf

@@ -1,46 +1,39 @@
-from typing import Optional
-import numpy as np
-import pandas as pd
+import polars as pl
 
 
-def _to_date(df: pd.DataFrame, *cols: str, **kwargs):
-    try:
-        for col in cols:
-            df[col] = pd.to_datetime(df[col], **kwargs)
-    except Exception as e:
-        raise Exception("Can not convert to date", e)
+def _to_tzdate(df: pl.DataFrame, *cols: str) -> pl.DataFrame:
+    new_cols = [
+        pl.col(col).str.strptime(
+            pl.Datetime, fmt="%Y-%m-%d %H:%M:%S.%f%z", strict=False
+        )
+        for col in cols
+    ]
+    return df.with_columns(new_cols)
 
 
-def _fdate(df: pd.DataFrame, *cols, precision: str = "S", format: Optional[str]):
-    def formatdate(row):
-        return row.strftime(format)
-
-    def convert(row):
-        encoded = "%Y-%m-%d %H:%M:%S"
-        if precision == "Min":
-            encoded = "%Y-%m-%d %H:%M"
-        elif precision == "H":
-            encoded = "%Y-%m-%d %H"
-        elif precision == "D":
-            encoded = "%Y-%m-%d"
-        elif precision == "M":
-            encoded = "%Y-%m"
-        elif precision == "Y":
-            encoded = "%Y"
-        return row.strftime(encoded)
-
-    for f in cols:
-        if format is None:
-            df[f] = pd.to_datetime(df[f]).apply(convert)
-        else:
-            df[f] = pd.to_datetime(df[f]).apply(formatdate)
+def _to_date(df: pl.DataFrame, *cols: str) -> pl.DataFrame:
+    new_cols = [pl.col(col).str.strptime(pl.Datetime, strict=False) for col in cols]
+    return df.with_columns(new_cols)
 
 
-def _timestamps(df: pd.DataFrame, col: str, name: Optional[str] = None, **kwargs):
-    if "errors" not in kwargs:
-        kwargs["errors"] = "coerce"
-    if "unit" in kwargs:
-        kwargs["unit"] = "ms"
-    _name = name or "timestamp"
-    df[_name] = pd.to_datetime(df[col], **kwargs)
-    df[_name] = df[_name].values.astype(np.int64) // 10**9
+def _fdate(df: pl.DataFrame, *cols: str, newcol: str, precision: str) -> pl.DataFrame:
+    encoded = "%Y-%m-%d %H:%M:%S"
+    if precision == "Min":
+        encoded = "%Y-%m-%d %H:%M"
+    elif precision == "H":
+        encoded = "%Y-%m-%d %H"
+    elif precision == "D":
+        encoded = "%Y-%m-%d"
+    elif precision == "M":
+        encoded = "%Y-%m"
+    elif precision == "Y":
+        encoded = "%Y"
+
+    print("Enc", encoded)
+    return df.with_columns(
+        [pl.col(col).dt.strftime(encoded).alias("fdate") for col in cols]
+    )
+
+
+def _timestamps(df: pl.DataFrame, *cols: str, name: str) -> pl.DataFrame:
+    return df.with_columns([pl.col(col).dt.timestamp().alias(name) for col in cols])
