@@ -1,6 +1,6 @@
 # Dataspace
 
-[![pub package](https://img.shields.io/pypi/v/dataspace)](https://pypi.org/project/dataspace/)
+[![pub package](https://img.shields.io/pypi/v/dataspace)](https://pypi.org/project/dataspace/) [![Coverage Status](https://coveralls.io/repos/github/synw/dataspace/badge.svg?branch=main)](https://coveralls.io/github/synw/dataspace?branch=main)
 
 A simple api to explore, clean, transform and visualize data
 
