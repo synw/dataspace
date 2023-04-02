@@ -15,5 +15,12 @@ testr:
 	@echo ""
 	@printf "Run the unit tests"
 	@echo ""
-	coverage run --source=dataspace -m pytest --maxfail=1 && coverage xml
+	coverage run --source=dataspace -m pytest && coverage xml
+.PHONY:test
+
+testl:
+	@echo ""
+	@printf "Run the unit tests"
+	@echo ""
+	coverage run --source=dataspace -m pytest && coverage lcov
 .PHONY:test
