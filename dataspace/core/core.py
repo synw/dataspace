@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Optional
 import pandas as pd
 import polars as pl
 
-from dataspace.calculations import _percent, _diffm, _diffp
+from dataspace.calculations import _percent, _diffm, _diffp, _cvar, _lreg
 from dataspace.charts import DsChartEngine
 from dataspace.clean import (
     _drop_any_nulls,
@@ -699,6 +699,24 @@ class DataSpace:
             ds.diffmp("Col 1", "New col")
         """
         self.df = _diffm(self.df, diffcol, name=name, decimals=decimals, percent=True)
+
+    def cvar_(self, col: str) -> float:
+        """
+        Returns the coefficient of variation (CV) of a column in percentage.
+
+        Args:
+            col (str): The name of the column for which to calculate the coefficient of variation.
+
+        Returns:
+            float: The coefficient of variation of the column in percentage.
+
+        Example:
+            ds.cvar_("mycol")
+        """
+        return _cvar(self.df, col)
+
+    def lreg_(self, xcol: str, ycol, name="regression"):
+        self.df = _lreg(self.df, xcol, ycol, name)
 
     """
     def diffs(self, col: str, serie: Iterable, name: str = "Diff"):
