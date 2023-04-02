@@ -10,7 +10,7 @@ A simple api to explore, clean, transform and visualize data
 - **Clean and transform data**: select, filter, normalize and reshape data
 - **Visualize data**: many kind of charts
 
-Check the [documentation](https://synw.github.io/dataspace/)
+:books: Check the [documentation](https://synw.github.io/dataspace/)
 
 This api is:
 
@@ -84,6 +84,14 @@ pip install dataspace
         ├── exclude
         ├── reverse
         └── sort
+```
+
+## Tests
+
+To run the tests:
+
+```bash
+make test
 ```
 
 
