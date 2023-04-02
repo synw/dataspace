@@ -28,15 +28,7 @@ def _count_empty_(df: pl.DataFrame, col: str) -> int:
 
 
 def _count_zero_(df: pl.DataFrame, col: str) -> int:
-    n: int
-
-    def check_(value):
-        return value == ""
-
-    count_df = df.with_columns(
-        [pl.col(col).apply(check_, return_dtype=pl.Boolean).alias("is_empty")]
-    ).select(pl.col("is_empty").sum().alias("empty_count"))
-    n = count_df["empty_count"][0]
+    n = df.select((pl.col(col) == 0).count())[0, 0]
     msg_ok("Found", n, "rows with 0 value in column " + col)
     return n
 

@@ -14,7 +14,7 @@ def _fill_nulls(
     df: pl.DataFrame, *cols: str, nulls: List[Any], val: Any
 ) -> pl.DataFrame:
     if len(cols) == 0:
-        cols = tuple(*df.columns)
+        cols = tuple(df.columns)
     return df.with_columns(
         [
             pl.when(pl.col(col).is_in(nulls))

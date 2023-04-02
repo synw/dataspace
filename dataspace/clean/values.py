@@ -1,3 +1,4 @@
+from typing import Any
 import polars as pl
 
 
@@ -39,7 +40,7 @@ def _roundvals(df: pl.DataFrame, col: str, precision: int) -> pl.DataFrame:
 
 
 def _replace(
-    df: pl.DataFrame, col: str, searchval: str, replaceval: str
+    df: pl.DataFrame, col: str, searchval: Any, replaceval: Any
 ) -> pl.DataFrame:
     new_col = (
         df[col]

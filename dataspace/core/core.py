@@ -2,7 +2,6 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 import polars as pl
-from numpy import nan
 
 from dataspace.calculations import _percent, _diffm, _diffp
 from dataspace.charts import DsChartEngine
@@ -89,17 +88,18 @@ class DataSpace:
     #           clean
     # **************************
 
-    def to_date(self, *cols: str):
+    def to_date(self, *cols: str, fmt: str = "%Y-%m-%d %H:%M:%S"):
         """
         Converts some column values to date type.
 
         Args:
             cols (str): The name(s) of the column(s) to convert.
+            fmt (str): The date parsing format to use
 
         Example:
             ds.to_date("mycol")
         """
-        self.df = _to_date(self.df, *cols)
+        self.df = _to_date(self.df, *cols, fmt=fmt)
 
     def to_tzdate(self, *cols: str):
         """
@@ -198,14 +198,14 @@ class DataSpace:
         """
         self.df = _drop_all_nulls(self.df)
 
-    def fill_nulls(self, *cols: str, val=None, nulls=[None, ""]):
+    def fill_nulls(self, *cols: str, val: Any, nulls=[None]):
         """
         Replace null (missing or empty) values in the specified columns with a given value.
 
         Args:
             *cols (str): One or more column names to replace nulls in.
             val (any, optional): The value to replace nulls with. Defaults to None.
-            nulls (list, optional): The list of null values to replace. Defaults to [None, ""].
+            nulls (list, optional): The list of null values to replace. Defaults to [None].
 
         Returns:
             None
@@ -285,7 +285,7 @@ class DataSpace:
         """
         self.df = _roundvals(self.df, col, precision)
 
-    def replace(self, col: str, searchval: str, replaceval: str):
+    def replace(self, col: str, searchval: Any, replaceval: Any):
         """
         Replaces all occurrences of a value in the specified column with a new value.
 
@@ -328,7 +328,9 @@ class DataSpace:
         Example:
             ds.unique_("col1")
         """
-        return list(self.df[col].unique())
+        l = list(self.df[col].unique())
+        l.sort()
+        return l
 
     def wunique_(self, col: str, colname: str = "Number") -> pd.DataFrame:
         """
@@ -562,11 +564,58 @@ class DataSpace:
 
         Example:
             ds.resample("datecol", "1m", mean_cols=["price"], sum_cols=["quantity"])
-
-        Example:
-
         """
         self.df = _resample(self.df, date_col, time_period, mcols, scols)
+
+    def rsum(self, date_col: str, time_period: str, *cols: str):
+        """
+        Resamples the `pl.DataFrame` object and sum to a specific time period.
+
+        Args:
+            date_col (str): Name of the column containing the date or datetime values.
+            time_period (str): Resample time period string. Possible values are:
+                - "1ns" (1 nanosecond)
+                - "1us" (1 microsecond)
+                - "1ms" (1 millisecond)
+                - "1s" (1 second)
+                - "1m" (1 minute)
+                - "1h" (1 hour)
+                - "1d" (1 day)
+                - "1w" (1 week)
+                - "1mo" (1 calendar month)
+                - "1y" (1 calendar year)
+                - "1i" (1 index count)
+            *cols (str): column names to resample with the sum function.
+
+        Example:
+            ds.rsum("datecol", "1m", "quantity")
+        """
+        self.resample(date_col, time_period, scols=list(cols))
+
+    def rmean(self, date_col: str, time_period: str, *cols: str):
+        """
+        Resamples the `pl.DataFrame` object and mean to a specific time period.
+
+        Args:
+            date_col (str): Name of the column containing the date or datetime values.
+            time_period (str): Resample time period string. Possible values are:
+                - "1ns" (1 nanosecond)
+                - "1us" (1 microsecond)
+                - "1ms" (1 millisecond)
+                - "1s" (1 second)
+                - "1m" (1 minute)
+                - "1h" (1 hour)
+                - "1d" (1 day)
+                - "1w" (1 week)
+                - "1mo" (1 calendar month)
+                - "1y" (1 calendar year)
+                - "1i" (1 index count)
+            *cols (str): column names to resample with the mean function.
+
+        Example:
+            ds.rmean("datecol", "1m", "price")
+        """
+        self.resample(date_col, time_period, mcols=list(cols))
 
     # **************************
     #        calculations
