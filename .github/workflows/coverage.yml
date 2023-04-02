@@ -1,15 +1,28 @@
-name: 'coverage'
-on:
-    pull_request:
-        branches:
-            - master
-            - main
+on: ["push", "pull_request"]
+
+name: Test Coveralls
+
 jobs:
-    coverage:
-        runs-on: ubuntu-latest
-        steps:
-          - name: Get Coverage
-            uses: orgoro/coverage@v3
-            with:
-                coverageFile: ./coverage.xml
-                token: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v1
+
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+
+    - name: npm install, make test-coverage
+      run: |
+        npm install
+        make test-coverage
+
+    - name: Coveralls
+      uses: coverallsapp/github-action@v1
+      with:
+            path-to-lcov: ./coverage.lcov
+            token: ${{ secrets.GITHUB_TOKEN }}
