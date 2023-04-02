@@ -1,2 +1,3 @@
-from .info import _cols
 from .view import _show
+
+__all__ = ["_show"]

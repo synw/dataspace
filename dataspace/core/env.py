@@ -1,7 +1,7 @@
 import platform
 
 try:
-    from IPython import get_ipython
+    from IPython import get_ipython  # type: ignore
 except ImportError:
     pass
 

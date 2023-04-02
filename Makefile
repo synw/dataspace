@@ -8,5 +8,5 @@ test:
 	@echo ""
 	@printf "Run the unit tests"
 	@echo ""
-	coverage run --source=dataspace -m pytest && coverage html
+	coverage run --source=dataspace -m pytest --maxfail=1 && coverage html && coverage xml coverage.xml
 .PHONY:test

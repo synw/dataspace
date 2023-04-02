@@ -1,70 +1,81 @@
-import pandas as pd
+import polars as pl
 
 from dataspace.utils.messages import msg_start, msg_end, msg_warning
 from . import DataSpace
 
 
-def _load_csv(url, **kwargs) -> pd.DataFrame:
+def _load_csv(url, **kwargs) -> pl.DataFrame:
     msg_start("Loading csv...")
+    df: pl.DataFrame
+    if "try_parse_dates" not in kwargs.keys():
+        kwargs["try_parse_dates"] = True
+    if "use_pyarrow" not in kwargs.keys():
+        kwargs["use_pyarrow"] = True
     try:
-        return pd.read_csv(url, **kwargs)
+        df = pl.read_csv(url, **kwargs)
     except FileNotFoundError:
         msg = "File " + url + " not found"
         msg_warning(msg)
-        return
-    except Exception as e:
-        raise Exception("Can not load csv file", e)
+        raise Exception(msg)
+    msg_end("Csv file loaded")
+    return df
 
 
-def _load_django(query) -> pd.DataFrame:
+def _load_django(query) -> pl.DataFrame:
     try:
-        df = pd.DataFrame(list(query.values()))
+        df = pl.DataFrame(list(query.values()))
         return df
     except Exception as e:
         raise Exception("Can not create dataspace from query", e)
 
 
-def from_df(df: pd.DataFrame) -> DataSpace:
+def from_df(df: pl.DataFrame) -> DataSpace:
     """
-    Intialize a DataSpace from a pandas DataFrame
+    Initializes a DataSpace from a DataFrame.
 
-    :param df: a pandas ``DataFrame``
-    :return: a DataSpace
-    :rtype: ``DataSpace``
+    Args:
+        df (polars.DataFrame): A DataFrame.
 
-    :example: `dataspace.from_df(df)`
+    Returns:
+        DataSpace: A DataSpace object.
+
+    Example:
+        dataspace.from_df(df)
     """
     return DataSpace(df)
 
 
 def from_csv(url, **kwargs) -> DataSpace:
     """
-    Loads csv data in the main dataframe
+    Loads CSV data into the main DataFrame.
 
-    :param url: url of the csv file to load:
-                            can be absolute if it starts with ``/``
-                            or relative if it starts with ``./``
-    :type url: ``str``
-    :param kwargs: keyword arguments to pass to Pandas
-                                ``read_csv`` function
-    :return: a DataSpace
-    :rtype: ``DataSpace``
+    Args:
+        url (str): The URL of the CSV file to load. Can be absolute if it starts
+            with ``/``, or relative if it starts with ``./``.
+        **kwargs: Optional keyword arguments to pass to Pandas ``read_csv``
+            function.
 
-    :example: `dataspace.from_csv("./myfile.csv")`
+    Returns:
+        DataSpace: A DataSpace object.
+
+    Example:
+        dataspace.from_csv("./myfile.csv")
     """
     return DataSpace(_load_csv(url, **kwargs))
 
 
 def from_django(query) -> DataSpace:
     """
-    Load the main dataframe from a django orm query
+    Loads the main DataFrame from a Django ORM query.
 
-    :param query: django query from a model
-    :type query: django query
+    Args:
+        query: A Django query from a model.
+        type query: django.db.models.query.QuerySet
 
-    :return: a DataSpace
-    :rtype: ``DataSpace``
+    Returns:
+        DataSpace: A DataSpace object.
 
-    :example: `dataspace.load_django(Mymodel.objects.all())`
+    Example:
+        dataspace.load_django(Mymodel.objects.all())
     """
     return DataSpace(_load_django(query))

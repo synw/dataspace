@@ -58,13 +58,11 @@ def _endmsg(rd) -> str:
         if rd.minutes > 1:
             s = "s"
         msg += colors.bold(str(rd.minutes)) + " minute" + s + " "
-    # if rd.seconds > 0:
-    #    msg+=str(rd.seconds)
-    # else:
-    #    msg+="0."
-    milliseconds = int(rd.microseconds / 1000)
-    if milliseconds > 0:
-        msg += colors.bold(str(rd.seconds) + "." + str(milliseconds))
+    if rd.seconds > 0:
+        # print("S", rd.seconds)
+        msg+=str(rd.seconds)
+    milliseconds = str(rd.microseconds / 1000).replace("0.","")
+    msg += colors.bold(str(rd.seconds) + "." + milliseconds)
     msg += " seconds"
     return msg
 
