@@ -5,12 +5,14 @@ from typing import List, Optional
 try:
     from slugify import slugify
 except (ModuleNotFoundError, ImportError):
-    print("The html reporting engine is not available in this environment")
+    # print("The html reporting engine is not available in this environment")
+    pass
 
 try:
     from fpdf import FPDF
 except (ModuleNotFoundError, ImportError):
-    print("The pdf reporting engine is not available in this environment")
+    # print("The pdf reporting engine is not available in this environment")
+    pass
 
 
 from dataspace.types import ChartEngineName, ReportItemType, ChartType

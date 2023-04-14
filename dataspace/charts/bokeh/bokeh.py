@@ -1,5 +1,4 @@
 from typing import Dict, List, Optional, Union
-import pandas as pd
 import holoviews as hv
 from holoviews.core.data.interface import DataError
 from dataspace.charts.bokeh.charts import (
@@ -12,7 +11,7 @@ from dataspace.charts.bokeh.charts import (
     HeatMap,
 )
 
-hv.extension("bokeh")
+hv.extension("bokeh")  # type: ignore
 
 
 class BokehChartEngine:
@@ -26,7 +25,7 @@ class BokehChartEngine:
 
     def chart(
         self,
-        df: pd.DataFrame,
+        df,
         chart_type,
         x: Optional[Union[str, List[str]]] = None,
         y: Optional[Union[str, List[str]]] = None,
@@ -88,7 +87,7 @@ class BokehChartEngine:
         if isinstance(yaxis, list):
             self.y = yaxis
         else:
-            self.y = [yaxis]    
+            self.y = [yaxis]
 
     def _checkAxis(self):
         assert self.x is not None or self.y is not None, "Set the chart fields"

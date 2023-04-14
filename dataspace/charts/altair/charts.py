@@ -20,214 +20,241 @@ except (ModuleNotFoundError, ImportError):
 
 class AltairChart(AltChart):
     def w(self, v: int) -> "AltairChart":
-        """Set the width of the chart
+        """
+        Set the width of the chart.
 
-        .. code-block:: python
+        Args:
+            v (int): Value in pixels.
 
-            ds = await load_dataset("sp500")
-            ds.axis("date:T", "price:Q")
-            ds.line_().w(500)
+        Returns:
+            AltairChart: The chart object.
 
-        :param v: value in pixels
-        :type v: int
-        :return: the chart object
-        :rtype: Chart
+        Example:
+            # Use this method to set the width of a chart to 500 pixels:
+            chart = ds.line_()
+            chart.w(500)
         """
         return self.properties(width=v)
 
     def h(self, v: int) -> "AltairChart":
-        """Set the height of the chart
+        """
+        Set the height of the chart.
 
-        .. code-block:: python
+        Args:
+            v (int): Value in pixels.
 
-            ds = await load_dataset("sp500")
-            ds.axis("date:T", "price:Q")
-            ds.line_().h(200)
+        Returns:
+            AltairChart: The chart object.
 
-        :param v: value in pixels
-        :type v: int
-        :return: the chart object
-        :rtype: Chart
+        Example:
+            # Use this method to set the height of a chart to 200 pixels:
+            chart = ds.line_()
+            chart.h(200)
         """
         return self.properties(height=v)
 
     def wh(self, w: int, h: int) -> "AltairChart":
-        """Set the width and height of a chart
+        """
+        Set the width and height of a chart.
 
-        .. code-block:: python
+        Args:
+            w (int): Width value in pixels.
+            h (int): Height value in pixels.
 
-            ds = await load_dataset("sp500")
-            ds.axis("date:T", "price:Q")
-            ds.line_().wh(500, 200)
+        Returns:
+            AltairChart: The chart object.
 
-        :param w: width value in pixels
-        :type w: int
-        :param h: height value in pixels
-        :type h: int
-        :return: the chart object
-        :rtype: Chart
+        Example:
+            # Use this method to set the width and height of a chart:
+            chart = ds.line_()
+            chart.wh(500, 200)
         """
         return self.properties(width=w, height=h)
 
     def mw(self, v: int) -> "AltairChart":
-        """Configure the default mark width
+        """
+        Configure the default mark width.
 
-        .. code-block:: python
+        Args:
+            v (int): Width value in pixels.
 
-            ds = await load_dataset("sp500")
-            ds.axis("date:T", "price:Q")
-            ds.bar_().mw(7)
+        Returns:
+            AltairChart: The chart object.
 
-        :param v: width value in pixels
-        :type v: int
-        :return: the chart object
-        :rtype: Chart
+        Example:
+            # Use this method to configure the default mark width:
+            chart = ds.bar_()
+            chart.mw(7)
         """
         return self.configure_mark(width=v)
 
     def pw(self, v: int) -> "AltairChart":
-        """Configure the default point width
+        """
+        Configure the default point width.
 
-        .. code-block:: python
+        Args:
+            v (int): Width value in pixels.
 
-            ds = await load_dataset("sp500")
-            ds.axis("date:T", "price:Q")
-            ds.point_().pw(25)
+        Returns:
+            AltairChart: The chart object.
 
-        :param v: width value in pixels
-        :type v: int
-        :return: the chart object
-        :rtype: Chart
+        Example:
+            # Use this method to configure the default point width:
+            chart = ds.point_()
+            chart.pw(25)
         """
         return self.configure_point(size=v)
 
     def color(self, v: str) -> "AltairChart":
-        """Configure the chart color
+        """
+        Configure the chart color.
 
-        .. code-block:: python
+        Args:
+            v (str): The color value.
 
-            ds = await load_dataset("sp500")
-            ds.axis("date:T", "price:Q")
-            ds.area_().color("forestgreen")
+        Returns:
+            AltairChart: The chart object.
 
-        :param v: the color value
-        :type v: str
-        :return: the chart object
-        :rtype: Chart
+        Example:
+            # Use this method to configure the chart color:
+            chart = ds.area_()
+            chart.color("forestgreen")
         """
         return self.encode(color=value(v))
 
     def opacity(self, v: Union[int, float]) -> "AltairChart":
-        """Configure the chart opacity
+        """
+        Configure the chart opacity.
 
-        .. code-block:: python
+        Args:
+            v (Union[int, float]): The opacity value.
 
-            ds = await load_dataset("sp500")
-            ds.axis("date:T", "price:Q")
-            ds.point_().opacity(0.5)
+        Returns:
+            AltairChart: The chart object.
 
-        :param v: the opacity value
-        :type v: Union[int, float]
-        :return: the chart object
-        :rtype: Chart
+        Example:
+            # Use this method to configure the chart opacity:
+            chart = ds.point_()
+            chart.opacity(0.5)
         """
         return self.encode(opacity=value(v))
 
     def tooltip(self, v: Union[str, List[str]]) -> "AltairChart":
-        """Configure a tooltip on hover for some colums
+        """
+        Configure a tooltip on hover for some columns.
 
         The tooltip shows up when the user cursor goes
-        over the datapoint on the chart
+        over the datapoint on the chart.
 
-        .. code-block:: python
+        Args:
+            v (Union[str, List[str]]): Column or list of columns to use for the tooltip.
 
-            ds = await load_dataset("sp500")
-            ds.point_("date:T", "price:Q").tooltip(["date","price"])
+        Returns:
+            AltairChart: The chart object.
 
-        :param v: column or list of columns to use for the tooltip
-        :type v: Union[str, List[str]]
-        :return: the chart object
-        :rtype: Chart
+        Example:
+            # Use this method to configure a tooltip for some columns:
+            chart = ds.point_()
+            chart.tooltip(["date", "price"])
         """
         return self.encode(tooltip=v)
 
     def to(self, v: str) -> "AltairChart":
-        """Change the chart type for an existing chart (only for the Altair engine)
+        """
+        Change the chart type for an existing chart (only for the Altair engine).
 
-        :param v: the new chart type
-        :type v: str
-        :return: the chart object
-        :rtype: Chart
+        Args:
+            v (str): The new chart type.
+
+        Returns:
+            AltairChart: The chart object.
+
+        Example:
+            # Use this method to change the chart type:
+            chart = ds.line_()
+            chart.to("area")
         """
         return self.properties(mark=v)
 
     def rx(self, v=-45) -> "AltairChart":
-        """Rotate the chart x labels
+        """
+        Rotate the chart x labels.
 
-        :param v: angle of rotation to use, defaults to -45
-        :type v: int, optional
-        :return: the chart object
-        :rtype: Chart
+        Args:
+            v (int, optional): Angle of rotation to use. Defaults to -45.
+
+        Returns:
+            AltairChart: The chart object.
+
+        Example:
+            # Use this method to rotate the x labels:
+            chart = ds.line_()
+            chart = chart.rx(-45)
         """
         self.encoding.x.axis.labelAngle = v
         return self
 
     def nox(self) -> "AltairChart":
-        """Remove the x axis labels
+        """
+        Remove the x-axis labels.
 
-        .. code-block:: python
+        Returns:
+            AltairChart: The chart object.
 
-            ds = await load_dataset("timeserie")
-            ds.axis("date:T", "data:Q")
-            (ds.line_().nox() + ds.point_().nox())
-
-        :return: the chart object
-        :rtype: Chart
+        Example:
+            # Use this method to remove the x-axis labels:
+            ds.line_().nox() + ds.point_().nox()
         """
         self.encoding.x.axis = None
         return self
 
     def noy(self) -> "AltairChart":
-        """Remove the y axis labels
+        """
+        Remove the y-axis labels.
 
-        .. code-block:: python
+        Returns:
+            AltairChart: The chart object.
 
-            ds = await load_dataset("timeserie")
-            ds.axis("date:T", "data:Q")
-            (ds.line_().noy() + ds.point_().noy())
-
-        :return: the chart object
-        :rtype: Chart
+        Example:
+            # Use this method to remove the y-axis labels:
+            ds.line_().noy() + ds.point_().noy()
         """
         self.encoding.y.axis = None
         return self
 
     def title(self, v: str) -> "AltairChart":
-        """Add a text title to the chart
+        """
+        Add a text title to the chart.
 
-        .. code-block:: python
+        Args:
+            v (str): The title text.
 
-            ds = await load_dataset("timeserie")
+        Returns:
+            AltairChart: The chart object.
+
+        Example:
+            # Use this method to add a title to the chart:
             ds.area_("date:T", "data:Q").title("The chart title")
-
-
-        :param v: the title text
-        :type v: str
-        :return: the chart object
-        :rtype: Chart
         """
         return self.properties(title=v)
 
     def colormap(self, column: str, **kwargs) -> "AltairChart":
-        """Add a values based colormap to the chart
+        """
+        Add a values-based colormap to the chart.
 
-        :param column: the column to use
-        :type column: str
-        :param kwargs: the colors and values map to use
-        :type kwargs: Dict[str,str]
-        :raises ArgumentError: raised if less than two colors are provided
-        :return: the chart object
-        :rtype: Chart
+        Args:
+            column (str): The column to use for the colormap.
+            **kwargs: The colors and values map to use.
+
+        Raises:
+            ArgumentError: Raised if less than two colors are provided.
+
+        Returns:
+            AltairChart: The chart object.
+
+        Example:
+            # Use this method to add a colormap to the chart:
+            ds.point_().colormap("Origin", Japan="red", Europe="green", USA="blue")
         """
         if len(kwargs) < 2:
             raise ArgumentError("Provide at least two colors in the map")
@@ -241,15 +268,24 @@ class AltairChart(AltChart):
         )
 
     def qcolormap(self, column: str, **kwargs) -> "AltairChart":
-        """Add a quantiles based colormap to the chart
+        """
+        Add a quantiles-based colormap to the chart.
 
-        :param column: the column to use
-        :type column: str
-        :param kwargs: the colors and values map to use
-        :type kwargs: Dict[str,str]
-        :raises ArgumentError: raised if less than two colors are provided
-        :return: the chart object
-        :rtype: Chart
+        Args:
+            column (str): The column to use for the colormap.
+            **kwargs: The quantile values and colors map to use.
+
+        Raises:
+            ArgumentError: Raised if less than two colors are provided.
+
+        Returns:
+            AltairChart: The chart object.
+
+        Example:
+            # Use this method to add a quantiles-based colormap to the chart:
+            ds.axis("Horsepower:Q", "Miles_per_Gallon:Q")
+            chart = ds.point_().qcolormap("Origin", low=0.2, high=0.8, Japan="red", Europe="green", USA="blue")
+
         """
         if len(kwargs) < 2:
             raise ArgumentError("Provide at least two colors in the map")
@@ -265,16 +301,20 @@ class AltairChart(AltChart):
         )
 
     def save_img(self, path: str):
-        """Save the chart to a png image
+        """
+        Save the chart to a png image.
 
-        :param path: the filepath
-        :type path: str
+        Args:
+            path (str): The filepath.
         """
         save(self, path)
 
     def get_html_(self) -> str:
         """
-        Get html for an Altair chart
+        Get HTML for an Altair chart.
+
+        Returns:
+            str: The HTML string representing the chart.
         """
         slug = uuid.uuid4().hex
         json_data = self.to_json(indent=0)
@@ -302,7 +342,10 @@ class AltairChart(AltChart):
     @staticmethod
     def html_header_():
         """
-        Returns html script tags for Altair
+        Returns the HTML script tags
+
+        Returns:
+            str: The HTML script tags
         """
         header = (
             f'<script src="https://cdn.jsdelivr.net/npm/vega@{VEGA_VERSION}"></script>',

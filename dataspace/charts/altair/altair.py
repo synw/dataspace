@@ -1,6 +1,6 @@
 from typing import Dict, Optional, Union
 
-import pandas as pd
+import polars as pl
 from dataspace.transform import _drop
 
 from altair import (
@@ -31,7 +31,7 @@ class AltairChartEngine:
 
     def chart(
         self,
-        df: pd.DataFrame,
+        df: pl.DataFrame,
         chart_type: str,
         x: Optional[Union[str, X]] = None,
         y: Optional[Union[str, X]] = None,
@@ -150,7 +150,7 @@ class AltairChartEngine:
 
     def _altair_chart_num_(
         self,
-        df: pd.DataFrame,
+        df: pl.DataFrame,
         chart_type: str,
         opts,
         style,
@@ -185,7 +185,7 @@ class AltairChartEngine:
         res = (c + num).properties(**opts)
         return res
 
-    def _altair_hline_(self, df: pd.DataFrame, opts, style, encode) -> AltairChart:
+    def _altair_hline_(self, df: pl.DataFrame, opts, style, encode) -> AltairChart:
         """
         Get a mean line chart
         """
@@ -200,7 +200,7 @@ class AltairChartEngine:
             while i < len(df[rawy]):
                 lx.append(mean)
                 i += 1
-            df["Mean"] = lx
+            df = df.with_columns(mean=pl.lit(mean))
             # hx = X(self.x.title, axis=None)
             chart = (
                 AltairChart(df)
@@ -208,12 +208,12 @@ class AltairChartEngine:
                 .encode(x=self.x, y="Mean:Q", **encode)
                 .properties(**opts)
             )
-            _drop(df, "Mean")
+            _drop(df, "mean")
             return chart
         except Exception as e:
             raise Exception("Can not draw mean line chart", e)
 
-    def _altair_histogram(self, df: pd.DataFrame, opts, style, encode) -> AltairChart:
+    def _altair_histogram(self, df: pl.DataFrame, opts, style, encode) -> AltairChart:
         assert self.x is not None and self.y is not None, "Set the chart fields"
         return (
             AltairChart(df)

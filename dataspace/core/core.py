@@ -1,9 +1,8 @@
 from typing import Any, Dict, List, Optional
 
-import pandas as pd
 import polars as pl
 
-from dataspace.calculations import _percent, _diffm, _diffp, _cvar, _lreg
+from dataspace.calculations import _percent, _diffm, _diffn, _diffp, _cvar, _lreg
 from dataspace.charts import DsChartEngine
 from dataspace.clean import (
     _drop_any_nulls,
@@ -28,9 +27,9 @@ from dataspace.count import _count_empty_, _count_null_, _count_unique_, _count_
 # from dataspace.info import _cols
 from dataspace.info.view import _show
 from dataspace.io.export import export_csv
-from dataspace.transform import _drop, _rename, _add, _resample
+from dataspace.transform import _drop, _rename, _add, _resample, _indexcol
 from dataspace.types import ChartType
-from dataspace.utils.messages import msg_info, msg_ok
+from dataspace.utils.messages import msg_info, msg_ok, msg_warning
 from dataspace.report import ReportEngine
 
 
@@ -71,19 +70,6 @@ class DataSpace:
         """
         return _show(rows, self.df)
 
-    """def cols_(self) -> pd.DataFrame:
-        
-        Returns a dataframe with columns info
-
-        Category: Info/View data/Show
-
-        :return: a pandas dataframe
-        :rtype: ``DataFrame``
-
-        :example: `ds.cols_()`
-        
-        return _cols(self.df)"""
-
     # **************************
     #           clean
     # **************************
@@ -103,7 +89,7 @@ class DataSpace:
 
     def to_tzdate(self, *cols: str):
         """
-        Converts some column values to date type from ISO string
+        Converts some column values to date type from ISO string \
         with timezone info.
 
         Args:
@@ -171,9 +157,23 @@ class DataSpace:
         if is_notebook is True:
             msg_ok(f"Converted columns values to {dtype}")
 
+    def drop_na(self, *cols: str):
+        """
+        Drop rows that contain any null values in the \
+        specified columns.
+
+        Args:
+            *cols: A variable number of string arguments representing the column
+                names to check for null values.
+
+        Example:
+            ds.drop_any_nulls("mycol")
+        """
+        self.df = _drop_any_nulls(self.df, *cols)
+
     def drop_any_nulls(self, *cols: str):
         """
-        Drop rows that contain any null values in the
+        Drop rows that contain any null values in the \
         specified columns.
 
         Args:
@@ -252,7 +252,7 @@ class DataSpace:
 
     def strip(self, *cols: str):
         """
-        Removes leading and trailing white spaces from the
+        Removes leading and trailing white spaces from the \
         values in the specified columns.
 
         Args:
@@ -303,6 +303,18 @@ class DataSpace:
     #           select
     # **************************
 
+    def indexcol(self, col: str = "index"):
+        """
+        Add an index column with a number incremented
+
+        Args:
+            col (str, optional): name of the column. Defaults to "index".
+
+        Example:
+            ds.indexcol()
+        """
+        self.df = _indexcol(self.df, col)
+
     def limit(self, r: int = 5):
         """
         Limits the number of rows in the DataFrame to the specified number.
@@ -332,9 +344,9 @@ class DataSpace:
         l.sort()
         return l
 
-    def wunique_(self, col: str, colname: str = "Number") -> pd.DataFrame:
+    def wunique_(self, col: str, colname: str = "Number") -> pl.DataFrame:
         """
-        Returns a `pl.DataFrame` object with a count of unique values in the specified column.
+        Returns a dataframe object with a count of unique values in the specified column.
 
         Args:
             col (str): Name of the column to select from.
@@ -416,7 +428,7 @@ class DataSpace:
 
     def split_(self, col: str) -> Dict[str, "DataSpace"]:
         """
-        Splits the main `pl.DataFrame` object into multiple `DataSpace` objects,
+        Splits the main dataframe object into multiple DataSpace objects, \
         one for each unique value in the specified column.
 
         Args:
@@ -500,7 +512,7 @@ class DataSpace:
 
     def exclude(self, col: str, val: Any):
         """
-        Deletes all rows from the main `pl.DataFrame` object
+        Deletes all rows from the main `pl.DataFrame` object \
         where the specified column has the specified value.
 
         Args:
@@ -511,6 +523,30 @@ class DataSpace:
             ds.exclude("Col1", "value")
         """
         self.df = self.df.filter(pl.any(pl.col(col) != val))
+
+    def append(self, vals: List[Any]):
+        """
+        Append a row to the dataframe
+
+        Args:
+            val (List[Any]): values to append to the dataframe
+
+        Example:
+            ds.append(["a","b"])
+        """
+        self.df = self.df.vstack(pl.DataFrame([vals], schema=self.df.columns))
+
+    def mappend(self, vals: List[List[Any]]):
+        """
+        Append many rows to the dataframe
+
+        Args:
+            val (List[Any]): values to append to the dataframe
+
+        Example:
+            ds.mappend([["a","b"], ["c","d"])
+        """
+        self.df = self.df.vstack(pl.DataFrame(vals, schema=self.df.columns))
 
     def copycol(self, origin_col: str, dest_col: str):
         """
@@ -670,6 +706,40 @@ class DataSpace:
             self.df, diffcol=diffcol, name=name, decimals=decimals, percent=True
         )
 
+    def diffn(self, diffcol: str, name: str = "diff", decimals=0):
+        """
+        Add a diff column to the main dataframe: calculate the difference
+        from the next value.
+
+        Args:
+            diffcol (str): The column name for which to calculate the difference.
+            name (str, optional): The name of the resulting difference column. Defaults to "diff".
+            decimals (int, optional): The number of decimal places to round the difference to. Defaults to 0.
+
+        Example:
+            ds.diffn("Col 1", "New col")
+        """
+        self.df = _diffn(
+            self.df, diffcol=diffcol, name=name, decimals=decimals, percent=False
+        )
+
+    def diffnp(self, diffcol: str, name: str = "diff", decimals=0):
+        """
+        Add a diff column to the main dataframe: calculate the difference
+        in percentage from the next value.
+
+        Args:
+            diffcol (str): The column name for which to calculate the difference.
+            name (str, optional): The name of the resulting difference column. Defaults to "diff".
+            decimals (int, optional): The number of decimal places to round the difference to. Defaults to 0.
+
+        Example:
+            ds.diffnp("Col 1", "New col")
+        """
+        self.df = _diffn(
+            self.df, diffcol=diffcol, name=name, decimals=decimals, percent=True
+        )
+
     def diffm(self, diffcol: str, name: str = "diff", decimals=0):
         """
         Add a difference column to the main dataframe: calculate the
@@ -715,7 +785,18 @@ class DataSpace:
         """
         return _cvar(self.df, col)
 
-    def lreg_(self, xcol: str, ycol, name="regression"):
+    def lreg_(self, xcol: str, ycol: str, name="regression"):
+        """
+        Add a column with the the linear regression for given x/y column
+
+        Args:
+            xcol (str): The name of the x column for which to calculate the linear regression.
+            ycol (str): The name of the y column for which to calculate the linear regression.
+            name (str): The name of the new column. Defaults to "regression"
+
+        Example:
+            ds.lreg_("col1", "col2")
+        """
         self.df = _lreg(self.df, xcol, ycol, name)
 
     """
@@ -758,61 +839,88 @@ class DataSpace:
 
     def bokeh(self):
         """
-        Use the Bokeh charts engine
+        Use the Bokeh charts engine.
 
-        :example: `ds.bokeh()`
+        Important: for now to use this chart engine you must install Pandas, as
+        the Bokeh engine does not yet support Polars dataframes
+
+        Example:
+            ds.bokeh()
         """
+        try:
+            import pandas  # type: ignore
+            import bokeh  # type: ignore
+        except (ImportError, ModuleNotFoundError):
+            msg_warning(
+                "Please install Pandas and Bokeh to use this chart engine: pip install pandas bokeh"
+            )
+            return
         self._charts.engine = "bokeh"
 
     def altair(self):
         """
-        Use the Altair charts engine
+        Use the Altair charts engine, which is the default engine.
 
-        :example: `ds.altair()`
+        Example:
+            ds.altair()
         """
         self._charts.engine = "altair"
 
     def axis(self, x_axis_col: str, y_axis_col: str):
         """
-        Set the columns to use for the chart x and y axis
+        Set the columns to use for the chart's x and y axis.
 
-        :param x_axis_col: name of the column to use for x axis chart
-        :type x_axis_col: str
-        :param y_axis_col: name of the column to use for y axis chart
-        :type y_axis_col: str
+        Args:
+            x_axis_col (str): Name of the column to use for the x axis chart.
+            y_axis_col (str): Name of the column to use for the y axis chart.
 
-        :example: `ds.axis("col1", "col2")`
+        Example:
+            ds.axis("col1", "col2")
         """
         self._charts.set_axis(x_axis_col, y_axis_col)
 
     def line_(self, *args, **kwargs) -> ChartType:
         """
-        Draw a line chart
+        Draw a line chart.
 
-        :param x_axis_col: name of the column to use for x axis chart, defaults
-            to the x axis value set by ds.axis
-        :type x_axis_col: Optional[str]
-        :param y_axis_col: name of the column to use for y axis chart, defaults
-            to the y axis value set by ds.axis
-        :type y_axis_col: Optional[str]
-        :rtype: an Altair or Bokeh chart
+        Args:
+            x_axis_col (Optional[str]): Name of the column to use for the x axis chart,
+                defaults to the x axis value set by ds.axis.
+            y_axis_col (Optional[str]): Name of the column to use for the y axis chart,
+                defaults to the y axis value set by ds.axis.
 
-        :example: `ds.line_()`
+        Returns:
+            Union[AltairChart, HvChart]: A Bokeh or Altair chart.
+
+        Example:
+            ds.line_()
         """
-        df = self.df.to_pandas()
+        df = self.df
+        if self._charts.engine == "bokeh":
+            df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "line", *args, **kwargs)
 
     def point_(self, *args, **kwargs) -> ChartType:
         """
-        Draw a point chart
+        Draw a point chart.
 
-        :rtype: Bokeh or Altair chart
+        Args:
+            x_axis_col (Optional[str]): Name of the column to use for the x axis chart,
+                defaults to the x axis value set by ds.axis.
+            y_axis_col (Optional[str]): Name of the column to use for the y axis chart,
+                defaults to the y axis value set by ds.axis.
 
-        :example: `ds.point_()`
+        Returns:
+            Union[AltairChart, HvChart]: A Bokeh or Altair chart.
+
+        Example:
+            ds.point_()
         """
-        df = self.df.to_pandas()
+        df = self.df
+        if self._charts.engine == "bokeh":
+            df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "point", *args, **kwargs)
@@ -821,11 +929,21 @@ class DataSpace:
         """
         Draw a bar chart
 
-        :rtype: Bokeh or Altair chart
+        Args:
+            x_axis_col (Optional[str]): Name of the column to use for the x axis chart,
+                defaults to the x axis value set by ds.axis.
+            y_axis_col (Optional[str]): Name of the column to use for the y axis chart,
+                defaults to the y axis value set by ds.axis.
 
-        :example: `ds.bar_()`
+        Returns:
+            Union[AltairChart, HvChart]: A Bokeh or Altair chart.
+
+        Example:
+            ds.bar_()
         """
-        df = self.df.to_pandas()
+        df = self.df
+        if self._charts.engine == "bokeh":
+            df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "bar", *args, **kwargs)
@@ -834,17 +952,25 @@ class DataSpace:
         """
         Draw a square chart with numbers. Only for Altair
 
-        :rtype: Altair chart
+        Args:
+            x_axis_col (Optional[str]): Name of the column to use for the x axis chart,
+                defaults to the x axis value set by ds.axis.
+            y_axis_col (Optional[str]): Name of the column to use for the y axis chart,
+                defaults to the y axis value set by ds.axis.
 
-        :example: `ds.square_()`
+        Returns:
+            Union[AltairChart, HvChart]: A Bokeh or Altair chart.
+
+        Example:
+            ds.square_()
         """
+        df = self.df
         if self._charts.engine != "altair":
             raise Exception(
                 """This chart is only available for the Altair engine
             Please switch to Altair like this: ds.altair()
             """
             )
-        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "square", *args, **kwargs)
@@ -853,17 +979,25 @@ class DataSpace:
         """
         Draw a rule chart with numbers. Only for Altair
 
-        :rtype: Altair chart
+        Args:
+            x_axis_col (Optional[str]): Name of the column to use for the x axis chart,
+                defaults to the x axis value set by ds.axis.
+            y_axis_col (Optional[str]): Name of the column to use for the y axis chart,
+                defaults to the y axis value set by ds.axis.
 
-        :example: `ds.rule_()`
+        Returns:
+            AltairChart: An Altair chart.
+
+        Example:
+            ds.rule_()
         """
+        df = self.df
         if self._charts.engine != "altair":
             raise Exception(
                 """This chart is only available for the Altair engine
             Please switch to Altair like this: ds.altair()
             """
             )
-        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "rule", *args, **kwargs)
@@ -872,17 +1006,25 @@ class DataSpace:
         """
         Draw a square chart with numbers. Only for Altair
 
-        :rtype: Altair chart
+        Args:
+            x_axis_col (Optional[str]): Name of the column to use for the x axis chart,
+                defaults to the x axis value set by ds.axis.
+            y_axis_col (Optional[str]): Name of the column to use for the y axis chart,
+                defaults to the y axis value set by ds.axis.
 
-        :example: `ds.tick_()`
+        Returns:
+            AltairChart: An Altair chart.
+
+        Example:
+            ds.tick_()
         """
+        df = self.df
         if self._charts.engine != "altair":
             raise Exception(
                 """This chart is only available for the Altair engine
             Please switch to Altair like this: ds.altair()
             """
             )
-        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "tick", *args, **kwargs)
@@ -891,17 +1033,25 @@ class DataSpace:
         """
         Draw a bar chart with numbers. Only for Altair
 
-        :rtype: Altair chart
+        Args:
+            x_axis_col (Optional[str]): Name of the column to use for the x axis chart,
+                defaults to the x axis value set by ds.axis.
+            y_axis_col (Optional[str]): Name of the column to use for the y axis chart,
+                defaults to the y axis value set by ds.axis.
 
-        :example: `ds.bar_num_()`
+        Returns:
+            AltairChart: An Altair chart.
+
+        Example:
+            ds.bar_num_()
         """
+        df = self.df
         if self._charts.engine != "altair":
             raise Exception(
                 """This chart is only available for the Altair engine
             Please switch to Altair like this: ds.altair()
             """
             )
-        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "bar_num", *args, **kwargs)
@@ -910,17 +1060,25 @@ class DataSpace:
         """
         Draw a line chart with numbers. Only for Altair
 
-        :rtype: Altair chart
+        Args:
+            x_axis_col (Optional[str]): Name of the column to use for the x axis chart,
+                defaults to the x axis value set by ds.axis.
+            y_axis_col (Optional[str]): Name of the column to use for the y axis chart,
+                defaults to the y axis value set by ds.axis.
 
-        :example: `ds.line_num_()`
+        Returns:
+            AltairChart: An Altair chart.
+
+        Example:
+            ds.line_num_()
         """
+        df = self.df
         if self._charts.engine != "altair":
             raise Exception(
                 """This chart is only available for the Altair engine
             Please switch to Altair like this: ds.altair()
             """
             )
-        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "line_num", *args, **kwargs)
@@ -929,17 +1087,25 @@ class DataSpace:
         """
         Draw a point chart with numbers. Only for Altair
 
-        :rtype: Altair chart
+        Args:
+            x_axis_col (Optional[str]): Name of the column to use for the x axis chart,
+                defaults to the x axis value set by ds.axis.
+            y_axis_col (Optional[str]): Name of the column to use for the y axis chart,
+                defaults to the y axis value set by ds.axis.
 
-        :example: `ds.point_num_()`
+        Returns:
+            AltairChart: An Altair chart.
+
+        Example:
+            ds.point_num_()
         """
+        df = self.df
         if self._charts.engine != "altair":
             raise Exception(
                 """This chart is only available for the Altair engine
             Please switch to Altair like this: ds.altair()
             """
             )
-        df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "point_num", *args, **kwargs)
@@ -948,11 +1114,21 @@ class DataSpace:
         """
         Draw an area chart
 
-        :rtype: Bokeh or Altair chart
+        Args:
+            x_axis_col (Optional[str]): Name of the column to use for the x axis chart,
+                defaults to the x axis value set by ds.axis.
+            y_axis_col (Optional[str]): Name of the column to use for the y axis chart,
+                defaults to the y axis value set by ds.axis.
 
-        :example: `ds.area_()`
+        Returns:
+            Union[AltairChart, HvChart]: A Bokeh or Altair chart.
+
+        Example:
+            ds.area_()
         """
-        df = self.df.to_pandas()
+        df = self.df
+        if self._charts.engine == "bokeh":
+            df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "area", *args, **kwargs)
@@ -961,11 +1137,21 @@ class DataSpace:
         """
         Draw a heatmap chart
 
-        :rtype: Bokeh or Altair chart
+        Args:
+            x_axis_col (Optional[str]): Name of the column to use for the x axis chart,
+                defaults to the x axis value set by ds.axis.
+            y_axis_col (Optional[str]): Name of the column to use for the y axis chart,
+                defaults to the y axis value set by ds.axis.
 
-        :example: `ds.heatmap_()`
+        Returns:
+            Union[AltairChart, HvChart]: A Bokeh or Altair chart.
+
+        Example:
+            ds.heatmap_()
         """
-        df = self.df.to_pandas()
+        df = self.df
+        if self._charts.engine == "bokeh":
+            df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "heatmap", *args, **kwargs)
@@ -974,11 +1160,21 @@ class DataSpace:
         """
         Draw a histogram chart
 
-        :rtype: Bokeh or Altair chart
+        Args:
+            x_axis_col (Optional[str]): Name of the column to use for the x axis chart,
+                defaults to the x axis value set by ds.axis.
+            y_axis_col (Optional[str]): Name of the column to use for the y axis chart,
+                defaults to the y axis value set by ds.axis.
 
-        :example: `ds.hist_()`
+        Returns:
+            Union[AltairChart, HvChart]: A Bokeh or Altair chart.
+
+        Example:
+            ds.hist_()
         """
-        df = self.df.to_pandas()
+        df = self.df
+        if self._charts.engine == "bokeh":
+            df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "hist", *args, **kwargs)
@@ -987,47 +1183,63 @@ class DataSpace:
         """
         Draw an horizontal mean line for the y axis
 
-        :rtype: Bokeh or Altair chart
+        Args:
+            x_axis_col (Optional[str]): Name of the column to use for the x axis chart,
+                defaults to the x axis value set by ds.axis.
+            y_axis_col (Optional[str]): Name of the column to use for the y axis chart,
+                defaults to the y axis value set by ds.axis.
 
-        :example: `ds.hline_()`
+        Returns:
+            Union[AltairChart, HvChart]: A Bokeh or Altair chart.
+
+        Example:
+            ds.hline_()
         """
-        df = self.df.to_pandas()
+        df = self.df
+        if self._charts.engine == "bokeh":
+            df = self.df.to_pandas()
         if "df" in kwargs.keys():
             df = kwargs["df"]
         return self._charts.chart(df, "hline", *args, **kwargs)
 
     def w(self, v: int):
         """
-        Set the default width of charts
+        Set the default width of charts.
 
-        :param v: the width to set, in pixel
-        :type v: int
+        Args:
+            v (int): The width to set, in pixels.
 
-        :example: `ds.w(350)`
+        Example:
+            # Use this method to set the default chart width to 350 pixels
+            ds.w(350)
         """
         self._charts.width(v)
 
     def h(self, v: int):
         """
-        Set the default width of charts
+        Set the default height of charts.
 
-        :param v: the height to set, in pixel
-        :type v: int
+        Args:
+            v (int): The height to set, in pixels.
 
-        :example: `ds.h(250)`
+        Example:
+            # Use this method to set the default chart height to 250 pixels:
+            ds.h(250)
         """
         self._charts.height(v)
 
     def wh(self, w: int, h: int):
         """
-        Set the default width and height of charts
+        Set the default width and height of charts.
 
-        :param w: the height to set, in pixel
-        :type w: int
-        :param h: the height to set, in pixel
-        :type h: int
+        Args:
+            w (int): The width to set, in pixels.
+            h (int): The height to set, in pixels.
 
-        :example: `ds.wh(500, 200)`
+        Example:
+            # Use this method to set the default chart width to 500 pixels
+            # and height to 200 pixels:
+            ds.wh(500, 200)
         """
         self._charts.wh(w, h)
 
@@ -1037,23 +1249,28 @@ class DataSpace:
 
     def export_csv(self, filepath: str, **kwargs):
         """
-        Write the main dataframe to a csv file
+        Write the main dataframe to a CSV file.
 
-        :param filepath: path of the file to save
-        :type filepath: str
-        :param **kwargs: arguments to pass to ``pd.to_csv``
+        Args:
+            filepath (str): Path of the file to save.
+            **kwargs: Arguments to pass to the Polars write_csv function.
 
-        :example: `ds.export_csv("myfile.csv", header=false)`
+        Example:
+            # Use this method to write the main dataframe to "myfile.csv" file
+            ds.export_csv("myfile.csv")
         """
         return export_csv(self.df, filepath, **kwargs)
 
     def report_path(self, path: str):
-        """Set the report path folder
+        """
+        Set the report path folder.
 
-        :param path: the path where to save reports: relative or absolute
-        :type path: str
+        Args:
+            path (str): The path where to save reports, relative or absolute.
 
-        :example: `ds.report_path("../reports")`
+        Example:
+            # Use this method to set the report path to "../reports":
+            ds.report_path("../reports")
         """
         self._reports.path = path
 
@@ -1063,36 +1280,48 @@ class DataSpace:
         title: Optional[str] = None,
         description: Optional[str] = None,
     ):
-        """Store a chart in the report stack
+        """
+        Store a chart in the report stack.
 
-        :param chart: a chart object
-        :type chart: ChartType
-        :param title: the chart title, defaults to None
-        :type title: Optional[str], optional
-        :param description: the chart description, defaults to None
-        :type description: Optional[str], optional
+        Args:
+            chart (ChartType): A chart object.
+            title (Optional[str], optional): The chart title. Defaults to None.
+            description (Optional[str], optional): The chart description. Defaults to None.
+
+        Example:
+            # Use this method to store a chart with a title and description:
+            ds.store_chart(chart_obj, title="My Chart", description="This chart shows...")
         """
         self._reports.stack(chart, self._charts.engine, title, description)
         m = "" if not title else title + " "
         msg_info(f"Chart {m}added in the report stack")
 
     def save_pdf(self, filename: str, clear_stack=True):
-        """Save a report to a pdf file
+        """
+        Save a report to a PDF file.
 
-        :param filename: the filename
-        :type filename: str
-        :param clear_stack: clear the reporting stack, defaults to True
-        :type clear_stack: bool, optional
+        Args:
+            filename (str): The filename.
+            clear_stack (bool, optional): Clear the reporting stack. Defaults to True.
+
+        Example:
+            # Use this method to save a report to "myreport.pdf" file:
+            ds.save_report_to_pdf("myreport.pdf")
         """
         self._reports.save_pdf(filename, clear_stack)
         msg_ok("Pdf file saved")
 
     def save_html(self, info=False, clear_stack=True):
-        """Save a report to multiple html files, one per stacked item
+        """
+        Save a report to multiple HTML files, one per stacked item.
 
-        :param info: print info about the html headers, defaults to False
-        :type info: bool, optional
-        :param clear_stack: clear the reporting stack, defaults to True
-        :type clear_stack: bool, optional
+        Args:
+            info (bool, optional): Print info about the HTML headers. Defaults to False.
+            clear_stack (bool, optional): Clear the reporting stack. Defaults to True.
+
+        Example:
+            # Use this method to save a report to multiple HTML files, with info printed
+            # about the headers:
+            ds.save_report_to_html_files(info=True)
         """
         self._reports.save_html(info, clear_stack)

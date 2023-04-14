@@ -1,6 +1,5 @@
 from typing import Optional, List
 from dataspace.utils.messages import msg_ok
-import pandas as pd
 import polars as pl
 
 

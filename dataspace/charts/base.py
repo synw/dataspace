@@ -1,10 +1,9 @@
 from ctypes import ArgumentError
 
-import pandas as pd
-
 from .altair import AltairChartEngine
 
 from dataspace.types import ChartEngineName, ChartType
+
 try:
     from .bokeh import BokehChartEngine  # type: ignore
 except (ModuleNotFoundError, ImportError):
@@ -19,7 +18,7 @@ class DsChartEngine:
     altair: AltairChartEngine
     bokeh: BokehChartEngine
 
-    def __init__(self, engine: ChartEngineName="altair", default_width=950) -> None:
+    def __init__(self, engine: ChartEngineName = "altair", default_width=950) -> None:
         self.engine = engine
         self.altair = AltairChartEngine(default_width)
         self.bokeh = BokehChartEngine(default_width)
@@ -34,7 +33,7 @@ class DsChartEngine:
         if "df" in kwargs.keys():
             del kwargs["df"]
         chart_type: str = args[1]
-        df: pd.DataFrame = args[0]
+        df = args[0]
         x = None
         y = None
         if len(args) > 2:

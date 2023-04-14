@@ -6,33 +6,34 @@ import polars as pl
 from dataspace.utils.messages import msg_ok
 
 
-def _diffp(
+def _shift_diff(
     df: pl.DataFrame,
     diffcol: str,
     name: str,
-    decimals=0,
-    percent: bool = False,
+    decimals: int,
+    percent: bool,
+    shift: int,
 ) -> pl.DataFrame:
     if not percent:
         if decimals > 0:
             return df.with_columns(
                 [
-                    (pl.col(diffcol) - pl.col(diffcol).shift(1))
+                    (pl.col(diffcol) - pl.col(diffcol).shift(shift))
                     .round(decimals)
                     .alias(name)
                 ]
             )
         else:
             return df.with_columns(
-                [(pl.col(diffcol) - pl.col(diffcol).shift(1)).alias(name)]
+                [(pl.col(diffcol) - pl.col(diffcol).shift(shift)).alias(name)]
             )
     else:
         if decimals > 0:
             return df.with_columns(
                 [
                     (
-                        (pl.col(diffcol) - pl.col(diffcol).shift(1))
-                        / pl.col(diffcol).shift(1)
+                        (pl.col(diffcol) - pl.col(diffcol).shift(shift))
+                        / pl.col(diffcol).shift(shift)
                         * 100
                     )
                     .round(decimals)
@@ -43,12 +44,32 @@ def _diffp(
             return df.with_columns(
                 [
                     (
-                        (pl.col(diffcol) - pl.col(diffcol).shift(1))
-                        / pl.col(diffcol).shift(1)
+                        (pl.col(diffcol) - pl.col(diffcol).shift(shift))
+                        / pl.col(diffcol).shift(shift)
                         * 100
                     ).alias(name)
                 ]
             )
+
+
+def _diffp(
+    df: pl.DataFrame,
+    diffcol: str,
+    name: str,
+    decimals=0,
+    percent: bool = False,
+) -> pl.DataFrame:
+    return _shift_diff(df, diffcol, name, decimals, percent, 1)
+
+
+def _diffn(
+    df: pl.DataFrame,
+    diffcol: str,
+    name: str,
+    decimals=0,
+    percent: bool = False,
+) -> pl.DataFrame:
+    return _shift_diff(df, diffcol, name, decimals, percent, -1)
 
 
 def _diffm(
