@@ -28,6 +28,7 @@ notebooks/
 env/
 develop-eggs/
 dist/
+!docsite/dist/
 downloads/
 eggs/
 .eggs/
