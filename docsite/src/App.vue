@@ -1,54 +1,40 @@
 <template>
-  <div :class="{ dark: user.isDarkMode.value == true }" class="w-screen h-screen">
-    <the-header class="fixed w-full h-16 primary" @navigate="navigate($event)"></the-header>
-    <the-sidebar v-if="sidebar == 'doc'" class="fixed w-64 pb-5 mt-16 overflow-y-auto sidebar secondary"></the-sidebar>
-    <the-apiref-sidebar v-else-if="sidebar == 'apiref'" class="fixed w-64 pb-5 mt-16 overflow-y-auto sidebar secondary">
-    </the-apiref-sidebar>
-    <the-examples-sidebar v-else-if="sidebar == 'examples'"
-      class="fixed w-64 pb-5 mt-16 overflow-y-auto sidebar secondary"></the-examples-sidebar>
-    <div id="main" class="fixed w-full p-3 pb-12 overflow-auto background top-16 left-64 bg-slate-400">
-      <router-view></router-view>
-    </div>
+  <the-header :lib-title="libTitle" :links="links"></the-header>
+  <div class="absolute p-5 pb-16 md:w-[calc(100%_-_20rem)] top-16 md:left-80 main-h">
+    <router-view></router-view>
   </div>
+  <the-sidebar class="fixed left-0 hidden p-3 overflow-y-auto w-80 top-16 md:block secondary main-h"></the-sidebar>
 </template>
 
 <script setup lang="ts">
-import TheHeader from "@/components/TheHeader.vue";
+import { onBeforeMount } from "vue";
+import TheHeader from "./components/TheHeader.vue";
 import TheSidebar from "./components/TheSidebar.vue";
-import TheApirefSidebar from "./components/TheApirefSidebar.vue";
-import TheExamplesSidebar from "./components/TheExamplesSidebar.vue";
-import { user } from "@/state";
-import { onBeforeMount, ref } from "vue";
-import { initPy } from "./py";
+import { libTitle, links } from "@/conf";
+import { initState } from "./state";
+import { useRouter } from "vue-router";
 
-const sidebar = ref<"doc" | "apiref" | "examples">("doc");
+const router = useRouter();
 
-function navigate(section: "doc" | "apiref" | "examples") {
-  //console.log("Nav", section)
-  sidebar.value = section
+function openLink(url: string) {
+  if (url.startsWith("http")) {
+    window.open(url, '_blank');
+  } else {
+    router.push(url)
+  }
 }
 
-onBeforeMount(() => initPy())
+// global helper for markdown links
+// use these links format in markdown files:
+// <a href="javascript:openLink('/category/name')">My link</a>
+window["openLink"] = openLink;
+
+onBeforeMount(() => initState());
 </script>
 
 <style lang="sass">
-a, a:visited
-  @apply txt-primary
-#main, .sidebar
-  height: calc(100% - 4rem)
-#main
-  width: calc(100% - 16rem)
-.dataframe
-  @apply table-auto divide-y divide-gray-200 rounded-t w-max mt-3
-  & thead
-    & th
-      @apply lighter px-3 text-center
-      min-width: 2em
-  & tbody
-    & td
-      @apply px-2 py-1
+.main-h
+  height: calc(100vh - 4rem)
+  @apply overflow-y-auto
 </style>
-
-
-
 

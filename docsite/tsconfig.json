@@ -17,9 +17,6 @@
     "types": [
       "vite/client"
     ],
-    "typeRoots": [
-      "src/global.d.ts"
-    ],
     "baseUrl": ".",
     "paths": {
       "@/*": [

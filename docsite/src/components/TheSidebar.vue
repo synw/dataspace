@@ -1,34 +1,25 @@
 <template>
-  <div>
-    <sidebar-block name="Data IO">
-      <sw-accordion :data="docmap['Data IO']" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
-    </sidebar-block>
-    <sidebar-block name="Info">
-      <sw-accordion :data="docmap['Info']" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
-    </sidebar-block>
-    <sidebar-block name="Select">
-      <sw-accordion :data="docmap['Select']" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
-    </sidebar-block>
-    <sidebar-block name="Clean">
-      <sw-accordion :data="docmap['Clean']" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
-    </sidebar-block>
-    <sidebar-block name="Transform">
-      <sw-accordion :data="docmap['Transform']" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
-    </sidebar-block>
-    <sidebar-block name="Charts">
-      <sw-accordion :data="docmap['Charts']" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
-    </sidebar-block>
-    <sidebar-block name="Reporting">
-      <sw-accordion :data="docmap['Reporting']" :has-titles="true" @onclick="$router.push($event)"></sw-accordion>
-    </sidebar-block>
+  <div v-if="isNavReady">
+    <default-sidebar v-if="sidebar == 'default'"></default-sidebar>
+    <api-sidebar v-else-if="sidebar == 'api'"></api-sidebar>
   </div>
 </template>
 
 <script setup lang="ts">
-import SidebarBlock from "@/widgets/SidebarBlock.vue";
-import SwAccordion from "@/widgets/SwAccordion.vue";
-import docmap from "@/docmap.json";
+import { ref, watchEffect } from 'vue';
+import { useRoute } from 'vue-router';
+import { isNavReady } from "@/state";
+import DefaultSidebar from "@/components/sidebars/DefaultSidebar.vue";
+import ApiSidebar from './sidebars/ApiSidebar.vue';
+
+const route = useRoute();
+const sidebar = ref<"default" | "api">("default");
+
+watchEffect(() => {
+  if (route.path.startsWith('/api')) {
+    sidebar.value = "api";
+  } else {
+    sidebar.value = "default";
+  }
+})
 </script>
-
-
-

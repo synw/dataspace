@@ -1,0 +1,106 @@
+{
+  "doc/data_io/export": [
+    "export_csv"
+  ],
+  "doc/infos/view_data": [
+    "show"
+  ],
+  "doc/infos/count_data": [
+    "count_null_",
+    "count_zero_",
+    "count_unique_",
+    "wunique_"
+  ],
+  "doc/select": [
+    "limit",
+    "unique_"
+  ],
+  "doc/clean/nulls": [
+    "drop_na",
+    "drop_any_nulls",
+    "drop_all_nulls",
+    "fill_nulls"
+  ],
+  "doc/clean/dates": [
+    "to_date",
+    "to_tzdate",
+    "fdate",
+    "timestamps"
+  ],
+  "doc/clean/convert_types": [
+    "to_int",
+    "to_float",
+    "to_str",
+    "to_type"
+  ],
+  "doc/clean/clean_values": [
+    "strip",
+    "strip_cols",
+    "roundvals",
+    "replace"
+  ],
+  "doc/transform/dataframe": [
+    "split_",
+    "drop",
+    "add",
+    "rename",
+    "keep",
+    "copycol",
+    "reverse"
+  ],
+  "doc/transform/values": [
+    "sort",
+    "exclude",
+    "append",
+    "mappend",
+    "diff",
+    "diffm"
+  ],
+  "doc/transform/resample_timeseries": [
+    "resample",
+    "rsum",
+    "rmean"
+  ],
+  "doc/transform/calculations": [
+    "percent",
+    "diffp",
+    "diffpp",
+    "diffn",
+    "diffnp",
+    "diffm",
+    "diffmp",
+    "cvar_",
+    "lreg_"
+  ],
+  "doc/charts/options": [
+    "axis",
+    "altair",
+    "bokeh",
+    "w",
+    "h",
+    "wh"
+  ],
+  "doc/charts/draw_charts": [
+    "line_",
+    "point_",
+    "bar_",
+    "area_",
+    "square_",
+    "rule_",
+    "tick_",
+    "bar_num_",
+    "line_num_",
+    "point_num_",
+    "heatmap_",
+    "hist_",
+    "hline_"
+  ],
+  "doc/reporting/prepare_a_report": [
+    "report_path",
+    "stack"
+  ],
+  "doc/reporting/export": [
+    "save_pdf",
+    "save_html"
+  ]
+}
