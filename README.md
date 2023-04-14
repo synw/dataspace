@@ -10,7 +10,128 @@ A simple api to explore, clean, transform and visualize data
 - **Clean and transform data**: select, filter, normalize and reshape data
 - **Visualize data**: many kind of charts
 
-:books: Check the [documentation](https://synw.github.io/dataspace/)
+<details>
+<summary>:books: Read the <a href="https://synw.github.io/docdundee">documentation</a></summary>
+
+ - [Doc](https://synw.github.io/docdundee/doc)
+     - [Data io](https://synw.github.io/docdundee/doc/data_io)
+         - [Load](https://synw.github.io/docdundee/doc/data_io/load)
+            - [From df](https://synw.github.io/docdundee/doc/data_io/load/from_df)
+            - [From csv](https://synw.github.io/docdundee/doc/data_io/load/from_csv)
+            - [From django](https://synw.github.io/docdundee/doc/data_io/load/from_django)
+         - [Export](https://synw.github.io/docdundee/doc/data_io/export)
+            - [Export csv](https://synw.github.io/docdundee/doc/data_io/export/export_csv)
+     - [Infos](https://synw.github.io/docdundee/doc/infos)
+         - [View data](https://synw.github.io/docdundee/doc/infos/view_data)
+            - [Show](https://synw.github.io/docdundee/doc/infos/view_data/show)
+         - [Count data](https://synw.github.io/docdundee/doc/infos/count_data)
+            - [Count null ](https://synw.github.io/docdundee/doc/infos/count_data/count_null_)
+            - [Count zero ](https://synw.github.io/docdundee/doc/infos/count_data/count_zero_)
+            - [Count unique ](https://synw.github.io/docdundee/doc/infos/count_data/count_unique_)
+            - [Wunique ](https://synw.github.io/docdundee/doc/infos/count_data/wunique_)
+     - [Select](https://synw.github.io/docdundee/doc/select)
+        - [Limit](https://synw.github.io/docdundee/doc/select/limit)
+        - [Unique ](https://synw.github.io/docdundee/doc/select/unique_)
+     - [Clean](https://synw.github.io/docdundee/doc/clean)
+         - [Nulls](https://synw.github.io/docdundee/doc/clean/nulls)
+            - [Drop na](https://synw.github.io/docdundee/doc/clean/nulls/drop_na)
+            - [Drop any nulls](https://synw.github.io/docdundee/doc/clean/nulls/drop_any_nulls)
+            - [Drop all nulls](https://synw.github.io/docdundee/doc/clean/nulls/drop_all_nulls)
+            - [Fill nulls](https://synw.github.io/docdundee/doc/clean/nulls/fill_nulls)
+         - [Dates](https://synw.github.io/docdundee/doc/clean/dates)
+            - [To date](https://synw.github.io/docdundee/doc/clean/dates/to_date)
+            - [To tzdate](https://synw.github.io/docdundee/doc/clean/dates/to_tzdate)
+            - [Fdate](https://synw.github.io/docdundee/doc/clean/dates/fdate)
+            - [Timestamps](https://synw.github.io/docdundee/doc/clean/dates/timestamps)
+         - [Convert types](https://synw.github.io/docdundee/doc/clean/convert_types)
+            - [To int](https://synw.github.io/docdundee/doc/clean/convert_types/to_int)
+            - [To float](https://synw.github.io/docdundee/doc/clean/convert_types/to_float)
+            - [To str](https://synw.github.io/docdundee/doc/clean/convert_types/to_str)
+            - [To type](https://synw.github.io/docdundee/doc/clean/convert_types/to_type)
+         - [Clean values](https://synw.github.io/docdundee/doc/clean/clean_values)
+            - [Strip](https://synw.github.io/docdundee/doc/clean/clean_values/strip)
+            - [Strip cols](https://synw.github.io/docdundee/doc/clean/clean_values/strip_cols)
+            - [Roundvals](https://synw.github.io/docdundee/doc/clean/clean_values/roundvals)
+            - [Replace](https://synw.github.io/docdundee/doc/clean/clean_values/replace)
+     - [Transform](https://synw.github.io/docdundee/doc/transform)
+         - [Dataframe](https://synw.github.io/docdundee/doc/transform/dataframe)
+            - [Split ](https://synw.github.io/docdundee/doc/transform/dataframe/split_)
+            - [Drop](https://synw.github.io/docdundee/doc/transform/dataframe/drop)
+            - [Add](https://synw.github.io/docdundee/doc/transform/dataframe/add)
+            - [Rename](https://synw.github.io/docdundee/doc/transform/dataframe/rename)
+            - [Keep](https://synw.github.io/docdundee/doc/transform/dataframe/keep)
+            - [Copycol](https://synw.github.io/docdundee/doc/transform/dataframe/copycol)
+            - [Reverse](https://synw.github.io/docdundee/doc/transform/dataframe/reverse)
+         - [Values](https://synw.github.io/docdundee/doc/transform/values)
+            - [Sort](https://synw.github.io/docdundee/doc/transform/values/sort)
+            - [Exclude](https://synw.github.io/docdundee/doc/transform/values/exclude)
+            - [Append](https://synw.github.io/docdundee/doc/transform/values/append)
+            - [Mappend](https://synw.github.io/docdundee/doc/transform/values/mappend)
+            - [Diffm](https://synw.github.io/docdundee/doc/transform/values/diffm)
+         - [Resample timeseries](https://synw.github.io/docdundee/doc/transform/resample_timeseries)
+            - [Resample](https://synw.github.io/docdundee/doc/transform/resample_timeseries/resample)
+            - [Rsum](https://synw.github.io/docdundee/doc/transform/resample_timeseries/rsum)
+            - [Rmean](https://synw.github.io/docdundee/doc/transform/resample_timeseries/rmean)
+         - [Calculations](https://synw.github.io/docdundee/doc/transform/calculations)
+            - [Percent](https://synw.github.io/docdundee/doc/transform/calculations/percent)
+            - [Diffp](https://synw.github.io/docdundee/doc/transform/calculations/diffp)
+            - [Diffpp](https://synw.github.io/docdundee/doc/transform/calculations/diffpp)
+            - [Diffn](https://synw.github.io/docdundee/doc/transform/calculations/diffn)
+            - [Diffnp](https://synw.github.io/docdundee/doc/transform/calculations/diffnp)
+            - [Diffm](https://synw.github.io/docdundee/doc/transform/calculations/diffm)
+            - [Diffmp](https://synw.github.io/docdundee/doc/transform/calculations/diffmp)
+            - [Cvar ](https://synw.github.io/docdundee/doc/transform/calculations/cvar_)
+            - [Lreg ](https://synw.github.io/docdundee/doc/transform/calculations/lreg_)
+     - [Charts](https://synw.github.io/docdundee/doc/charts)
+         - [Options](https://synw.github.io/docdundee/doc/charts/options)
+            - [Axis](https://synw.github.io/docdundee/doc/charts/options/axis)
+            - [Altair](https://synw.github.io/docdundee/doc/charts/options/altair)
+            - [Bokeh](https://synw.github.io/docdundee/doc/charts/options/bokeh)
+            - [W](https://synw.github.io/docdundee/doc/charts/options/w)
+            - [H](https://synw.github.io/docdundee/doc/charts/options/h)
+            - [Wh](https://synw.github.io/docdundee/doc/charts/options/wh)
+         - [Draw charts](https://synw.github.io/docdundee/doc/charts/draw_charts)
+            - [Line ](https://synw.github.io/docdundee/doc/charts/draw_charts/line_)
+            - [Point ](https://synw.github.io/docdundee/doc/charts/draw_charts/point_)
+            - [Bar ](https://synw.github.io/docdundee/doc/charts/draw_charts/bar_)
+            - [Area ](https://synw.github.io/docdundee/doc/charts/draw_charts/area_)
+            - [Square ](https://synw.github.io/docdundee/doc/charts/draw_charts/square_)
+            - [Rule ](https://synw.github.io/docdundee/doc/charts/draw_charts/rule_)
+            - [Tick ](https://synw.github.io/docdundee/doc/charts/draw_charts/tick_)
+            - [Bar num ](https://synw.github.io/docdundee/doc/charts/draw_charts/bar_num_)
+            - [Line num ](https://synw.github.io/docdundee/doc/charts/draw_charts/line_num_)
+            - [Point num ](https://synw.github.io/docdundee/doc/charts/draw_charts/point_num_)
+            - [Heatmap ](https://synw.github.io/docdundee/doc/charts/draw_charts/heatmap_)
+            - [Hist ](https://synw.github.io/docdundee/doc/charts/draw_charts/hist_)
+            - [Hline ](https://synw.github.io/docdundee/doc/charts/draw_charts/hline_)
+         - [Inline api](https://synw.github.io/docdundee/doc/charts/inline_api)
+            - [W](https://synw.github.io/docdundee/doc/charts/inline_api/w)
+            - [H](https://synw.github.io/docdundee/doc/charts/inline_api/h)
+            - [Wh](https://synw.github.io/docdundee/doc/charts/inline_api/wh)
+            - [Mw](https://synw.github.io/docdundee/doc/charts/inline_api/mw)
+            - [Pw](https://synw.github.io/docdundee/doc/charts/inline_api/pw)
+            - [Color](https://synw.github.io/docdundee/doc/charts/inline_api/color)
+            - [Opacity](https://synw.github.io/docdundee/doc/charts/inline_api/opacity)
+            - [Tooltip](https://synw.github.io/docdundee/doc/charts/inline_api/tooltip)
+            - [To](https://synw.github.io/docdundee/doc/charts/inline_api/to)
+            - [Rx](https://synw.github.io/docdundee/doc/charts/inline_api/rx)
+            - [Nox](https://synw.github.io/docdundee/doc/charts/inline_api/nox)
+            - [Noy](https://synw.github.io/docdundee/doc/charts/inline_api/noy)
+            - [Title](https://synw.github.io/docdundee/doc/charts/inline_api/title)
+            - [Colormap](https://synw.github.io/docdundee/doc/charts/inline_api/colormap)
+            - [Qcolormap](https://synw.github.io/docdundee/doc/charts/inline_api/qcolormap)
+            - [Save img](https://synw.github.io/docdundee/doc/charts/inline_api/save_img)
+            - [Get html ](https://synw.github.io/docdundee/doc/charts/inline_api/get_html_)
+            - [Html header ](https://synw.github.io/docdundee/doc/charts/inline_api/html_header_)
+     - [Reporting](https://synw.github.io/docdundee/doc/reporting)
+         - [Prepare a report](https://synw.github.io/docdundee/doc/reporting/prepare_a_report)
+            - [Report path](https://synw.github.io/docdundee/doc/reporting/prepare_a_report/report_path)
+            - [Stack](https://synw.github.io/docdundee/doc/reporting/prepare_a_report/stack)
+         - [Export](https://synw.github.io/docdundee/doc/reporting/export)
+            - [Save pdf](https://synw.github.io/docdundee/doc/reporting/export/save_pdf)
+            - [Save html](https://synw.github.io/docdundee/doc/reporting/export/save_html)
+
+</details>
 
 This api is:
 
@@ -23,6 +144,20 @@ This api is:
 ```
 pip install dataspace
 ```
+
+Optional: to use the Bokeh chart engine:
+
+```
+pip install bokeh pandas
+```
+
+Note: the Pandas dependency is required for this chart engine as it does 
+not yet support Polars dataframes
+
+## Dependencies
+
+- Dataframe: [Polars](https://github.com/pola-rs/polars)
+- Charts: [Altair](https://github.com/altair-viz/altair), and [Holoviews](https://github.com/holoviz/holoviews) with [Bokeh](https://github.com/bokeh/bokeh) (optional)
 
 ## Example notebooks
 
@@ -40,17 +175,15 @@ pip install dataspace
 ├── clean
 │   ├── convert
 │   ├── date
-│   ├── dropnan
-│   ├── fill_nan
+│   ├── drop_nulls
 │   ├── fill_nulls
-│   ├── index
 │   ├── strip
 │   └── values
 ├── count
 │   ├── count_empty
 │   ├── count_null
 │   ├── count_unique
-│   ├── count_zero
+│   └── count_zero
 ├── io
 │   ├── export
 │   └── load
@@ -63,7 +196,6 @@ pip install dataspace
     │   ├── add
     │   ├── copycol
     │   ├── drop
-    │   ├── indexcol
     │   ├── keep
     │   ├── rename
     │   └── split
@@ -73,14 +205,12 @@ pip install dataspace
     │   ├── diffn
     │   ├── diffnp
     │   ├── diffp
-    │   ├── diffpp
+    │   └── diffpp
     ├── resample
     │   ├── rmean
     │   └── rsum
     └── values
         ├── append
-        ├── apply
-        ├── dropr
         ├── exclude
         ├── reverse
         └── sort
