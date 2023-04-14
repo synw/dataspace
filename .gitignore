@@ -18,6 +18,7 @@ __pycache__/
 .ipynb_checkpoints
 *.ipynb
 notebooks/
+.analysis.db
 
 # C extensions
 *.so
