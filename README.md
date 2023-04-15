@@ -148,7 +148,7 @@ pip install dataspace
 Optional: to use the Bokeh chart engine:
 
 ```
-pip install bokeh pandas
+pip install bokeh holoviews
 ```
 
 Note: the Pandas dependency is required for this chart engine as it does 

@@ -7,7 +7,8 @@ from dataspace.types import ChartEngineName, ChartType
 try:
     from .bokeh import BokehChartEngine  # type: ignore
 except (ModuleNotFoundError, ImportError):
-    print("The Bokeh chart engine is not available in this environment")
+    # print("The Bokeh chart engine is not available in this environment")
+    pass
 
     class BokehChartEngine(AltairChartEngine):
         pass
